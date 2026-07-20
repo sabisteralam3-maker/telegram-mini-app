@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn Rewards Mini App</title>
+    
+    <!-- Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- AdsGram Official SDK -->
+    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background-color: #f0f2f5; color: #333; padding: 15px; text-align: center; }
+        .container { max-width: 400px; margin: 0 auto; }
+        .header { background: linear-gradient(135deg, #0088cc, #005588); color: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        .balance { font-size: 28px; font-weight: bold; margin-top: 5px; }
+        
+        /* Modal & Animations Base */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 320px; text-align: center; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; font-weight: bold; }
+
+        /* Wheel Animation */
+        .wheel-box { position: relative; width: 200px; height: 200px; margin: 15px auto; }
+        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #0088cc; position: relative; overflow: hidden; transition: transform 3s cubic-bezier(0.1, 0.7, 0.1, 1); background: conic-gradient(#ff7675 0 60deg, #fdcb6e 60deg 120deg, #55efc4 120deg 180deg, #74b9ff 180deg 240deg, #a29bfe 240deg 300deg, #ffeaa7 300deg 360deg); }
+        .pointer { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #d63031; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); z-index: 10; }
+
+        /* Scratch Card Canvas */
+        #scratch-canvas { border-radius: 10px; cursor: pointer; background: #e0e0e0; margin-top: 10px; }
+
+        /* Cards & Buttons */
+        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: left; display: flex; justify-content: space-between; align-items: center; }
+        .card-info h3 { font-size: 16px; margin-bottom: 4px; }
+        .card-info p { font-size: 12px; color: #666; }
+        .btn { background-color: #0088cc; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        
+        /* Referral & Redeem Box */
+        .box { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-top: 15px; text-align: left; }
+        .box h3 { font-size: 16px; margin-bottom: 8px; }
+        .input-field { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; font-size: 14px; outline: none; }
+        .btn-full { width: 100%; padding: 12px; font-size: 16px; background-color: #28a745; }
+        .btn-refer { background-color: #ff9f43; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <p>Total Balance</p>
+        <div class="balance">₹<span id="balance">0.00</span></div>
+        <p style="margin-top: 8px; font-size: 13px;">Daily Limit Left: <span id="tasks-left">5</span>/5</p>
+    </div>
+
+    <!-- Spin Feature -->
+    <div class="card">
+        <div class="card-info">
+            <h3>🌀 Spin & Win</h3>
+            <p>Earn ₹0.30 - ₹0.50</p>
+        </div>
+        <button class="btn" id="btn-spin" onclick="openSpinModal()">Spin</button>
+    </div>
+
+    <!-- Scratch Feature -->
+    <div class="card">
+        <div class="card-info">
+            <h3>🎟️ Scratch Card</h3>
+            <p>Earn ₹0.30 - ₹0.50</p>
+        </div>
+        <button class="btn" id="btn-scratch" onclick="openScratchModal()">Scratch</button>
+    </div>
+
+    <!-- Video Ads Feature -->
+    <div class="card">
+        <div class="card-info">
+            <h3>📺 Watch Video Ad</h3>
+            <p>Earn ₹0.30 - ₹0.50</p>
+        </div>
+        <button class="btn" id="btn-ad" onclick="showAdsGramVideoAd()">Watch</button>
+    </div>
+
+    <!-- Referral System Section -->
+    <div class="box">
+        <h3>👥 Refer & Earn (₹1 Per Refer)</h3>
+        <p style="font-size: 12px; color: #666;">दोस्तों को इनवाइट करें और हर सफल जॉइन पर ₹1 पाएं!</p>
+        <input type="text" id="ref-link" class="input-field" readonly placeholder="Generating Link...">
+        <button class="btn-refer" onclick="shareReferralLink()">Invite Friends / Copy Link</button>
+    </div>
+
+    <!-- Redeem Section -->
+    <div class="box">
+        <h3>💸 Redeem Earnings (Min: ₹10)</h3>
+        <input type="text" id="upi-input" class="input-field" placeholder="Enter UPI ID or Redeem Code">
+        <button class="btn btn-full" onclick="handleRedeem()">Submit Withdrawal</button>
+    </div>
+</div>
+
+<!-- Spin Wheel Modal -->
+<div id="spin-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('spin-modal')">&times;</span>
+        <h3>Spin the Wheel!</h3>
+        <div class="wheel-box">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel"></div>
+        </div>
+        <button class="btn" id="start-spin-btn" onclick="executeSpin()">Start Spin</button>
+    </div>
+</div>
+
+<!-- Scratch Card Modal -->
+<div id="scratch-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('scratch-modal')">&times;</span>
+        <h3>Scratch Card!</h3>
+        <p style="font-size: 12px; color: #666;">उंगली से स्क्रैच करें</p>
+        <div style="position: relative; width: 200px; height: 100px; margin: 15px auto;">
+            <div id="scratch-reward" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px; background:#fff; border:1px solid #ccc; border-radius:10px;">
+                ₹0.00
+            </div>
+            <canvas id="scratch-canvas" width="200" height="100" style="position: absolute; top:0; left:0; z-index:2;"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // ==========================================
+    // CONFIGURATION
+    // ==========================================
+    const BOT_USERNAME = "SpinWinApp_bot"; // यहाँ अपने Telegram Bot का यूजरनेम बिना @ के लिखें
+    const ADSGRAM_BLOCK_ID = "YOUR_ADSGRAM_BLOCK_ID_HERE";
+    // ==========================================
+
+    let AdController = null;
+    if (window.Adsgram && ADSGRAM_BLOCK_ID !== "YOUR_ADSGRAM_BLOCK_ID_HERE") {
+        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+    }
+
+    let balance = 0.00;
+    let tasksLeft = 5;
+    let currentSpinDeg = 0;
+
+    // Get User Telegram ID for Referral
+    const userId = tg.initDataUnsafe?.user?.id || "demo_user";
+    const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
+    document.getElementById('ref-link').value = refLink;
+
+    function shareReferralLink() {
+        const text = `🎉 इस बॉट से डेली Spin, Scratch और Video देख कर पैसे कमाएं! मेरे लिंक से जॉइन करने पर तुरंत बोनस पाएं:\n${refLink}`;
+        
+        // Telegram में Direct Share करने के लिए
+        if (tg.isExpanded) {
+            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent(text)}`);
+        } else {
+            navigator.clipboard.writeText(refLink);
+            alert("Referral Link कॉपी हो गया है!");
+        }
+    }
+
+    function getRandomReward() {
+        return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2));
+    }
+
+    // Modal Handlers
+    function openSpinModal() {
+        if(tasksLeft <= 0) return alert("आज की डेली लिमिट खत्म हो गई है!");
+        document.getElementById('spin-modal').style.display = 'flex';
+    }
+
+    function openScratchModal() {
+        if(tasksLeft <= 0) return alert("आज की डेली लिमिट खत्म हो गई है!");
+        initScratchCard();
+        document.getElementById('scratch-modal').style.display = 'flex';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    // Animated Spin Execution
+    function executeSpin() {
+        const btn = document.getElementById('start-spin-btn');
+        btn.disabled = true;
+
+        const reward = getRandomReward();
+        const extraDegrees = Math.floor(Math.random() * 360) + 1440;
+        currentSpinDeg += extraDegrees;
+
+        const wheel = document.getElementById('wheel');
+        wheel.style.transform = `rotate(${currentSpinDeg}deg)`;
+
+        setTimeout(() => {
+            addReward(reward, "Spin");
+            closeModal('spin-modal');
+            btn.disabled = false;
+        }, 3200);
+    }
+
+    // Scratch Card Logic
+    function initScratchCard() {
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        const reward = getRandomReward();
+        document.getElementById('scratch-reward').innerText = `₹${reward}`;
+
+        ctx.fillStyle = '#b2bec3';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#636e72';
+        ctx.font = '16px Arial';
+        ctx.fillText('Scratch Here', 50, 55);
+
+        let isScratching = false;
+
+        function scratch(e) {
+            if (!isScratching) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 15, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        canvas.onmousedown = canvas.ontouchstart = () => isScratching = true;
+        canvas.onmouseup = canvas.ontouchend = () => {
+            if (isScratching) {
+                isScratching = false;
+                addReward(reward, "Scratch Card");
+                setTimeout(() => closeModal('scratch-modal'), 1000);
+            }
+        };
+        canvas.onmousemove = canvas.ontouchmove = scratch;
+    }
+
+    // Video Ads Execution
+    function showAdsGramVideoAd() {
+        if (tasksLeft <= 0) return alert("आज की डेली लिमिट खत्म हो गई है!");
+
+        if (!AdController) {
+            alert("AdsGram Ad Loading (Demo Mode)...");
+            addReward(getRandomReward(), "Video Ad");
+            return;
+        }
+
+        AdController.show().then(() => {
+            addReward(getRandomReward(), "Video Ad");
+        }).catch(() => {
+            alert("वीडियो ऐड पूरा नहीं देखा गया या नेटवर्क समस्या है।");
+        });
+    }
+
+    function addReward(amount, typeName) {
+        balance = parseFloat((balance + amount).toFixed(2));
+        tasksLeft--;
+        updateUI();
+        alert(`बधाई हो! ${typeName} से आपको ₹${amount} मिले।`);
+    }
+
+    function updateUI() {
+        document.getElementById('balance').innerText = balance.toFixed(2);
+        document.getElementById('tasks-left').innerText = tasksLeft;
+
+        if (tasksLeft <= 0) {
+            document.getElementById('btn-spin').disabled = true;
+            document.getElementById('btn-scratch').disabled = true;
+            document.getElementById('btn-ad').disabled = true;
+        }
+    }
+
+    function handleRedeem() {
+        const upiVal = document.getElementById('upi-input').value.trim();
+        if (balance < 10) return alert("कम से कम ₹10 होने पर ही विड्रॉ कर सकते हैं!");
+        if (!upiVal) return alert("कृपया UPI ID दर्ज करें!");
+
+        tg.sendData(JSON.stringify({
+            action: "redeem_request",
+            amount: balance,
+            account: upiVal,
+            user_id: userId
+        }));
+
+        alert("आपकी विड्रॉल रिक्वेस्ट सबमिट हो गई है!");
+    }
+</script>
+
+</body>
+</html>
