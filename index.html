@@ -12,102 +12,234 @@
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: #f0f2f5; color: #333; padding: 15px; text-align: center; }
-        .container { max-width: 400px; margin: 0 auto; }
-        .header { background: linear-gradient(135deg, #0088cc, #005588); color: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        .balance { font-size: 28px; font-weight: bold; margin-top: 5px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', 'Segoe UI', sans-serif; }
+        body { background: #fffdf7; color: #2d3436; padding-bottom: 30px; }
         
-        /* Modal & Animations Base */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: white; padding: 20px; border-radius: 15px; width: 90%; max-width: 320px; text-align: center; position: relative; }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; font-weight: bold; }
-
-        /* Wheel Animation */
-        .wheel-box { position: relative; width: 200px; height: 200px; margin: 15px auto; }
-        .wheel { width: 100%; height: 100%; border-radius: 50%; border: 5px solid #0088cc; position: relative; overflow: hidden; transition: transform 3s cubic-bezier(0.1, 0.7, 0.1, 1); background: conic-gradient(#ff7675 0 60deg, #fdcb6e 60deg 120deg, #55efc4 120deg 180deg, #74b9ff 180deg 240deg, #a29bfe 240deg 300deg, #ffeaa7 300deg 360deg); }
-        .pointer { width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #d63031; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); z-index: 10; }
-
-        /* Scratch Card Canvas */
-        #scratch-canvas { border-radius: 10px; cursor: pointer; background: #e0e0e0; margin-top: 10px; }
-
-        /* Cards & Buttons */
-        .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: left; display: flex; justify-content: space-between; align-items: center; }
-        .card-info h3 { font-size: 16px; margin-bottom: 4px; }
-        .card-info p { font-size: 12px; color: #666; }
-        .btn { background-color: #0088cc; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        .container { max-width: 420px; margin: 0 auto; padding: 15px; }
         
-        /* Referral & Redeem Box */
-        .box { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-top: 15px; text-align: left; }
-        .box h3 { font-size: 16px; margin-bottom: 8px; }
-        .input-field { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; font-size: 14px; outline: none; }
-        .btn-full { width: 100%; padding: 12px; font-size: 16px; background-color: #28a745; }
-        .btn-refer { background-color: #ff9f43; color: white; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+        /* Header */
+        .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .page-title { font-size: 20px; font-weight: 700; color: #d35400; }
+
+        /* Premium Balance Card */
+        .balance-card { 
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0); 
+            border-radius: 20px; 
+            padding: 22px; 
+            box-shadow: 0 10px 20px rgba(250, 177, 160, 0.3);
+            text-align: left;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .balance-title { font-size: 14px; color: #e67e22; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .balance-amount { font-size: 36px; font-weight: 800; color: #d35400; margin-top: 5px; }
+        .limit-badge { display: inline-block; background: rgba(255,255,255,0.7); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #d35400; margin-top: 10px; }
+
+        /* Withdraw History Card */
+        .history-card {
+            background: #fff8eb;
+            border: 1px dashed #f39c12;
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .history-card:active { transform: scale(0.98); }
+        .history-info { text-align: left; }
+        .history-info h4 { font-size: 15px; color: #d35400; margin-bottom: 3px; }
+        .history-info p { font-size: 11px; color: #7f8c8d; max-width: 220px; }
+        .arrow-icon { font-size: 20px; color: #e67e22; font-weight: bold; }
+
+        /* Titles */
+        .section-title { text-align: left; font-size: 16px; font-weight: 700; color: #2c3e50; margin-bottom: 15px; }
+
+        /* Task Cards */
+        .card { background: white; border-radius: 16px; padding: 15px 18px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f1f2f6; display: flex; justify-content: space-between; align-items: center; }
+        .card-info { text-align: left; }
+        .card-info h3 { font-size: 15px; font-weight: 600; }
+        .card-info p { font-size: 12px; color: #27ae60; font-weight: 600; margin-top: 2px; }
+        .btn-action { background: linear-gradient(135deg, #0984e3, #74b9ff); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(9, 132, 227, 0.2); }
+        .btn-action:disabled { background: #b2bec3; box-shadow: none; }
+
+        /* Withdraw Grid */
+        .withdraw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+        .withdraw-item {
+            background: white;
+            border: 2px dashed #ffeaa7;
+            border-radius: 18px;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .withdraw-item img { width: 50px; height: 50px; object-fit: contain; margin: 10px 0; }
+        .withdraw-item h4 { font-size: 13px; font-weight: 700; color: #c0392b; margin-bottom: 5px; }
+        .btn-withdraw {
+            background: #d63031;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(214, 48, 49, 0.25);
+            width: 100%;
+        }
+
+        /* Modal Base */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px); }
+        .modal-content { background: white; padding: 22px; border-radius: 20px; width: 90%; max-width: 340px; text-align: center; position: relative; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .close-btn { position: absolute; top: 12px; right: 18px; font-size: 22px; cursor: pointer; color: #b2bec3; }
+
+        #scratch-canvas { border-radius: 12px; cursor: pointer; margin-top: 10px; }
+
+        /* Bottom Navigation Bar */
+        .tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #f1f2f6; display: flex; justify-space-around: space-around; padding: 10px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 90; }
+        .tab-item { border: none; background: none; font-size: 12px; font-weight: 600; color: #b2bec3; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .tab-item.active { color: #d35400; }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .input-field { width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 10px; margin: 12px 0; font-size: 14px; outline: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="header">
-        <p>Total Balance</p>
-        <div class="balance">₹<span id="balance">0.00</span></div>
-        <p style="margin-top: 8px; font-size: 13px;">Daily Limit Left: <span id="tasks-left">5</span>/5</p>
-    </div>
-
-    <!-- Spin Feature -->
-    <div class="card">
-        <div class="card-info">
-            <h3>🌀 Spin & Win</h3>
-            <p>Earn ₹0.30 - ₹0.50</p>
+    
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+        <div class="top-bar">
+            <div class="page-title">Spin & Earn</div>
         </div>
-        <button class="btn" id="btn-spin" onclick="openSpinModal()">Spin</button>
-    </div>
 
-    <!-- Scratch Feature -->
-    <div class="card">
-        <div class="card-info">
-            <h3>🎟️ Scratch Card</h3>
-            <p>Earn ₹0.30 - ₹0.50</p>
+        <div class="balance-card">
+            <div class="balance-title">Your Balance</div>
+            <div class="balance-amount">₹<span id="balance">0.00</span></div>
+            <div class="limit-badge">Daily Tasks Left: <span id="tasks-left">5</span>/5</div>
         </div>
-        <button class="btn" id="btn-scratch" onclick="openScratchModal()">Scratch</button>
-    </div>
 
-    <!-- Video Ads Feature -->
-    <div class="card">
-        <div class="card-info">
-            <h3>📺 Watch Video Ad</h3>
-            <p>Earn ₹0.30 - ₹0.50</p>
+        <div class="section-title">Earning Tasks</div>
+
+        <!-- Spin Card -->
+        <div class="card">
+            <div class="card-info">
+                <h3>🌀 Spin & Win</h3>
+                <p>Earn ₹0.30 - ₹0.50</p>
+            </div>
+            <button class="btn-action" id="btn-spin" onclick="openSpinModal()">Spin</button>
         </div>
-        <button class="btn" id="btn-ad" onclick="showAdsGramVideoAd()">Watch</button>
+
+        <!-- Scratch Card -->
+        <div class="card">
+            <div class="card-info">
+                <h3>🎟️ Scratch Card</h3>
+                <p>Earn ₹0.30 - ₹0.50</p>
+            </div>
+            <button class="btn-action" id="btn-scratch" onclick="openScratchModal()">Scratch</button>
+        </div>
+
+        <!-- Watch Video Card -->
+        <div class="card">
+            <div class="card-info">
+                <h3>📺 Watch Video Ad</h3>
+                <p>Earn ₹0.30 - ₹0.50</p>
+            </div>
+            <button class="btn-action" id="btn-ad" onclick="showAdsGramVideoAd()">Watch</button>
+        </div>
+
+        <!-- Referral Section -->
+        <div style="background: white; padding: 18px; border-radius: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); text-align: left;">
+            <h3 style="font-size: 15px;">👥 Refer & Earn (₹1/Refer)</h3>
+            <p style="font-size: 11px; color: #7f8c8d; margin-top: 4px;">दोस्तों को शेयर करें और प्रति रेफरल ₹1 कमाएं!</p>
+            <input type="text" id="ref-link" class="input-field" readonly value="Loading Link...">
+            <button class="btn-action" style="width:100%; background: #e67e22;" onclick="shareReferralLink()">Copy Link / Share</button>
+        </div>
     </div>
 
-    <!-- Referral System Section -->
-    <div class="box">
-        <h3>👥 Refer & Earn (₹1 Per Refer)</h3>
-        <p style="font-size: 12px; color: #666;">दोस्तों को इनवाइट करें और हर सफल जॉइन पर ₹1 पाएं!</p>
-        <input type="text" id="ref-link" class="input-field" readonly placeholder="Generating Link...">
-        <button class="btn-refer" onclick="shareReferralLink()">Invite Friends / Copy Link</button>
+    <!-- WITHDRAW PAGE -->
+    <div id="page-withdraw" class="page">
+        <div class="top-bar">
+            <div class="page-title" style="color: #d35400;">Withdraw Balance</div>
+        </div>
+
+        <div class="balance-card">
+            <div class="balance-title">Your Balance</div>
+            <div class="balance-amount">₹<span id="withdraw-balance">0.00</span></div>
+        </div>
+
+        <div class="history-card" onclick="alert('No past withdrawal history found.')">
+            <div class="history-info">
+                <h4>📜 Withdraw History</h4>
+                <p>View all your past withdrawal requests, amounts, dates, and status.</p>
+            </div>
+            <div class="arrow-icon">→</div>
+        </div>
+
+        <div class="section-title">Select Withdrawal Method</div>
+
+        <div class="withdraw-grid">
+            <div class="withdraw-item">
+                <h4 style="color:#d63031;">GOOGLE CODE</h4>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" alt="Google Play">
+                <button class="btn-withdraw" style="background:#d63031;" onclick="openRedeemModal('Google Code')">Withdraw →</button>
+            </div>
+
+            <div class="withdraw-item">
+                <h4 style="color:#2d3436;">AMAZON CODE</h4>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+                <button class="btn-withdraw" style="background:#2d3436;" onclick="openRedeemModal('Amazon Code')">Withdraw →</button>
+            </div>
+
+            <div class="withdraw-item">
+                <h4 style="color:#e67e22;">FLIPKART</h4>
+                <img src="https://cdn.iconscout.com/icon/free/png-256/free-flipkart-logo-icon-download-in-svg-png-gif-file-formats--shopping-brand-social-media-pack-logos-icons-226594.png" alt="Flipkart">
+                <button class="btn-withdraw" style="background:#e67e22;" onclick="openRedeemModal('Flipkart')">Withdraw →</button>
+            </div>
+
+            <div class="withdraw-item">
+                <h4 style="color:#27ae60;">UPI CASH</h4>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI">
+                <button class="btn-withdraw" style="background:#27ae60;" onclick="openRedeemModal('UPI Cash')">Withdraw →</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Redeem Section -->
-    <div class="box">
-        <h3>💸 Redeem Earnings (Min: ₹10)</h3>
-        <input type="text" id="upi-input" class="input-field" placeholder="Enter UPI ID or Redeem Code">
-        <button class="btn btn-full" onclick="handleRedeem()">Submit Withdrawal</button>
-    </div>
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div class="tab-bar">
+    <button class="tab-item active" id="tab-home" onclick="switchPage('home')">
+        <span>🏠</span>
+        <span>Home</span>
+    </button>
+    <button class="tab-item" id="tab-withdraw" onclick="switchPage('withdraw')">
+        <span>💸</span>
+        <span>Withdraw</span>
+    </button>
 </div>
 
 <!-- Spin Wheel Modal -->
 <div id="spin-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('spin-modal')">&times;</span>
-        <h3>Spin the Wheel!</h3>
-        <div class="wheel-box">
-            <div class="pointer"></div>
-            <div class="wheel" id="wheel"></div>
+        <h3 style="margin-bottom: 15px;">Spin the Wheel!</h3>
+        <div style="position: relative; width: 220px; height: 220px; margin: 0 auto;">
+            <div style="width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 22px solid #d63031; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); z-index: 10;"></div>
+            <canvas id="wheel-canvas" width="220" height="220" style="transition: transform 3.5s cubic-bezier(0.1, 0.7, 0.1, 1);"></canvas>
         </div>
-        <button class="btn" id="start-spin-btn" onclick="executeSpin()">Start Spin</button>
+        <button class="btn-action" id="start-spin-btn" style="margin-top:20px; width:100%;" onclick="executeSpin()">Start Spin</button>
     </div>
 </div>
 
@@ -116,13 +248,24 @@
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('scratch-modal')">&times;</span>
         <h3>Scratch Card!</h3>
-        <p style="font-size: 12px; color: #666;">उंगली से स्क्रैच करें</p>
-        <div style="position: relative; width: 200px; height: 100px; margin: 15px auto;">
-            <div id="scratch-reward" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px; background:#fff; border:1px solid #ccc; border-radius:10px;">
+        <p style="font-size: 12px; color: #7f8c8d; margin-top:4px;">उंगली से पूरा स्क्रैच करें</p>
+        <div style="position: relative; width: 220px; height: 110px; margin: 20px auto;">
+            <div id="scratch-reward" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:22px; color:#27ae60; background:#fff; border:2px dashed #27ae60; border-radius:12px;">
                 ₹0.00
             </div>
-            <canvas id="scratch-canvas" width="200" height="100" style="position: absolute; top:0; left:0; z-index:2;"></canvas>
+            <canvas id="scratch-canvas" width="220" height="110" style="position: absolute; top:0; left:0; z-index:2;"></canvas>
         </div>
+    </div>
+</div>
+
+<!-- Redeem Modal -->
+<div id="redeem-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('redeem-modal')">&times;</span>
+        <h3 id="redeem-title" style="color:#d35400;">Withdrawal</h3>
+        <p style="font-size: 12px; color: #7f8c8d; margin-top:4px;">Minimum Redeem: ₹10</p>
+        <input type="text" id="redeem-account" class="input-field" placeholder="Enter UPI ID / Mobile Number">
+        <button class="btn-action" style="width: 100%; background: #27ae60;" onclick="submitRedeem()">Submit Request</button>
     </div>
 </div>
 
@@ -130,46 +273,60 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // ==========================================
-    // CONFIGURATION
-    // ==========================================
-    const BOT_USERNAME = "SpinWinApp_bot"; // यहाँ अपने Telegram Bot का यूजरनेम बिना @ के लिखें
-    
-const ADSGRAM_BLOCK_ID = "39162";
-
-    // ==========================================
+    const BOT_USERNAME = "SpinWinApp_bot";
+    const ADSGRAM_BLOCK_ID = "39162";
 
     let AdController = null;
-    if (window.Adsgram && ADSGRAM_BLOCK_ID !== "YOUR_ADSGRAM_BLOCK_ID_HERE") {
+    if (window.Adsgram && ADSGRAM_BLOCK_ID) {
         AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
     }
 
     let balance = 0.00;
     let tasksLeft = 5;
     let currentSpinDeg = 0;
+    let selectedMethod = "";
 
-    // Get User Telegram ID for Referral
-    const userId = tg.initDataUnsafe?.user?.id || "demo_user";
+    const userId = tg.initDataUnsafe?.user?.id || "user_demo";
     const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
     document.getElementById('ref-link').value = refLink;
 
-    function shareReferralLink() {
-        const text = `🎉 इस बॉट से डेली Spin, Scratch और Video देख कर पैसे कमाएं! मेरे लिंक से जॉइन करने पर तुरंत बोनस पाएं:\n${refLink}`;
-        
-        // Telegram में Direct Share करने के लिए
-        if (tg.isExpanded) {
-            tg.openTelegramLink(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent(text)}`);
-        } else {
-            navigator.clipboard.writeText(refLink);
-            alert("Referral Link कॉपी हो गया है!");
+    // Draw Canvas Wheel
+    const canvas = document.getElementById('wheel-canvas');
+    const ctx = canvas.getContext('2d');
+    const rewards = ["₹0.30", "₹0.35", "₹0.40", "₹0.45", "₹0.50", "₹0.30"];
+    const colors = ["#ff7675", "#fdcb6e", "#55efc4", "#74b9ff", "#a29bfe", "#ffeaa7"];
+
+    function drawWheel() {
+        const numSegments = rewards.length;
+        const angle = (2 * Math.PI) / numSegments;
+
+        for (let i = 0; i < numSegments; i++) {
+            ctx.beginPath();
+            ctx.fillStyle = colors[i];
+            ctx.moveTo(110, 110);
+            ctx.arc(110, 110, 110, i * angle, (i + 1) * angle);
+            ctx.fill();
+
+            ctx.save();
+            ctx.translate(110, 110);
+            ctx.rotate(i * angle + angle / 2);
+            ctx.textAlign = "right";
+            ctx.fillStyle = "#2d3436";
+            ctx.font = "bold 14px Arial";
+            ctx.fillText(rewards[i], 90, 5);
+            ctx.restore();
         }
     }
+    drawWheel();
 
-    function getRandomReward() {
-        return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2));
+    function switchPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        
+        document.getElementById(`page-${page}`).classList.add('active');
+        document.getElementById(`tab-${page}`).classList.add('active');
     }
 
-    // Modal Handlers
     function openSpinModal() {
         if(tasksLeft <= 0) return alert("आज की डेली लिमिट खत्म हो गई है!");
         document.getElementById('spin-modal').style.display = 'flex';
@@ -181,12 +338,32 @@ const ADSGRAM_BLOCK_ID = "39162";
         document.getElementById('scratch-modal').style.display = 'flex';
     }
 
+    function openRedeemModal(method) {
+        selectedMethod = method;
+        document.getElementById('redeem-title').innerText = `${method} Withdrawal`;
+        document.getElementById('redeem-account').placeholder = method === 'UPI Cash' ? 'Enter UPI ID' : 'Enter Email/Mobile No.';
+        document.getElementById('redeem-modal').style.display = 'flex';
+    }
+
     function closeModal(id) {
         document.getElementById(id).style.display = 'none';
     }
 
-    // Animated Spin Execution
+    function getRandomReward() {
+        return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2));
+    }
+
     function executeSpin() {
+        if (tasksLeft <= 0) return alert("डेली लिमिट खत्म!");
+
+        if (AdController) {
+            AdController.show().then(() => runSpinAnimation()).catch(() => runSpinAnimation());
+        } else {
+            runSpinAnimation();
+        }
+    }
+
+    function runSpinAnimation() {
         const btn = document.getElementById('start-spin-btn');
         btn.disabled = true;
 
@@ -194,80 +371,87 @@ const ADSGRAM_BLOCK_ID = "39162";
         const extraDegrees = Math.floor(Math.random() * 360) + 1440;
         currentSpinDeg += extraDegrees;
 
-        const wheel = document.getElementById('wheel');
-        wheel.style.transform = `rotate(${currentSpinDeg}deg)`;
+        canvas.style.transform = `rotate(${currentSpinDeg}deg)`;
 
         setTimeout(() => {
             addReward(reward, "Spin");
             closeModal('spin-modal');
             btn.disabled = false;
-        }, 3200);
+        }, 3600);
     }
 
-    // Scratch Card Logic
     function initScratchCard() {
-        const canvas = document.getElementById('scratch-canvas');
-        const ctx = canvas.getContext('2d');
+        const sCanvas = document.getElementById('scratch-canvas');
+        const sCtx = sCanvas.getContext('2d');
         const reward = getRandomReward();
         document.getElementById('scratch-reward').innerText = `₹${reward}`;
 
-        ctx.fillStyle = '#b2bec3';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#636e72';
-        ctx.font = '16px Arial';
-        ctx.fillText('Scratch Here', 50, 55);
+        sCtx.fillStyle = '#b2bec3';
+        sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+        sCtx.fillStyle = '#2d3436';
+        sCtx.font = 'bold 16px Arial';
+        sCtx.fillText('Scratch Here!', 60, 60);
 
         let isScratching = false;
 
         function scratch(e) {
             if (!isScratching) return;
-            const rect = canvas.getBoundingClientRect();
+            const rect = sCanvas.getBoundingClientRect();
             const x = (e.clientX || e.touches[0].clientX) - rect.left;
             const y = (e.clientY || e.touches[0].clientY) - rect.top;
 
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath();
-            ctx.arc(x, y, 15, 0, Math.PI * 2);
-            ctx.fill();
+            sCtx.globalCompositeOperation = 'destination-out';
+            sCtx.beginPath();
+            sCtx.arc(x, y, 18, 0, Math.PI * 2);
+            sCtx.fill();
         }
 
-        canvas.onmousedown = canvas.ontouchstart = () => isScratching = true;
-        canvas.onmouseup = canvas.ontouchend = () => {
+        sCanvas.onmousedown = sCanvas.ontouchstart = () => isScratching = true;
+        sCanvas.onmouseup = sCanvas.ontouchend = () => {
             if (isScratching) {
                 isScratching = false;
-                addReward(reward, "Scratch Card");
-                setTimeout(() => closeModal('scratch-modal'), 1000);
+
+                if (AdController) {
+                    AdController.show().then(() => {
+                        addReward(reward, "Scratch Card");
+                        setTimeout(() => closeModal('scratch-modal'), 500);
+                    }).catch(() => {
+                        addReward(reward, "Scratch Card");
+                        setTimeout(() => closeModal('scratch-modal'), 500);
+                    });
+                } else {
+                    addReward(reward, "Scratch Card");
+                    setTimeout(() => closeModal('scratch-modal'), 500);
+                }
             }
         };
-        canvas.onmousemove = canvas.ontouchmove = scratch;
+        sCanvas.onmousemove = sCanvas.ontouchmove = scratch;
     }
 
-    // Video Ads Execution
     function showAdsGramVideoAd() {
         if (tasksLeft <= 0) return alert("आज की डेली लिमिट खत्म हो गई है!");
 
-        if (!AdController) {
-            alert("AdsGram Ad Loading (Demo Mode)...");
+        if (AdController) {
+            AdController.show().then(() => {
+                addReward(getRandomReward(), "Video Ad");
+            }).catch(() => {
+                alert("वीडियो पूरा नहीं देखा गया।");
+            });
+        } else {
             addReward(getRandomReward(), "Video Ad");
-            return;
         }
-
-        AdController.show().then(() => {
-            addReward(getRandomReward(), "Video Ad");
-        }).catch(() => {
-            alert("वीडियो ऐड पूरा नहीं देखा गया या नेटवर्क समस्या है।");
-        });
     }
 
-    function addReward(amount, typeName) {
+    function addReward(amount, type) {
         balance = parseFloat((balance + amount).toFixed(2));
         tasksLeft--;
         updateUI();
-        alert(`बधाई हो! ${typeName} से आपको ₹${amount} मिले।`);
+        alert(`बधाई हो! ${type} से आपको ₹${amount} मिले।`);
     }
 
     function updateUI() {
         document.getElementById('balance').innerText = balance.toFixed(2);
+        document.getElementById('withdraw-balance').innerText = balance.toFixed(2);
         document.getElementById('tasks-left').innerText = tasksLeft;
 
         if (tasksLeft <= 0) {
@@ -277,19 +461,26 @@ const ADSGRAM_BLOCK_ID = "39162";
         }
     }
 
-    function handleRedeem() {
-        const upiVal = document.getElementById('upi-input').value.trim();
+    function shareReferralLink() {
+        navigator.clipboard.writeText(refLink);
+        alert("Referral Link कॉपी हो गया है!");
+    }
+
+    function submitRedeem() {
+        const acc = document.getElementById('redeem-account').value.trim();
         if (balance < 10) return alert("कम से कम ₹10 होने पर ही विड्रॉ कर सकते हैं!");
-        if (!upiVal) return alert("कृपया UPI ID दर्ज करें!");
+        if (!acc) return alert("कृपया विवरण दर्ज करें!");
 
         tg.sendData(JSON.stringify({
             action: "redeem_request",
+            method: selectedMethod,
             amount: balance,
-            account: upiVal,
+            account: acc,
             user_id: userId
         }));
 
-        alert("आपकी विड्रॉल रिक्वेस्ट सबमिट हो गई है!");
+        alert(`आपकी ${selectedMethod} रिक्वेस्ट सबमिट हो गई है!`);
+        closeModal('redeem-modal');
     }
 </script>
 
