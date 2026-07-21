@@ -14,6 +14,14 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background-color: #080214; color: #ffffff; padding-bottom: 90px; }
         .container { max-width: 420px; margin: 0 auto; padding: 12px; }
+<!-- Daily Extra Task Card -->
+<div class="refer-card" style="background: linear-gradient(135deg, #064e3b, #022c22); border-color: #34d399; margin-bottom: 12px;">
+    <div class="refer-info">
+        <h4>🎯 Daily Extra Task</h4>
+        <p style="color:#a7f3d0;">Complete simple task & earn ₹1.00</p>
+    </div>
+    <button class="refer-btn" style="background: linear-gradient(135deg, #059669, #047857); border-color: #6ee7b7;" onclick="showAdsgramTask()">Complete Task ➔</button>
+</div>
 
         .top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         .user-profile { display: flex; align-items: center; gap: 10px; }
@@ -656,6 +664,30 @@
     }
 
     updateUI();
+    // Task Ads Block ID
+    const ADSGRAM_TASK_ID = "39213"; 
+
+    let TaskController = null;
+    if (window.Adsgram && ADSGRAM_TASK_ID) {
+        TaskController = window.Adsgram.init({ blockId: ADSGRAM_TASK_ID });
+    }
+
+    // Task Ads दिखाने का फ़ंक्शन
+    function showAdsgramTask() {
+        if (TaskController) {
+            muteMusic();
+            TaskController.show().then(() => {
+                unmuteMusic();
+                addReward(1.00, "Daily Extra Task");
+            }).catch((err) => {
+                unmuteMusic();
+                alert("टास्क पूरा नहीं हुआ या रद्द कर दिया गया।");
+            });
+        } else {
+            alert("Task Ads अभी लोड नहीं हुआ है। कृपया टेलीग्राम ऐप रीस्टार्ट करें।");
+        }
+    }
+
 </script>
 
 </body>
