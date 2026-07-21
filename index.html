@@ -14,14 +14,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
         body { background-color: #080214; color: #ffffff; padding-bottom: 90px; }
         .container { max-width: 420px; margin: 0 auto; padding: 12px; }
-<!-- Daily Extra Task Card -->
-<div class="refer-card" style="background: linear-gradient(135deg, #064e3b, #022c22); border-color: #34d399; margin-bottom: 12px;">
-    <div class="refer-info">
-        <h4>🎯 Daily Extra Task</h4>
-        <p style="color:#a7f3d0;">Complete simple task & earn ₹1.00</p>
-    </div>
-    <button class="refer-btn" style="background: linear-gradient(135deg, #059669, #047857); border-color: #6ee7b7;" onclick="showAdsgramTask()">Complete Task ➔</button>
-</div>
 
         .top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         .user-profile { display: flex; align-items: center; gap: 10px; }
@@ -154,6 +146,15 @@
                 </div>
                 <button class="btn-card btn-watch" id="btn-ad" onclick="triggerAdAndWatchVideo()">Watch Now ➔</button>
             </div>
+        </div>
+
+        <!-- DAILY EXTRA TASK CARD -->
+        <div class="refer-card" style="background: linear-gradient(135deg, #064e3b, #022c22); border-color: #34d399; margin-bottom: 12px;">
+            <div class="refer-info">
+                <h4>🎯 Daily Extra Task</h4>
+                <p style="color:#a7f3d0;">Complete simple task & earn ₹1.00</p>
+            </div>
+            <button class="refer-btn" style="background: linear-gradient(135deg, #059669, #047857); border-color: #6ee7b7;" onclick="showAdsgramTask()">Complete Task ➔</button>
         </div>
 
         <div class="refer-card">
@@ -341,13 +342,16 @@
 
     const BOT_USERNAME = "SpinWinApp_bot";
     const ADSGRAM_BLOCK_ID = "39162";
+    const ADSGRAM_TASK_ID = "39213";
 
     let AdController = null;
-    if (window.Adsgram && ADSGRAM_BLOCK_ID) {
-        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+    let TaskController = null;
+
+    if (window.Adsgram) {
+        if (ADSGRAM_BLOCK_ID) AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+        if (ADSGRAM_TASK_ID) TaskController = window.Adsgram.init({ blockId: ADSGRAM_TASK_ID });
     }
 
-    // --- Dynamic User Identification (No shared data) ---
     const tgUser = tg.initDataUnsafe?.user;
     const userId = tgUser?.id ? tgUser.id.toString() : "guest_" + Math.floor(Math.random() * 100000);
     const userName = tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : "User";
@@ -361,7 +365,6 @@
     document.getElementById('user-avatar').innerText = userAvatarText;
     document.getElementById('ref-link-input').value = refLink;
 
-    // Clean Instrumental Music (No Voices)
     let bgAudio = null;
     let isUserMuted = false;
 
@@ -400,7 +403,6 @@
         } catch(e) {}
     }
 
-    // USER-SPECIFIC LOCAL STORAGE (हर Telegram ID का अलग डेटा)
     const storageKey = 'spinwin_user_data_' + userId;
     const today = new Date().toDateString();
     let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
@@ -420,12 +422,13 @@
     let coinHistory = savedData.coinHistory || [];
     let referHistory = savedData.referHistory || [];
 
-    // --- CHECK FOR REFERRAL BONUS ON FIRST LOGIN ---
-    const startParam = tg.initDataUnsafe?.start_param;
+    // --- REFERRAL BONUS CHECK (FIXED) ---
+    const startParam = tg.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('tgWebAppStartParam');
     if (startParam && startParam.startsWith('ref_') && !savedData.hasBeenReferred) {
         savedData.hasBeenReferred = true;
         balance = parseFloat((balance + 1.00).toFixed(2));
         coinHistory.unshift({ text: `Earned ₹1.00 Referral Welcome Bonus`, time: new Date().toLocaleTimeString() });
+        saveData();
     }
 
     let currentSpinDeg = 0;
@@ -540,6 +543,21 @@
     function triggerAdAndWatchVideo() {
         if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है!");
         playAdThenReward(getRandomReward(), "Video Ad", () => { watchLeft--; });
+    }
+
+    function showAdsgramTask() {
+        if (TaskController) {
+            muteMusic();
+            TaskController.show().then(() => {
+                unmuteMusic();
+                addReward(1.00, "Daily Extra Task");
+            }).catch((err) => {
+                unmuteMusic();
+                alert("टास्क पूरा नहीं हुआ या रद्द कर दिया गया।");
+            });
+        } else {
+            alert("Task Ads अभी लोड नहीं हुआ है। कृपया टेलीग्राम ऐप रीस्टार्ट करें।");
+        }
     }
 
     function claimRewardWithAd() {
@@ -664,30 +682,6 @@
     }
 
     updateUI();
-    // Task Ads Block ID
-    const ADSGRAM_TASK_ID = "39213"; 
-
-    let TaskController = null;
-    if (window.Adsgram && ADSGRAM_TASK_ID) {
-        TaskController = window.Adsgram.init({ blockId: ADSGRAM_TASK_ID });
-    }
-
-    // Task Ads दिखाने का फ़ंक्शन
-    function showAdsgramTask() {
-        if (TaskController) {
-            muteMusic();
-            TaskController.show().then(() => {
-                unmuteMusic();
-                addReward(1.00, "Daily Extra Task");
-            }).catch((err) => {
-                unmuteMusic();
-                alert("टास्क पूरा नहीं हुआ या रद्द कर दिया गया।");
-            });
-        } else {
-            alert("Task Ads अभी लोड नहीं हुआ है। कृपया टेलीग्राम ऐप रीस्टार्ट करें।");
-        }
-    }
-
 </script>
 
 </body>
