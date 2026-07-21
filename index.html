@@ -274,7 +274,6 @@
         <div class="banner-box" style="margin-top:15px; text-align:left;">
             <h4 style="color:#facc15; font-size:13px;">🎵 Background Music Settings</h4>
             <div style="display:flex; gap:8px; margin-top:10px;">
-                <button class="btn-card btn-spin" onclick="switchNextTrack()">Next Track ⏭️</button>
                 <button class="btn-card" style="background:#dc2626;" onclick="toggleAudioMute()" id="mute-btn">Mute Music 🔇</button>
             </div>
         </div>
@@ -340,34 +339,35 @@
         AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
     }
 
-    // MULTIPLE RELAXING BACKGROUND TRACKS
-    const musicPlaylist = [
-        'https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg',
-        'https://actions.google.com/sounds/v1/weather/rain_heavy.ogg'
-    ];
-    let currentTrackIdx = 0;
+    // --- Dynamic User Identification (No shared data) ---
+    const tgUser = tg.initDataUnsafe?.user;
+    const userId = tgUser?.id ? tgUser.id.toString() : "guest_" + Math.floor(Math.random() * 100000);
+    const userName = tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : "User";
+    const userHandle = tgUser?.username ? `@${tgUser.username}` : "@SpinWinApp_bot";
+    const userAvatarText = userName.charAt(0).toUpperCase() || "U";
+    const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
+
+    document.getElementById('user-name').innerText = userName;
+    document.getElementById('profile-name').innerText = userName;
+    document.getElementById('profile-handle').innerText = userHandle;
+    document.getElementById('user-avatar').innerText = userAvatarText;
+    document.getElementById('ref-link-input').value = refLink;
+
+    // Clean Instrumental Music (No Voices)
     let bgAudio = null;
     let isUserMuted = false;
 
     function initBackgroundMusic() {
         try {
-            bgAudio = new Audio(musicPlaylist[currentTrackIdx]);
+            bgAudio = new Audio('https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=relaxing-music-113824.mp3');
             bgAudio.loop = true;
-            bgAudio.volume = 0.15;
+            bgAudio.volume = 0.2;
             bgAudio.play().catch(() => {
                 window.addEventListener('click', () => { if(bgAudio && bgAudio.paused && !isUserMuted) bgAudio.play(); }, {once: true});
             });
         } catch(e) {}
     }
     initBackgroundMusic();
-
-    function switchNextTrack() {
-        currentTrackIdx = (currentTrackIdx + 1) % musicPlaylist.length;
-        if(bgAudio) { bgAudio.pause(); }
-        bgAudio = new Audio(musicPlaylist[currentTrackIdx]);
-        bgAudio.loop = true; bgAudio.volume = 0.15;
-        if(!isUserMuted) bgAudio.play();
-    }
 
     function toggleAudioMute() {
         isUserMuted = !isUserMuted;
@@ -392,30 +392,17 @@
         } catch(e) {}
     }
 
-    const tgUser = tg.initDataUnsafe?.user;
-    const userName = tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : "User";
-    const userHandle = tgUser?.username ? `@${tgUser.username}` : "@SpinWinApp_bot";
-    const userAvatarText = userName.charAt(0).toUpperCase() || "U";
-    const userId = tgUser?.id || "demo_user";
-    const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
-
-    document.getElementById('user-name').innerText = userName;
-    document.getElementById('profile-name').innerText = userName;
-    document.getElementById('profile-handle').innerText = userHandle;
-    document.getElementById('user-avatar').innerText = userAvatarText;
-    document.getElementById('ref-link-input').value = refLink;
-
-    // --- AUTOMATIC DAILY RESET LOGIC (हर दिन रीसेट होना) ---
+    // USER-SPECIFIC LOCAL STORAGE (हर Telegram ID का अलग डेटा)
+    const storageKey = 'spinwin_user_data_' + userId;
     const today = new Date().toDateString();
-    let savedData = JSON.parse(localStorage.getItem('spinwin_user_data_v9')) || {};
+    let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
 
-    // अगर नया दिन आया है तो सारी लिमिट 5 रीसेट कर दो
     if (savedData.lastDate !== today) {
         savedData.lastDate = today;
         savedData.spinLeft = 5;
         savedData.scratchLeft = 5;
         savedData.watchLeft = 5;
-        delete savedData.bonusClaimedDate; // रीसेट डेली बोनस
+        delete savedData.bonusClaimedDate;
     }
 
     let balance = savedData.balance || 0.00;
@@ -424,7 +411,15 @@
     let watchLeft = savedData.watchLeft ?? 5;
     let coinHistory = savedData.coinHistory || [];
     let referHistory = savedData.referHistory || [];
-    
+
+    // --- CHECK FOR REFERRAL BONUS ON FIRST LOGIN ---
+    const startParam = tg.initDataUnsafe?.start_param;
+    if (startParam && startParam.startsWith('ref_') && !savedData.hasBeenReferred) {
+        savedData.hasBeenReferred = true;
+        balance = parseFloat((balance + 1.00).toFixed(2));
+        coinHistory.unshift({ text: `Earned ₹1.00 Referral Welcome Bonus`, time: new Date().toLocaleTimeString() });
+    }
+
     let currentSpinDeg = 0;
     let pendingReward = 0;
     let pendingType = "";
@@ -437,7 +432,7 @@
         savedData.watchLeft = watchLeft;
         savedData.coinHistory = coinHistory;
         savedData.referHistory = referHistory;
-        localStorage.setItem('spinwin_user_data_v9', JSON.stringify(savedData));
+        localStorage.setItem(storageKey, JSON.stringify(savedData));
         updateUI();
     }
 
@@ -512,7 +507,7 @@
     function getRandomReward() { return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2)); }
 
     function executeSpin() {
-        if (spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है! कल दोबारा मिलेगा।");
+        if (spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है!");
         
         const btn = document.getElementById('start-spin-btn');
         btn.disabled = true;
@@ -535,7 +530,7 @@
     }
 
     function triggerAdAndWatchVideo() {
-        if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है! कल दोबारा मिलेगा।");
+        if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है!");
         playAdThenReward(getRandomReward(), "Video Ad", () => { watchLeft--; });
     }
 
@@ -587,7 +582,7 @@
         sCanvas.onmouseup = sCanvas.ontouchend = () => {
             if (isScratching) {
                 isScratching = false;
-                if (scratchLeft <= 0) return alert("आज की Scratch लिमिट खत्म हो गई है! कल दोबारा मिलेगा।");
+                if (scratchLeft <= 0) return alert("आज की Scratch लिमिट खत्म हो गई है!");
                 scratchLeft--;
                 pendingReward = reward; pendingType = "Scratch Card";
                 document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
