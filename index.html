@@ -7,7 +7,6 @@
     
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
     <!-- AdsGram Official SDK -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
@@ -16,81 +15,73 @@
         body { background-color: #080214; color: #ffffff; padding-bottom: 90px; }
         .container { max-width: 420px; margin: 0 auto; padding: 12px; }
 
-        /* Top Bar */
         .top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         .user-profile { display: flex; align-items: center; gap: 10px; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #7c3aed); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; border: 2px solid #fbbf24; box-shadow: 0 0 15px rgba(245, 158, 11, 0.6); }
         .user-info h4 { font-size: 15px; font-weight: 700; color: #fff; }
         .user-info p { font-size: 11px; color: #a78bfa; }
         
-        /* Premium Glowing Daily Bonus Button */
-        .daily-btn { background: linear-gradient(135deg, #7c3aed, #4c1d95); border: 1px solid #c084fc; color: #facc15; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 0 15px rgba(124, 58, 237, 0.6); transition: 0.2s; }
-        .daily-btn:active { transform: scale(0.95); }
+        .daily-btn { background: linear-gradient(135deg, #7c3aed, #4c1d95); border: 1px solid #c084fc; color: #facc15; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 0 15px rgba(124, 58, 237, 0.6); }
 
-        /* Balance Wallet Card */
         .wallet-card { background: linear-gradient(135deg, #1c0836, #2d0b5a); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 20px; padding: 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.7); }
         .wallet-left { display: flex; align-items: center; gap: 12px; }
         .wallet-icon { font-size: 38px; }
         .wallet-info p { font-size: 11px; color: #c084fc; font-weight: 600; text-transform: uppercase; }
         .wallet-info h2 { font-size: 28px; font-weight: 900; color: #fff; margin: 2px 0; }
-        .wallet-btn { background: linear-gradient(135deg, #9333ea, #6366f1); border: 1px solid #c084fc; color: #fff; padding: 9px 16px; border-radius: 14px; font-weight: 800; font-size: 12px; cursor: pointer; box-shadow: 0 0 12px rgba(147, 51, 234, 0.5); }
+        .wallet-btn { background: linear-gradient(135deg, #9333ea, #6366f1); border: 1px solid #c084fc; color: #fff; padding: 9px 16px; border-radius: 14px; font-weight: 800; font-size: 12px; cursor: pointer; }
 
-        /* Banner Box */
         .banner-box { background: linear-gradient(135deg, #2a085c, #13032d); border: 1px solid rgba(234, 179, 8, 0.4); border-radius: 16px; padding: 12px; margin-bottom: 12px; text-align: center; }
-        .banner-box h3 { font-size: 15px; color: #facc15; font-weight: 800; letter-spacing: 0.5px; }
+        .banner-box h3 { font-size: 15px; color: #facc15; font-weight: 800; }
         .banner-box p { font-size: 10px; color: #d8b4fe; margin-top: 2px; }
 
-        /* 3 Task Cards Grid */
         .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-        .task-card { background: linear-gradient(180deg, #180838, #0a021c); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 18px; padding: 12px 6px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; height: 190px; box-shadow: 0 6px 15px rgba(0,0,0,0.4); }
+        .task-card { background: linear-gradient(180deg, #180838, #0a021c); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 18px; padding: 12px 6px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; height: 190px; }
         .task-icon { font-size: 34px; margin-bottom: 2px; }
         .task-card h4 { font-size: 13px; font-weight: 800; color: #fff; }
         .task-card p { font-size: 9px; color: #94a3b8; margin: 2px 0 4px 0; }
         .limit-badge { font-size: 9px; background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 2px 6px; border-radius: 6px; display: inline-block; margin-bottom: 6px; font-weight: 700; }
         
-        .btn-card { border: none; color: #fff; padding: 8px 0; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; transition: 0.2s; }
-        .btn-card:active { transform: scale(0.96); }
-        .btn-card:disabled { background: #334155 !important; box-shadow: none !important; opacity: 0.5; color: #94a3b8; }
-        .btn-spin { background: linear-gradient(135deg, #2563eb, #1d4ed8); box-shadow: 0 0 12px rgba(37, 99, 235, 0.6); border: 1px solid #60a5fa; }
-        .btn-scratch { background: linear-gradient(135deg, #d97706, #b45309); box-shadow: 0 0 12px rgba(217, 119, 6, 0.6); border: 1px solid #fbbf24; }
-        .btn-watch { background: linear-gradient(135deg, #0284c7, #0369a1); box-shadow: 0 0 12px rgba(2, 132, 199, 0.6); border: 1px solid #38bdf8; }
+        .btn-card { border: none; color: #fff; padding: 8px 0; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; }
+        .btn-card:disabled { background: #334155 !important; opacity: 0.5; color: #94a3b8; }
+        .btn-spin { background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid #60a5fa; }
+        .btn-scratch { background: linear-gradient(135deg, #d97706, #b45309); border: 1px solid #fbbf24; }
+        .btn-watch { background: linear-gradient(135deg, #0284c7, #0369a1); border: 1px solid #38bdf8; }
 
-        /* Refer Card */
-        .refer-card { background: linear-gradient(135deg, #22074a, #0f0224); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.4); }
+        .refer-card { background: linear-gradient(135deg, #22074a, #0f0224); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         .refer-info h4 { font-size: 13px; font-weight: 800; color: #fff; }
         .refer-info p { font-size: 10px; color: #a78bfa; margin-top: 1px; }
-        .refer-btn { background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; border: 1px solid #c084fc; padding: 8px 14px; border-radius: 12px; font-weight: 800; font-size: 11px; cursor: pointer; box-shadow: 0 0 10px rgba(124, 58, 237, 0.5); }
+        .refer-btn { background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; border: 1px solid #c084fc; padding: 8px 14px; border-radius: 12px; font-weight: 800; font-size: 11px; cursor: pointer; }
 
-        /* Leaderboard Box */
-        .leader-preview { background: #130628; border-radius: 18px; padding: 14px; border: 1px solid rgba(168, 85, 247, 0.2); box-shadow: 0 6px 15px rgba(0,0,0,0.4); }
+        .leader-preview { background: #130628; border-radius: 18px; padding: 14px; border: 1px solid rgba(168, 85, 247, 0.2); }
         .leader-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .leader-head h4 { font-size: 13px; color: #facc15; font-weight: 800; }
         .leader-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .leader-row:last-child { border-bottom: none; }
         .leader-user { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; }
 
-        /* Withdraw Grid */
         .withdraw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
         .withdraw-item { background: #130628; border: 1px dashed rgba(234, 179, 8, 0.5); border-radius: 16px; padding: 14px; text-align: center; }
         .withdraw-item img { width: 42px; height: 42px; object-fit: contain; margin: 8px 0; }
         .withdraw-item h5 { font-size: 11px; font-weight: 800; color: #eab308; margin-bottom: 6px; }
-        .btn-withdraw { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; box-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+        .btn-withdraw { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; }
 
-        /* Bottom Navbar */
-        .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070212; border-top: 1px solid rgba(168, 85, 247, 0.3); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; box-shadow: 0 -5px 20px rgba(0,0,0,0.8); }
-        .nav-item { border: none; background: none; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; transition: 0.2s; }
-        .nav-item.active { color: #c084fc; text-shadow: 0 0 8px rgba(192, 132, 252, 0.6); }
+        /* History Boxes */
+        .history-box { background: #130628; border-radius: 14px; padding: 12px; margin-top: 15px; border: 1px solid rgba(168, 85, 247, 0.2); max-height: 150px; overflow-y: auto; text-align: left; }
+        .history-item { font-size: 11px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+
+        .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070212; border-top: 1px solid rgba(168, 85, 247, 0.3); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; }
+        .nav-item { border: none; background: none; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+        .nav-item.active { color: #c084fc; }
         .nav-icon { font-size: 18px; }
         .gift-center { background: linear-gradient(135deg, #9333ea, #c084fc); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #facc15; box-shadow: 0 0 20px rgba(168, 85, 247, 0.9); margin-top: -22px; cursor: pointer; }
 
-        /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(6px); }
-        .modal-content { background: linear-gradient(180deg, #1e0b3c, #0e0324); border: 1px solid #a855f7; padding: 20px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
+        .modal-content { background: linear-gradient(180deg, #1e0b3c, #0e0324); border: 1px solid #a855f7; padding: 20px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 14px; font-size: 22px; cursor: pointer; color: #94a3b8; }
 
         .page { display: none; }
         .page.active { display: block; }
-        .input-field { width: 100%; padding: 11px; background: #080214; border: 1px solid #7c3aed; color: #fff; border-radius: 10px; margin: 10px 0; font-size: 12px; outline: none; }
+        .input-field, .select-field { width: 100%; padding: 11px; background: #080214; border: 1px solid #7c3aed; color: #fff; border-radius: 10px; margin: 10px 0; font-size: 12px; outline: none; }
     </style>
 </head>
 <body>
@@ -107,7 +98,7 @@
                     <p id="user-handle">Welcome back! 👋</p>
                 </div>
             </div>
-            <button class="daily-btn" onclick="triggerAdAndClaimBonus()">🎁 Daily Bonus</button>
+            <button class="daily-btn" onclick="openBonusModal()">🎁 Daily Bonus</button>
         </div>
 
         <div class="wallet-card">
@@ -126,7 +117,6 @@
             <p>Spin • Scratch • Watch • Refer & Earn</p>
         </div>
 
-        <!-- 3 Tasks Grid -->
         <div class="task-grid">
             <div class="task-card">
                 <div>
@@ -164,7 +154,7 @@
                 <h4>👥 Refer & Earn (₹1/Refer)</h4>
                 <p>Invite friends & Earn ₹1 per refer</p>
             </div>
-            <button class="refer-btn" onclick="shareReferralLink()">Refer Now ➔</button>
+            <button class="refer-btn" onclick="openReferModal()">Refer Now ➔</button>
         </div>
 
         <div class="leader-preview">
@@ -220,6 +210,11 @@
                 <button class="btn-withdraw" style="background:linear-gradient(135deg,#16a34a,#15803d);" onclick="openRedeemModal('UPI Cash')">Withdraw ➔</button>
             </div>
         </div>
+
+        <h4 style="font-size:13px; margin-top:20px; color:#c084fc;">📜 Coin & Earnings History</h4>
+        <div class="history-box" id="coin-history-list">
+            <div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">No history yet.</div>
+        </div>
     </div>
 
     <!-- PROFILE PAGE -->
@@ -244,7 +239,7 @@
         <span class="nav-icon">🏆</span>
         <span>Leaderboard</span>
     </button>
-    <div class="gift-center" onclick="triggerAdAndClaimBonus()">🎁</div>
+    <div class="gift-center" onclick="openBonusModal()">🎁</div>
     <button class="nav-item" id="nav-withdraw" onclick="switchPage('withdraw')">
         <span class="nav-icon">👛</span>
         <span>Wallet</span>
@@ -255,7 +250,7 @@
     </button>
 </div>
 
-<!-- Spin Modal -->
+<!-- Modals -->
 <div id="spin-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('spin-modal')">&times;</span>
@@ -264,11 +259,10 @@
             <div style="width:0; height:0; border-left:9px solid transparent; border-right:9px solid transparent; border-top:16px solid #ef4444; position:absolute; top:-6px; left:50%; transform:translateX(-50%); z-index:10;"></div>
             <canvas id="wheel-canvas" width="190" height="190" style="transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.15, 1);"></canvas>
         </div>
-        <button class="btn-card btn-spin" id="start-spin-btn" style="margin-top:15px; font-size:13px;" onclick="triggerSpinAd()">Start Spin</button>
+        <button class="btn-card btn-spin" id="start-spin-btn" style="margin-top:15px; font-size:13px;" onclick="executeSpin()">Start Spin</button>
     </div>
 </div>
 
-<!-- Scratch Modal -->
 <div id="scratch-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('scratch-modal')">&times;</span>
@@ -283,13 +277,47 @@
     </div>
 </div>
 
+<!-- Claim Reward Modal (For Spin/Scratch/Bonus) -->
+<div id="claim-modal" class="modal">
+    <div class="modal-content">
+        <h3 style="color:#4ade80; margin-bottom: 8px;">🎉 You Won ₹<span id="claim-amount">0.00</span>!</h3>
+        <p style="font-size: 11px; color:#94a3b8; margin-bottom: 15px;">क्वालिफाइड रिवॉर्ड क्लेम करने के लिए नीचे क्लिक करें:</p>
+        <button class="btn-card btn-spin" style="background:linear-gradient(135deg,#16a34a,#15803d);" onclick="claimRewardWithAd()">Claim Reward (Watch Ad)</button>
+    </div>
+</div>
+
+<!-- Refer Modal -->
+<div id="refer-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal('refer-modal')">&times;</span>
+        <h3 style="color:#c084fc; margin-bottom: 10px;">👥 Refer & Earn</h3>
+        <input type="text" id="ref-link-input" class="input-field" readonly>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+            <button class="btn-card" style="background:#25D366;" onclick="shareOnWhatsApp()">WhatsApp</button>
+            <button class="btn-card" style="background:#0088cc;" onclick="shareOnTelegram()">Telegram</button>
+        </div>
+        <button class="btn-card btn-spin" style="margin-top:8px;" onclick="copyReferLink()">Copy Link</button>
+        
+        <h4 style="font-size:11px; margin-top:15px; color:#facc15; text-align:left;">Referral History:</h4>
+        <div class="history-box" id="refer-history-list" style="max-height:80px;">
+            <div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>
+        </div>
+    </div>
+</div>
+
 <!-- Redeem Modal -->
 <div id="redeem-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('redeem-modal')">&times;</span>
         <h3 id="redeem-title" style="color:#c084fc;">Withdrawal</h3>
-        <p style="font-size:10px; color:#94a3b8; margin-top:2px;">Minimum Limit: ₹10</p>
-        <input type="text" id="redeem-account" class="input-field" placeholder="Enter Details">
+        <p style="font-size:10px; color:#94a3b8; margin-top:2px;">Select Amount (Min ₹10, Max ₹100)</p>
+        <select id="redeem-amount-select" class="select-field">
+            <option value="10">₹10</option>
+            <option value="20">₹20</option>
+            <option value="50">₹50</option>
+            <option value="100">₹100</option>
+        </select>
+        <input type="text" id="redeem-account" class="input-field" placeholder="Enter UPI ID / Mobile No.">
         <button class="btn-card btn-spin" style="background:#16a34a;" onclick="submitRedeem()">Submit Request</button>
     </div>
 </div>
@@ -306,25 +334,37 @@
         AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
     }
 
-    // Success Sound Effect generator (Using Web Audio API - No external audio files needed)
+    // --- BACKGROUND MUSIC ENGINE (Auto Mute on Ad) ---
+    let bgAudio = null;
+    function initBackgroundMusic() {
+        try {
+            // Smooth ambient calming background music stream
+            bgAudio = new Audio('https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg');
+            bgAudio.loop = true;
+            bgAudio.volume = 0.15;
+            bgAudio.play().catch(e => {
+                // Browser policy requires user interaction first
+                window.addEventListener('click', () => { if(bgAudio && bgAudio.paused) bgAudio.play(); }, {once: true});
+            });
+        } catch(e) {}
+    }
+    initBackgroundMusic();
+
+    function muteMusic() { if(bgAudio) bgAudio.muted = true; }
+    function unmuteMusic() { if(bgAudio) bgAudio.muted = false; }
+
+    // --- SOUND EFFECTS ---
     function playCoinSound() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 note
-            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08); // A5 note
-            
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.3);
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
         } catch(e) {}
     }
 
@@ -332,14 +372,17 @@
     const userName = tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : "User";
     const userHandle = tgUser?.username ? `@${tgUser.username}` : "@SpinWinApp_bot";
     const userAvatarText = userName.charAt(0).toUpperCase() || "U";
+    const userId = tgUser?.id || "demo_user";
+    const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
 
     document.getElementById('user-name').innerText = userName;
     document.getElementById('profile-name').innerText = userName;
     document.getElementById('profile-handle').innerText = userHandle;
     document.getElementById('user-avatar').innerText = userAvatarText;
+    document.getElementById('ref-link-input').value = refLink;
 
     const today = new Date().toDateString();
-    let savedData = JSON.parse(localStorage.getItem('spinwin_user_data_v5')) || {};
+    let savedData = JSON.parse(localStorage.getItem('spinwin_user_data_v6')) || {};
 
     if (savedData.lastDate !== today) {
         savedData.lastDate = today;
@@ -349,10 +392,15 @@
     }
 
     let balance = savedData.balance || 0.00;
-    let spinLeft = savedData.spinLeft !== undefined ? savedData.spinLeft : 5;
-    let scratchLeft = savedData.scratchLeft !== undefined ? savedData.scratchLeft : 5;
-    let watchLeft = savedData.watchLeft !== undefined ? savedData.watchLeft : 5;
+    let spinLeft = savedData.spinLeft ?? 5;
+    let scratchLeft = savedData.scratchLeft ?? 5;
+    let watchLeft = savedData.watchLeft ?? 5;
+    let coinHistory = savedData.coinHistory || [];
+    let referHistory = savedData.referHistory || [];
+    
     let currentSpinDeg = 0;
+    let pendingReward = 0;
+    let pendingType = "";
     let selectedMethod = "";
 
     function saveData() {
@@ -360,10 +408,13 @@
         savedData.spinLeft = spinLeft;
         savedData.scratchLeft = scratchLeft;
         savedData.watchLeft = watchLeft;
-        localStorage.setItem('spinwin_user_data_v5', JSON.stringify(savedData));
-        updateLeaderboardUI();
+        savedData.coinHistory = coinHistory;
+        savedData.referHistory = referHistory;
+        localStorage.setItem('spinwin_user_data_v6', JSON.stringify(savedData));
+        updateUI();
     }
 
+    // --- LEADERBOARD ---
     function updateLeaderboardUI() {
         let players = [
             { name: "Aman Verma", amount: 5432.10 },
@@ -371,30 +422,20 @@
             { name: "Pooja Sharma", amount: 2132.00 },
             { name: `${userName} (You)`, amount: balance }
         ];
-
         players.sort((a, b) => b.amount - a.amount);
-
-        let homeHtml = "";
-        let fullHtml = "";
-
+        let homeHtml = "", fullHtml = "";
         players.forEach((p, idx) => {
             let rankNum = idx + 1;
             let iconMark = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : `${rankNum}️⃣`;
-            
-            let rowStr = `
-                <div class="leader-row" ${p.name.includes('(You)') ? 'style="background: rgba(168, 85, 247, 0.2); border-radius:8px; padding:5px 8px;"' : ''}>
-                    <div class="leader-user">${iconMark} ${p.name}</div>
-                    <div style="color:#4ade80; font-weight:bold;">₹${p.amount.toFixed(2)}</div>
-                </div>
-            `;
+            let rowStr = `<div class="leader-row" ${p.name.includes('(You)') ? 'style="background: rgba(168, 85, 247, 0.2); border-radius:8px; padding:5px 8px;"' : ''}><div class="leader-user">${iconMark} ${p.name}</div><div style="color:#4ade80; font-weight:bold;">₹${p.amount.toFixed(2)}</div></div>`;
             if(idx < 3) homeHtml += rowStr;
             fullHtml += rowStr;
         });
-
         document.getElementById('home-leaderboard-list').innerHTML = homeHtml;
         document.getElementById('full-leaderboard-list').innerHTML = fullHtml;
     }
 
+    // --- WHEEL ---
     const canvas = document.getElementById('wheel-canvas');
     const ctx = canvas.getContext('2d');
     const rewards = ["₹0.30", "₹0.35", "₹0.40", "₹0.45", "₹0.50", "₹0.30"];
@@ -403,20 +444,11 @@
     function drawWheel() {
         const angle = (2 * Math.PI) / rewards.length;
         for (let i = 0; i < rewards.length; i++) {
-            ctx.beginPath();
-            ctx.fillStyle = colors[i];
-            ctx.moveTo(95, 95);
-            ctx.arc(95, 95, 95, i * angle, (i + 1) * angle);
-            ctx.fill();
-
-            ctx.save();
-            ctx.translate(95, 95);
-            ctx.rotate(i * angle + angle / 2);
-            ctx.textAlign = "right";
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 12px Arial";
-            ctx.fillText(rewards[i], 80, 4);
-            ctx.restore();
+            ctx.beginPath(); ctx.fillStyle = colors[i];
+            ctx.moveTo(95, 95); ctx.arc(95, 95, 95, i * angle, (i + 1) * angle); ctx.fill();
+            ctx.save(); ctx.translate(95, 95); ctx.rotate(i * angle + angle / 2);
+            ctx.textAlign = "right"; ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px Arial";
+            ctx.fillText(rewards[i], 80, 4); ctx.restore();
         }
     }
     drawWheel();
@@ -425,99 +457,78 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         document.getElementById(`page-${page}`).classList.add('active');
-        if(document.getElementById(`nav-${page}`)) {
-            document.getElementById(`nav-${page}`).classList.add('active');
-        }
+        if(document.getElementById(`nav-${page}`)) document.getElementById(`nav-${page}`).classList.add('active');
     }
 
     function openSpinModal() {
         if(spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है!");
         document.getElementById('spin-modal').style.display = 'flex';
     }
-
     function openScratchModal() {
         if(scratchLeft <= 0) return alert("आज की Scratch लिमिट खत्म हो गई है!");
-        initScratchCard();
-        document.getElementById('scratch-modal').style.display = 'flex';
+        initScratchCard(); document.getElementById('scratch-modal').style.display = 'flex';
     }
-
+    function openBonusModal() {
+        pendingReward = 0.50; pendingType = "Daily Bonus";
+        document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
+        document.getElementById('claim-modal').style.display = 'flex';
+    }
+    function openReferModal() { document.getElementById('refer-modal').style.display = 'flex'; }
     function openRedeemModal(method) {
         selectedMethod = method;
-        document.getElementById('redeem-title').innerText = `${method} Request`;
+        document.getElementById('redeem-title').innerText = `${method} Withdrawal`;
         document.getElementById('redeem-account').placeholder = method === 'UPI Cash' ? 'Enter UPI ID' : 'Enter Email/Mobile No.';
         document.getElementById('redeem-modal').style.display = 'flex';
     }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function getRandomReward() { return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2)); }
 
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
-
-    function getRandomReward() {
-        return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2));
-    }
-
-    // --- AD TRIGGER & REWARD LOGIC ---
-
-    function triggerAdAndClaimBonus() {
-        if (savedData.bonusClaimed === today) {
-            alert("आप आज का डेली बोनस पहले ही क्लेम कर चुकी हैं!");
-            return;
-        }
-        playAdThenReward(0.50, "Daily Bonus", () => {
-            savedData.bonusClaimed = today;
-        });
-    }
-
-    function triggerSpinAd() {
+    // --- TASK LOGIC & AD CLAIM SYSTEM ---
+    function executeSpin() {
         if (spinLeft <= 0) return alert("Spin लिमिट खत्म!");
+        spinLeft--;
+        closeModal('spin-modal');
         
-        playAdThenReward(0, "", () => {
-            spinLeft--;
-            closeModal('spin-modal');
-            runSpinAnimation();
-        });
+        const reward = getRandomReward();
+        const segmentAngle = 360 / rewards.length;
+        const randomSegment = Math.floor(Math.random() * rewards.length);
+        currentSpinDeg += (5 * 360) + (randomSegment * segmentAngle) + (segmentAngle / 2);
+        canvas.style.transform = `rotate(${currentSpinDeg}deg)`;
+
+        setTimeout(() => {
+            pendingReward = reward; pendingType = "Spin & Win";
+            document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
+            document.getElementById('claim-modal').style.display = 'flex';
+        }, 3600);
     }
 
     function triggerAdAndWatchVideo() {
         if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है!");
-        
-        playAdThenReward(getRandomReward(), "Video Ad", () => {
-            watchLeft--;
-        });
+        playAdThenReward(getRandomReward(), "Video Ad", () => { watchLeft--; });
+    }
+
+    // Claim button triggers Ad before crediting coin
+    function claimRewardWithAd() {
+        closeModal('claim-modal');
+        playAdThenReward(pendingReward, pendingType, () => {});
     }
 
     function playAdThenReward(amount, type, callback) {
+        muteMusic(); // Mute background music when ad loads
         if (AdController) {
             AdController.show().then(() => {
+                unmuteMusic();
                 if(callback) callback();
-                if(amount > 0) addReward(amount, type);
+                addReward(amount, type);
             }).catch(() => {
+                unmuteMusic();
                 alert("विज्ञापन पूरा नहीं देखा गया या नेटवर्क समस्या है।");
             });
         } else {
+            unmuteMusic();
             if(callback) callback();
-            if(amount > 0) addReward(amount, type);
+            addReward(amount, type);
         }
-    }
-
-    function runSpinAnimation() {
-        const btn = document.getElementById('start-spin-btn');
-        btn.disabled = true;
-
-        const reward = getRandomReward();
-        const segmentAngle = 360 / rewards.length;
-        const randomSegment = Math.floor(Math.random() * rewards.length);
-        
-        // Exact rotation calculation for smooth landing
-        const extraSpins = 5 * 360;
-        currentSpinDeg += extraSpins + (randomSegment * segmentAngle) + (segmentAngle / 2);
-
-        canvas.style.transform = `rotate(${currentSpinDeg}deg)`;
-
-        setTimeout(() => {
-            addReward(reward, "Spin");
-            btn.disabled = false;
-        }, 3600);
     }
 
     function initScratchCard() {
@@ -525,37 +536,27 @@
         const sCtx = sCanvas.getContext('2d');
         const reward = getRandomReward();
         document.getElementById('scratch-reward').innerText = `₹${reward}`;
-
-        sCtx.fillStyle = '#475569';
-        sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
-        sCtx.fillStyle = '#ffffff';
-        sCtx.font = 'bold 13px Arial';
-        sCtx.fillText('Scratch Here!', 50, 50);
+        sCtx.fillStyle = '#475569'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+        sCtx.fillStyle = '#ffffff'; sCtx.font = 'bold 13px Arial'; sCtx.fillText('Scratch Here!', 50, 50);
 
         let isScratching = false;
-
         function scratch(e) {
             if (!isScratching) return;
             const rect = sCanvas.getBoundingClientRect();
             const x = (e.clientX || e.touches[0].clientX) - rect.left;
             const y = (e.clientY || e.touches[0].clientY) - rect.top;
-
             sCtx.globalCompositeOperation = 'destination-out';
-            sCtx.beginPath();
-            sCtx.arc(x, y, 15, 0, Math.PI * 2);
-            sCtx.fill();
+            sCtx.beginPath(); sCtx.arc(x, y, 15, 0, Math.PI * 2); sCtx.fill();
         }
-
         sCanvas.onmousedown = sCanvas.ontouchstart = () => isScratching = true;
         sCanvas.onmouseup = sCanvas.ontouchend = () => {
             if (isScratching) {
                 isScratching = false;
                 if (scratchLeft <= 0) return alert("Scratch लिमिट खत्म!");
-
-                playAdThenReward(reward, "Scratch Card", () => {
-                    scratchLeft--;
-                    setTimeout(() => closeModal('scratch-modal'), 400);
-                });
+                scratchLeft--; closeModal('scratch-modal');
+                pendingReward = reward; pendingType = "Scratch Card";
+                document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
+                document.getElementById('claim-modal').style.display = 'flex';
             }
         };
         sCanvas.onmousemove = sCanvas.ontouchmove = scratch;
@@ -563,9 +564,9 @@
 
     function addReward(amount, type) {
         balance = parseFloat((balance + amount).toFixed(2));
+        coinHistory.unshift({ text: `Earned ₹${amount} from ${type}`, time: new Date().toLocaleTimeString() });
         saveData();
-        updateUI();
-        playCoinSound(); // Coin success sound triggered here
+        playCoinSound();
         alert(`बधाई हो! ${type} से आपको ₹${amount} मिले।`);
     }
 
@@ -582,29 +583,47 @@
         document.getElementById('btn-scratch').disabled = (scratchLeft <= 0);
         document.getElementById('btn-ad').disabled = (watchLeft <= 0);
 
+        // Coin History Render
+        let histHtml = coinHistory.length ? coinHistory.map(h => `<div class="history-item"><span>${h.text}</span><span style="color:#94a3b8">${h.time}</span></div>`).join('') : '<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">No history yet.</div>';
+        document.getElementById('coin-history-list').innerHTML = histHtml;
+
+        // Refer History Render
+        let refHistHtml = referHistory.length ? referHistory.map(r => `<div class="history-item"><span>${r.name}</span><span style="color:#4ade80">+₹1.00</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>';
+        document.getElementById('refer-history-list').innerHTML = refHistHtml;
+
         updateLeaderboardUI();
     }
 
-    function shareReferralLink() {
-        const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${tgUser?.id || 'demo'}`;
-        navigator.clipboard.writeText(refLink);
-        alert("Referral Link कॉपी हो गया है! प्रति सफल रेफर आपको ₹1 मिलेंगे।");
+    function copyReferLink() {
+        navigator.clipboard.writeText(refLink); alert("Referral Link कॉपी हो गया है!");
+    }
+    function shareOnWhatsApp() {
+        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent("Join this amazing bot and earn money: " + refLink)}`);
+    }
+    function shareOnTelegram() {
+        window.open(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("Earn real money daily!")}`);
     }
 
     function submitRedeem() {
+        const amt = parseFloat(document.getElementById('redeem-amount-select').value);
         const acc = document.getElementById('redeem-account').value.trim();
-        if (balance < 10) return alert("कम से कम ₹10 होने पर ही विड्रॉ कर सकते हैं!");
-        if (!acc) return alert("कृपया विवरण दर्ज करें!");
+        
+        if (balance < amt) return alert(`आपके वॉलेट में कम से कम ₹${amt} होना चाहिए!`);
+        if (!acc) return alert("कृपया UPI ID या अकाउंट विवरण दर्ज करें!");
+
+        balance = parseFloat((balance - amt).toFixed(2));
+        coinHistory.unshift({ text: `Redeemed ₹${amt} via ${selectedMethod}`, time: new Date().toLocaleTimeString() });
+        saveData();
 
         tg.sendData(JSON.stringify({
             action: "redeem_request",
             method: selectedMethod,
-            amount: balance,
+            amount: amt,
             account: acc,
-            user_id: tgUser?.id || "demo"
+            user_id: userId
         }));
 
-        alert(`आपकी ${selectedMethod} रिक्वेस्ट सबमिट हो गई है!`);
+        alert(`आपकी ₹${amt} की ${selectedMethod} रिक्वेस्ट सबमिट हो गई है!`);
         closeModal('redeem-modal');
     }
 
