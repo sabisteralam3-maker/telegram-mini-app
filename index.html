@@ -65,8 +65,7 @@
         .withdraw-item h5 { font-size: 11px; font-weight: 800; color: #eab308; margin-bottom: 6px; }
         .btn-withdraw { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; }
 
-        /* History Boxes */
-        .history-box { background: #130628; border-radius: 14px; padding: 12px; margin-top: 15px; border: 1px solid rgba(168, 85, 247, 0.2); max-height: 150px; overflow-y: auto; text-align: left; }
+        .history-box { background: #130628; border-radius: 14px; padding: 12px; margin-top: 12px; border: 1px solid rgba(168, 85, 247, 0.2); max-height: 150px; overflow-y: auto; text-align: left; }
         .history-item { font-size: 11px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
 
         .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070212; border-top: 1px solid rgba(168, 85, 247, 0.3); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; }
@@ -125,7 +124,7 @@
                     <p style="color:#60a5fa;">Win Big Prizes</p>
                     <span class="limit-badge"><span id="spin-left">5</span>/5 Left</span>
                 </div>
-                <button class="btn-card btn-spin" id="btn-spin" onclick="openSpinModal()">Spin Now ➔</button>
+                <button class="btn-card btn-spin" id="btn-spin" onclick="switchPage('spin-page')">Spin Now ➔</button>
             </div>
 
             <div class="task-card">
@@ -135,7 +134,7 @@
                     <p style="color:#fbbf24;">Scratch & Win</p>
                     <span class="limit-badge"><span id="scratch-left">5</span>/5 Left</span>
                 </div>
-                <button class="btn-card btn-scratch" id="btn-scratch" onclick="openScratchModal()">Scratch Now ➔</button>
+                <button class="btn-card btn-scratch" id="btn-scratch" onclick="switchPage('scratch-page')">Scratch Now ➔</button>
             </div>
 
             <div class="task-card">
@@ -154,7 +153,7 @@
                 <h4>👥 Refer & Earn (₹1/Refer)</h4>
                 <p>Invite friends & Earn ₹1 per refer</p>
             </div>
-            <button class="refer-btn" onclick="openReferModal()">Refer Now ➔</button>
+            <button class="refer-btn" onclick="switchPage('refer-page')">Refer Now ➔</button>
         </div>
 
         <div class="leader-preview">
@@ -163,6 +162,51 @@
                 <span style="font-size: 11px; color: #c084fc; cursor: pointer;" onclick="switchPage('leaderboard')">View All ➔</span>
             </div>
             <div id="home-leaderboard-list"></div>
+        </div>
+    </div>
+
+    <!-- FULL PAGE SPIN -->
+    <div id="page-spin-page" class="page">
+        <h3 style="color:#c084fc; margin-bottom: 15px;">🎡 Spin Wheel</h3>
+        <div class="banner-box">
+            <div style="position: relative; width: 220px; height: 220px; margin: 15px auto;">
+                <div style="width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:18px solid #ef4444; position:absolute; top:-8px; left:50%; transform:translateX(-50%); z-index:10;"></div>
+                <canvas id="wheel-canvas" width="220" height="220" style="transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.15, 1);"></canvas>
+            </div>
+            <button class="btn-card btn-spin" id="start-spin-btn" style="padding:12px; font-size:14px; font-weight:800;" onclick="executeSpin()">Start Spin 🎡</button>
+        </div>
+    </div>
+
+    <!-- FULL PAGE SCRATCH -->
+    <div id="page-scratch-page" class="page">
+        <h3 style="color:#facc15; margin-bottom: 15px;">🃏 Scratch Card</h3>
+        <div class="banner-box">
+            <p style="font-size:12px; color:#94a3b8; margin-bottom:15px;">उंगली से पूरा स्क्रैच करें</p>
+            <div style="position: relative; width: 220px; height: 110px; margin: 0 auto;">
+                <div id="scratch-reward" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:20px; color:#22c55e; background:#080214; border:2px dashed #22c55e; border-radius:12px;">
+                    ₹0.00
+                </div>
+                <canvas id="scratch-canvas" width="220" height="110" style="position: absolute; top:0; left:0; z-index:2; border-radius:12px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULL PAGE REFER -->
+    <div id="page-refer-page" class="page">
+        <h3 style="color:#c084fc; margin-bottom: 12px;">👥 Refer & Earn</h3>
+        <div class="banner-box" style="text-align:left;">
+            <p style="font-size:12px; color:#a78bfa;">Your Referral Link:</p>
+            <input type="text" id="ref-link-input" class="input-field" readonly>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
+                <button class="btn-card" style="background:#25D366;" onclick="shareOnWhatsApp()">WhatsApp</button>
+                <button class="btn-card" style="background:#0088cc;" onclick="shareOnTelegram()">Telegram</button>
+            </div>
+            <button class="btn-card btn-spin" style="margin-top:8px;" onclick="copyReferLink()">Copy Link</button>
+        </div>
+
+        <h4 style="font-size:12px; margin-top:15px; color:#facc15;">Referral History:</h4>
+        <div class="history-box" id="refer-history-list">
+            <div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>
         </div>
     </div>
 
@@ -224,6 +268,15 @@
             <p>Name: <b id="profile-name" style="color:#fff;">User</b></p>
             <p style="margin-top:6px;">Telegram Handle: <b id="profile-handle" style="color:#c084fc;">@SpinWinApp_bot</b></p>
             <p style="margin-top:6px;">Total Earnings: <b style="color:#4ade80;">₹<span id="profile-balance">0.00</span></b></p>
+            <p style="margin-top:6px;">Support desk: <a href="https://t.me/NexoraHelpDesk" target="_blank" style="color:#60a5fa; text-decoration:none; font-weight:bold;">@NexoraHelpDesk 🎧</a></p>
+        </div>
+
+        <div class="banner-box" style="margin-top:15px; text-align:left;">
+            <h4 style="color:#facc15; font-size:13px;">🎵 Background Music Settings</h4>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+                <button class="btn-card btn-spin" onclick="switchNextTrack()">Next Track ⏭️</button>
+                <button class="btn-card" style="background:#dc2626;" onclick="toggleAudioMute()" id="mute-btn">Mute Music 🔇</button>
+            </div>
         </div>
     </div>
 
@@ -251,61 +304,14 @@
 </div>
 
 <!-- Modals -->
-<div id="spin-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('spin-modal')">&times;</span>
-        <h3 style="margin-bottom:12px; color:#c084fc;">Spin Wheel</h3>
-        <div style="position: relative; width: 190px; height: 190px; margin: 0 auto;">
-            <div style="width:0; height:0; border-left:9px solid transparent; border-right:9px solid transparent; border-top:16px solid #ef4444; position:absolute; top:-6px; left:50%; transform:translateX(-50%); z-index:10;"></div>
-            <canvas id="wheel-canvas" width="190" height="190" style="transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.15, 1);"></canvas>
-        </div>
-        <button class="btn-card btn-spin" id="start-spin-btn" style="margin-top:15px; font-size:13px;" onclick="executeSpin()">Start Spin</button>
-    </div>
-</div>
-
-<div id="scratch-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('scratch-modal')">&times;</span>
-        <h3 style="color:#facc15;">Scratch Card</h3>
-        <p style="font-size:10px; color:#94a3b8; margin:4px 0 12px 0;">उंगली से स्क्रैच करें</p>
-        <div style="position: relative; width: 190px; height: 95px; margin: 0 auto;">
-            <div id="scratch-reward" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:18px; color:#22c55e; background:#080214; border:2px dashed #22c55e; border-radius:10px;">
-                ₹0.00
-            </div>
-            <canvas id="scratch-canvas" width="190" height="95" style="position: absolute; top:0; left:0; z-index:2; border-radius:10px;"></canvas>
-        </div>
-    </div>
-</div>
-
-<!-- Claim Reward Modal (For Spin/Scratch/Bonus) -->
 <div id="claim-modal" class="modal">
     <div class="modal-content">
         <h3 style="color:#4ade80; margin-bottom: 8px;">🎉 You Won ₹<span id="claim-amount">0.00</span>!</h3>
-        <p style="font-size: 11px; color:#94a3b8; margin-bottom: 15px;">क्वालिफाइड रिवॉर्ड क्लेम करने के लिए नीचे क्लिक करें:</p>
+        <p style="font-size: 11px; color:#94a3b8; margin-bottom: 15px;">रिवॉर्ड क्लेम करने के लिए नीचे क्लिक करें:</p>
         <button class="btn-card btn-spin" style="background:linear-gradient(135deg,#16a34a,#15803d);" onclick="claimRewardWithAd()">Claim Reward (Watch Ad)</button>
     </div>
 </div>
 
-<!-- Refer Modal -->
-<div id="refer-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal('refer-modal')">&times;</span>
-        <h3 style="color:#c084fc; margin-bottom: 10px;">👥 Refer & Earn</h3>
-        <input type="text" id="ref-link-input" class="input-field" readonly>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
-            <button class="btn-card" style="background:#25D366;" onclick="shareOnWhatsApp()">WhatsApp</button>
-            <button class="btn-card" style="background:#0088cc;" onclick="shareOnTelegram()">Telegram</button>
-        </div>
-        <button class="btn-card btn-spin" style="margin-top:8px;" onclick="copyReferLink()">Copy Link</button>
-        
-        <h4 style="font-size:11px; margin-top:15px; color:#facc15; text-align:left;">Referral History:</h4>
-        <div class="history-box" id="refer-history-list" style="max-height:80px;">
-            <div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>
-        </div>
-    </div>
-</div>
-
-<!-- Redeem Modal -->
 <div id="redeem-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('redeem-modal')">&times;</span>
@@ -334,26 +340,44 @@
         AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
     }
 
-    // --- BACKGROUND MUSIC ENGINE (Auto Mute on Ad) ---
+    // MULTIPLE RELAXING BACKGROUND TRACKS
+    const musicPlaylist = [
+        'https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg',
+        'https://actions.google.com/sounds/v1/weather/rain_heavy.ogg'
+    ];
+    let currentTrackIdx = 0;
     let bgAudio = null;
+    let isUserMuted = false;
+
     function initBackgroundMusic() {
         try {
-            // Smooth ambient calming background music stream
-            bgAudio = new Audio('https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg');
+            bgAudio = new Audio(musicPlaylist[currentTrackIdx]);
             bgAudio.loop = true;
             bgAudio.volume = 0.15;
-            bgAudio.play().catch(e => {
-                // Browser policy requires user interaction first
-                window.addEventListener('click', () => { if(bgAudio && bgAudio.paused) bgAudio.play(); }, {once: true});
+            bgAudio.play().catch(() => {
+                window.addEventListener('click', () => { if(bgAudio && bgAudio.paused && !isUserMuted) bgAudio.play(); }, {once: true});
             });
         } catch(e) {}
     }
     initBackgroundMusic();
 
-    function muteMusic() { if(bgAudio) bgAudio.muted = true; }
-    function unmuteMusic() { if(bgAudio) bgAudio.muted = false; }
+    function switchNextTrack() {
+        currentTrackIdx = (currentTrackIdx + 1) % musicPlaylist.length;
+        if(bgAudio) { bgAudio.pause(); }
+        bgAudio = new Audio(musicPlaylist[currentTrackIdx]);
+        bgAudio.loop = true; bgAudio.volume = 0.15;
+        if(!isUserMuted) bgAudio.play();
+    }
 
-    // --- SOUND EFFECTS ---
+    function toggleAudioMute() {
+        isUserMuted = !isUserMuted;
+        if(bgAudio) bgAudio.muted = isUserMuted;
+        document.getElementById('mute-btn').innerText = isUserMuted ? "Play Music 🎵" : "Mute Music 🔇";
+    }
+
+    function muteMusic() { if(bgAudio) bgAudio.muted = true; }
+    function unmuteMusic() { if(bgAudio && !isUserMuted) bgAudio.muted = false; }
+
     function playCoinSound() {
         try {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -381,14 +405,17 @@
     document.getElementById('user-avatar').innerText = userAvatarText;
     document.getElementById('ref-link-input').value = refLink;
 
+    // --- AUTOMATIC DAILY RESET LOGIC (हर दिन रीसेट होना) ---
     const today = new Date().toDateString();
-    let savedData = JSON.parse(localStorage.getItem('spinwin_user_data_v6')) || {};
+    let savedData = JSON.parse(localStorage.getItem('spinwin_user_data_v9')) || {};
 
+    // अगर नया दिन आया है तो सारी लिमिट 5 रीसेट कर दो
     if (savedData.lastDate !== today) {
         savedData.lastDate = today;
         savedData.spinLeft = 5;
         savedData.scratchLeft = 5;
         savedData.watchLeft = 5;
+        delete savedData.bonusClaimedDate; // रीसेट डेली बोनस
     }
 
     let balance = savedData.balance || 0.00;
@@ -410,11 +437,10 @@
         savedData.watchLeft = watchLeft;
         savedData.coinHistory = coinHistory;
         savedData.referHistory = referHistory;
-        localStorage.setItem('spinwin_user_data_v6', JSON.stringify(savedData));
+        localStorage.setItem('spinwin_user_data_v9', JSON.stringify(savedData));
         updateUI();
     }
 
-    // --- LEADERBOARD ---
     function updateLeaderboardUI() {
         let players = [
             { name: "Aman Verma", amount: 5432.10 },
@@ -435,7 +461,6 @@
         document.getElementById('full-leaderboard-list').innerHTML = fullHtml;
     }
 
-    // --- WHEEL ---
     const canvas = document.getElementById('wheel-canvas');
     const ctx = canvas.getContext('2d');
     const rewards = ["₹0.30", "₹0.35", "₹0.40", "₹0.45", "₹0.50", "₹0.30"];
@@ -445,10 +470,10 @@
         const angle = (2 * Math.PI) / rewards.length;
         for (let i = 0; i < rewards.length; i++) {
             ctx.beginPath(); ctx.fillStyle = colors[i];
-            ctx.moveTo(95, 95); ctx.arc(95, 95, 95, i * angle, (i + 1) * angle); ctx.fill();
-            ctx.save(); ctx.translate(95, 95); ctx.rotate(i * angle + angle / 2);
-            ctx.textAlign = "right"; ctx.fillStyle = "#ffffff"; ctx.font = "bold 12px Arial";
-            ctx.fillText(rewards[i], 80, 4); ctx.restore();
+            ctx.moveTo(110, 110); ctx.arc(110, 110, 110, i * angle, (i + 1) * angle); ctx.fill();
+            ctx.save(); ctx.translate(110, 110); ctx.rotate(i * angle + angle / 2);
+            ctx.textAlign = "right"; ctx.fillStyle = "#ffffff"; ctx.font = "bold 13px Arial";
+            ctx.fillText(rewards[i], 95, 4); ctx.restore();
         }
     }
     drawWheel();
@@ -456,65 +481,75 @@
     function switchPage(page) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(`page-${page}`).classList.add('active');
-        if(document.getElementById(`nav-${page}`)) document.getElementById(`nav-${page}`).classList.add('active');
+        
+        const targetPage = document.getElementById(`page-${page}`);
+        if(targetPage) targetPage.classList.add('active');
+        
+        const targetNav = document.getElementById(`nav-${page}`);
+        if(targetNav) targetNav.classList.add('active');
+
+        if(page === 'scratch-page') initScratchCard();
     }
 
-    function openSpinModal() {
-        if(spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है!");
-        document.getElementById('spin-modal').style.display = 'flex';
-    }
-    function openScratchModal() {
-        if(scratchLeft <= 0) return alert("आज की Scratch लिमिट खत्म हो गई है!");
-        initScratchCard(); document.getElementById('scratch-modal').style.display = 'flex';
-    }
     function openBonusModal() {
-        pendingReward = 0.50; pendingType = "Daily Bonus";
+        if (savedData.bonusClaimedDate === today) {
+            return alert("आप आज का डेली बोनस क्लेम कर चुकी हैं! कल रात 12 बजे के बाद दोबारा मिलेगा।");
+        }
+        pendingReward = 0.50; 
+        pendingType = "Daily Bonus";
         document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
         document.getElementById('claim-modal').style.display = 'flex';
     }
-    function openReferModal() { document.getElementById('refer-modal').style.display = 'flex'; }
+
     function openRedeemModal(method) {
         selectedMethod = method;
         document.getElementById('redeem-title').innerText = `${method} Withdrawal`;
         document.getElementById('redeem-account').placeholder = method === 'UPI Cash' ? 'Enter UPI ID' : 'Enter Email/Mobile No.';
         document.getElementById('redeem-modal').style.display = 'flex';
     }
+
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
     function getRandomReward() { return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2)); }
 
-    // --- TASK LOGIC & AD CLAIM SYSTEM ---
     function executeSpin() {
-        if (spinLeft <= 0) return alert("Spin लिमिट खत्म!");
-        spinLeft--;
-        closeModal('spin-modal');
+        if (spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है! कल दोबारा मिलेगा।");
         
+        const btn = document.getElementById('start-spin-btn');
+        btn.disabled = true;
+        spinLeft--;
+
         const reward = getRandomReward();
         const segmentAngle = 360 / rewards.length;
         const randomSegment = Math.floor(Math.random() * rewards.length);
         currentSpinDeg += (5 * 360) + (randomSegment * segmentAngle) + (segmentAngle / 2);
+
         canvas.style.transform = `rotate(${currentSpinDeg}deg)`;
 
         setTimeout(() => {
-            pendingReward = reward; pendingType = "Spin & Win";
+            btn.disabled = false;
+            pendingReward = reward;
+            pendingType = "Spin & Win";
             document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
             document.getElementById('claim-modal').style.display = 'flex';
         }, 3600);
     }
 
     function triggerAdAndWatchVideo() {
-        if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है!");
+        if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है! कल दोबारा मिलेगा।");
         playAdThenReward(getRandomReward(), "Video Ad", () => { watchLeft--; });
     }
 
-    // Claim button triggers Ad before crediting coin
     function claimRewardWithAd() {
         closeModal('claim-modal');
-        playAdThenReward(pendingReward, pendingType, () => {});
+        playAdThenReward(pendingReward, pendingType, () => {
+            if (pendingType === "Daily Bonus") {
+                savedData.bonusClaimedDate = today;
+            }
+        });
     }
 
     function playAdThenReward(amount, type, callback) {
-        muteMusic(); // Mute background music when ad loads
+        muteMusic();
         if (AdController) {
             AdController.show().then(() => {
                 unmuteMusic();
@@ -537,7 +572,7 @@
         const reward = getRandomReward();
         document.getElementById('scratch-reward').innerText = `₹${reward}`;
         sCtx.fillStyle = '#475569'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
-        sCtx.fillStyle = '#ffffff'; sCtx.font = 'bold 13px Arial'; sCtx.fillText('Scratch Here!', 50, 50);
+        sCtx.fillStyle = '#ffffff'; sCtx.font = 'bold 13px Arial'; sCtx.fillText('Scratch Here!', 60, 60);
 
         let isScratching = false;
         function scratch(e) {
@@ -546,14 +581,14 @@
             const x = (e.clientX || e.touches[0].clientX) - rect.left;
             const y = (e.clientY || e.touches[0].clientY) - rect.top;
             sCtx.globalCompositeOperation = 'destination-out';
-            sCtx.beginPath(); sCtx.arc(x, y, 15, 0, Math.PI * 2); sCtx.fill();
+            sCtx.beginPath(); sCtx.arc(x, y, 16, 0, Math.PI * 2); sCtx.fill();
         }
         sCanvas.onmousedown = sCanvas.ontouchstart = () => isScratching = true;
         sCanvas.onmouseup = sCanvas.ontouchend = () => {
             if (isScratching) {
                 isScratching = false;
-                if (scratchLeft <= 0) return alert("Scratch लिमिट खत्म!");
-                scratchLeft--; closeModal('scratch-modal');
+                if (scratchLeft <= 0) return alert("आज की Scratch लिमिट खत्म हो गई है! कल दोबारा मिलेगा।");
+                scratchLeft--;
                 pendingReward = reward; pendingType = "Scratch Card";
                 document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
                 document.getElementById('claim-modal').style.display = 'flex';
@@ -583,11 +618,9 @@
         document.getElementById('btn-scratch').disabled = (scratchLeft <= 0);
         document.getElementById('btn-ad').disabled = (watchLeft <= 0);
 
-        // Coin History Render
         let histHtml = coinHistory.length ? coinHistory.map(h => `<div class="history-item"><span>${h.text}</span><span style="color:#94a3b8">${h.time}</span></div>`).join('') : '<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">No history yet.</div>';
         document.getElementById('coin-history-list').innerHTML = histHtml;
 
-        // Refer History Render
         let refHistHtml = referHistory.length ? referHistory.map(r => `<div class="history-item"><span>${r.name}</span><span style="color:#4ade80">+₹1.00</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>';
         document.getElementById('refer-history-list').innerHTML = refHistHtml;
 
