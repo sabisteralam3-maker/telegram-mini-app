@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earn Rewards Mini App</title>
+    <title>Spin & Earn Mini App</title>
     
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -12,8 +12,8 @@
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', 'Segoe UI', sans-serif; }
-        body { background: #fffdf7; color: #2d3436; padding-bottom: 30px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body { background: #fffdf7; color: #2d3436; padding-bottom: 80px; }
         
         .container { max-width: 420px; margin: 0 auto; padding: 15px; }
         
@@ -25,92 +25,61 @@
         .balance-card { 
             background: linear-gradient(135deg, #ffeaa7, #fab1a0); 
             border-radius: 20px; 
-            padding: 22px; 
-            box-shadow: 0 10px 20px rgba(250, 177, 160, 0.3);
+            padding: 20px; 
+            box-shadow: 0 8px 18px rgba(250, 177, 160, 0.35);
             text-align: left;
             margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
         }
-        .balance-title { font-size: 14px; color: #e67e22; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .balance-amount { font-size: 36px; font-weight: 800; color: #d35400; margin-top: 5px; }
-        .limit-badge { display: inline-block; background: rgba(255,255,255,0.7); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #d35400; margin-top: 10px; }
+        .balance-title { font-size: 13px; color: #e67e22; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .balance-amount { font-size: 34px; font-weight: 800; color: #d35400; margin-top: 4px; }
+        .limit-badge { display: inline-block; background: rgba(255,255,255,0.8); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #d35400; margin-top: 8px; }
 
-        /* Withdraw History Card */
-        .history-card {
-            background: #fff8eb;
-            border: 1px dashed #f39c12;
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 25px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .history-card:active { transform: scale(0.98); }
-        .history-info { text-align: left; }
-        .history-info h4 { font-size: 15px; color: #d35400; margin-bottom: 3px; }
-        .history-info p { font-size: 11px; color: #7f8c8d; max-width: 220px; }
-        .arrow-icon { font-size: 20px; color: #e67e22; font-weight: bold; }
-
-        /* Titles */
-        .section-title { text-align: left; font-size: 16px; font-weight: 700; color: #2c3e50; margin-bottom: 15px; }
+        /* Section Titles */
+        .section-title { text-align: left; font-size: 16px; font-weight: 700; color: #2c3e50; margin-bottom: 12px; }
 
         /* Task Cards */
-        .card { background: white; border-radius: 16px; padding: 15px 18px; margin-bottom: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #f1f2f6; display: flex; justify-content: space-between; align-items: center; }
+        .card { background: white; border-radius: 16px; padding: 15px 18px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #f1f2f6; display: flex; justify-content: space-between; align-items: center; }
         .card-info { text-align: left; }
         .card-info h3 { font-size: 15px; font-weight: 600; }
         .card-info p { font-size: 12px; color: #27ae60; font-weight: 600; margin-top: 2px; }
-        .btn-action { background: linear-gradient(135deg, #0984e3, #74b9ff); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(9, 132, 227, 0.2); }
+        .btn-action { background: #3498db; color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 10px rgba(52, 152, 219, 0.25); }
         .btn-action:disabled { background: #b2bec3; box-shadow: none; }
 
-        /* Withdraw Grid */
-        .withdraw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .withdraw-item {
-            background: white;
-            border: 2px dashed #ffeaa7;
-            border-radius: 18px;
-            padding: 15px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-        .withdraw-item img { width: 50px; height: 50px; object-fit: contain; margin: 10px 0; }
-        .withdraw-item h4 { font-size: 13px; font-weight: 700; color: #c0392b; margin-bottom: 5px; }
-        .btn-withdraw {
-            background: #d63031;
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(214, 48, 49, 0.25);
-            width: 100%;
-        }
+        /* Leaderboard UI */
+        .leaderboard-list { background: white; border-radius: 16px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #f1f2f6; }
+        .leader-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 10px; border-bottom: 1px solid #f1f2f6; }
+        .leader-item:last-child { border-bottom: none; }
+        .rank { font-weight: 800; font-size: 16px; width: 30px; color: #f39c12; }
+        .user-name { font-weight: 600; font-size: 14px; flex-grow: 1; text-align: left; }
+        .user-score { font-weight: 700; color: #27ae60; font-size: 14px; }
 
-        /* Modal Base */
+        /* Withdraw Grid */
+        .history-card {
+            background: #fff8eb; border: 1px dashed #f39c12; border-radius: 16px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; cursor: pointer;
+        }
+        .history-info { text-align: left; }
+        .history-info h4 { font-size: 14px; color: #d35400; margin-bottom: 2px; }
+        .history-info p { font-size: 11px; color: #7f8c8d; }
+
+        .withdraw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .withdraw-item { background: white; border: 2px dashed #ffeaa7; border-radius: 16px; padding: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+        .withdraw-item img { width: 45px; height: 45px; object-fit: contain; margin: 8px 0; }
+        .withdraw-item h4 { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+        .btn-withdraw { background: #d63031; color: white; border: none; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; width: 100%; }
+
+        /* Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(4px); }
-        .modal-content { background: white; padding: 22px; border-radius: 20px; width: 90%; max-width: 340px; text-align: center; position: relative; animation: popIn 0.3s ease; }
-        @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-content { background: white; padding: 22px; border-radius: 20px; width: 90%; max-width: 340px; text-align: center; position: relative; }
         .close-btn { position: absolute; top: 12px; right: 18px; font-size: 22px; cursor: pointer; color: #b2bec3; }
 
-        #scratch-canvas { border-radius: 12px; cursor: pointer; margin-top: 10px; }
-
-        /* Bottom Navigation Bar */
-        .tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #f1f2f6; display: flex; justify-space-around: space-around; padding: 10px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 90; }
-        .tab-item { border: none; background: none; font-size: 12px; font-weight: 600; color: #b2bec3; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .tab-item.active { color: #d35400; }
+        /* Bottom Tab Bar (Fixed Size & Layout) */
+        .tab-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; padding: 8px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); z-index: 90; }
+        .tab-item { border: none; background: none; font-size: 11px; font-weight: 600; color: #95a5a6; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
+        .tab-item.active { color: #e67e22; }
+        .tab-icon { font-size: 18px; }
 
         .page { display: none; }
         .page.active { display: block; }
-
         .input-field { width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 10px; margin: 12px 0; font-size: 14px; outline: none; }
     </style>
 </head>
@@ -118,14 +87,14 @@
 
 <div class="container">
     
-    <!-- HOME PAGE -->
+    <!-- 1. HOME PAGE -->
     <div id="page-home" class="page active">
         <div class="top-bar">
             <div class="page-title">Spin & Earn</div>
         </div>
 
         <div class="balance-card">
-            <div class="balance-title">Your Balance</div>
+            <div class="balance-title">YOUR BALANCE</div>
             <div class="balance-amount">₹<span id="balance">0.00</span></div>
             <div class="limit-badge">Daily Tasks Left: <span id="tasks-left">5</span>/5</div>
         </div>
@@ -141,50 +110,84 @@
             <button class="btn-action" id="btn-spin" onclick="openSpinModal()">Spin</button>
         </div>
 
-        <!-- Scratch Card -->
+        <!-- Scratch Card (No Numbers Below) -->
         <div class="card">
             <div class="card-info">
                 <h3>🎟️ Scratch Card</h3>
-                <p>Earn ₹0.30 - ₹0.50</p>
             </div>
             <button class="btn-action" id="btn-scratch" onclick="openScratchModal()">Scratch</button>
         </div>
 
-        <!-- Watch Video Card -->
+        <!-- Watch Video Card (No Numbers Below) -->
         <div class="card">
             <div class="card-info">
                 <h3>📺 Watch Video Ad</h3>
-                <p>Earn ₹0.30 - ₹0.50</p>
             </div>
             <button class="btn-action" id="btn-ad" onclick="showAdsGramVideoAd()">Watch</button>
         </div>
 
         <!-- Referral Section -->
-        <div style="background: white; padding: 18px; border-radius: 16px; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); text-align: left;">
-            <h3 style="font-size: 15px;">👥 Refer & Earn (₹1/Refer)</h3>
-            <p style="font-size: 11px; color: #7f8c8d; margin-top: 4px;">दोस्तों को शेयर करें और प्रति रेफरल ₹1 कमाएं!</p>
+        <div style="background: white; padding: 16px; border-radius: 16px; margin-top: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); text-align: left;">
+            <h3 style="font-size: 14px;">👥 Refer & Earn (₹1/Refer)</h3>
+            <p style="font-size: 11px; color: #7f8c8d; margin-top: 2px;">दोस्तों को शेयर करें और प्रति रेफरल ₹1 कमाएं!</p>
             <input type="text" id="ref-link" class="input-field" readonly value="Loading Link...">
             <button class="btn-action" style="width:100%; background: #e67e22;" onclick="shareReferralLink()">Copy Link / Share</button>
         </div>
     </div>
 
-    <!-- WITHDRAW PAGE -->
+    <!-- 2. LEADERBOARD PAGE -->
+    <div id="page-leaderboard" class="page">
+        <div class="top-bar">
+            <div class="page-title" style="color: #f39c12;">🏆 Top Performers</div>
+        </div>
+
+        <div class="section-title">Highest Earners Today</div>
+        <div class="leaderboard-list">
+            <div class="leader-item">
+                <span class="rank">🥇</span>
+                <span class="user-name">Rahul Sharma</span>
+                <span class="user-score">₹154.50</span>
+            </div>
+            <div class="leader-item">
+                <span class="rank">🥈</span>
+                <span class="user-name">Priya Patel</span>
+                <span class="user-score">₹122.00</span>
+            </div>
+            <div class="leader-item">
+                <span class="rank">🥉</span>
+                <span class="user-name">Aman Verma</span>
+                <span class="user-score">₹98.30</span>
+            </div>
+            <div class="leader-item">
+                <span class="rank">4</span>
+                <span class="user-name">Saurav Kumar</span>
+                <span class="user-score">₹85.00</span>
+            </div>
+            <div class="leader-item">
+                <span class="rank">5</span>
+                <span class="user-name">You (Current)</span>
+                <span class="user-score" id="user-rank-score">₹0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. WITHDRAW PAGE -->
     <div id="page-withdraw" class="page">
         <div class="top-bar">
             <div class="page-title" style="color: #d35400;">Withdraw Balance</div>
         </div>
 
         <div class="balance-card">
-            <div class="balance-title">Your Balance</div>
+            <div class="balance-title">YOUR BALANCE</div>
             <div class="balance-amount">₹<span id="withdraw-balance">0.00</span></div>
         </div>
 
         <div class="history-card" onclick="alert('No past withdrawal history found.')">
             <div class="history-info">
                 <h4>📜 Withdraw History</h4>
-                <p>View all your past withdrawal requests, amounts, dates, and status.</p>
+                <p>View all your past withdrawal requests and status.</p>
             </div>
-            <div class="arrow-icon">→</div>
+            <div style="color:#e67e22; font-weight:bold;">→</div>
         </div>
 
         <div class="section-title">Select Withdrawal Method</div>
@@ -221,16 +224,20 @@
 <!-- Bottom Navigation Bar -->
 <div class="tab-bar">
     <button class="tab-item active" id="tab-home" onclick="switchPage('home')">
-        <span>🏠</span>
+        <span class="tab-icon">🏠</span>
         <span>Home</span>
     </button>
+    <button class="tab-item" id="tab-leaderboard" onclick="switchPage('leaderboard')">
+        <span class="tab-icon">🏆</span>
+        <span>Leaderboard</span>
+    </button>
     <button class="tab-item" id="tab-withdraw" onclick="switchPage('withdraw')">
-        <span>💸</span>
+        <span class="tab-icon">💸</span>
         <span>Withdraw</span>
     </button>
 </div>
 
-<!-- Spin Wheel Modal -->
+<!-- Spin Modal -->
 <div id="spin-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('spin-modal')">&times;</span>
@@ -243,7 +250,7 @@
     </div>
 </div>
 
-<!-- Scratch Card Modal -->
+<!-- Scratch Modal -->
 <div id="scratch-modal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('scratch-modal')">&times;</span>
@@ -264,7 +271,7 @@
         <span class="close-btn" onclick="closeModal('redeem-modal')">&times;</span>
         <h3 id="redeem-title" style="color:#d35400;">Withdrawal</h3>
         <p style="font-size: 12px; color: #7f8c8d; margin-top:4px;">Minimum Redeem: ₹10</p>
-        <input type="text" id="redeem-account" class="input-field" placeholder="Enter UPI ID / Mobile Number">
+        <input type="text" id="redeem-account" class="input-field" placeholder="Enter Details">
         <button class="btn-action" style="width: 100%; background: #27ae60;" onclick="submitRedeem()">Submit Request</button>
     </div>
 </div>
@@ -281,10 +288,25 @@
         AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
     }
 
-    let balance = 0.00;
-    let tasksLeft = 5;
+    // LOCAL STORAGE FOR DATA PERSISTENCE (डेटा सेव रखने के लिए)
+    const today = new Date().toDateString();
+    let savedData = JSON.parse(localStorage.getItem('spin_win_app_data')) || {};
+
+    if (savedData.lastDate !== today) {
+        savedData.lastDate = today;
+        savedData.tasksLeft = 5;
+    }
+
+    let balance = savedData.balance || 0.00;
+    let tasksLeft = savedData.tasksLeft !== undefined ? savedData.tasksLeft : 5;
     let currentSpinDeg = 0;
     let selectedMethod = "";
+
+    function saveData() {
+        savedData.balance = balance;
+        savedData.tasksLeft = tasksLeft;
+        localStorage.setItem('spin_win_app_data', JSON.stringify(savedData));
+    }
 
     const userId = tg.initDataUnsafe?.user?.id || "user_demo";
     const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
@@ -445,6 +467,7 @@
     function addReward(amount, type) {
         balance = parseFloat((balance + amount).toFixed(2));
         tasksLeft--;
+        saveData();
         updateUI();
         alert(`बधाई हो! ${type} से आपको ₹${amount} मिले।`);
     }
@@ -452,6 +475,7 @@
     function updateUI() {
         document.getElementById('balance').innerText = balance.toFixed(2);
         document.getElementById('withdraw-balance').innerText = balance.toFixed(2);
+        document.getElementById('user-rank-score').innerText = `₹${balance.toFixed(2)}`;
         document.getElementById('tasks-left').innerText = tasksLeft;
 
         if (tasksLeft <= 0) {
@@ -482,6 +506,9 @@
         alert(`आपकी ${selectedMethod} रिक्वेस्ट सबमिट हो गई है!`);
         closeModal('redeem-modal');
     }
+
+    // Initial Load
+    updateUI();
 </script>
 
 </body>
