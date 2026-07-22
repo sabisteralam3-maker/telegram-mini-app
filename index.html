@@ -3,92 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpinWin Bot</title>
+    <title>SpinWin Bot - Master HD Edition</title>
     
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- AdsGram Official SDK -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 
-    <!-- Firebase SDK (Compat Version for Easy Integration) -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
-        body { background-color: #080214; color: #ffffff; padding-bottom: 90px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        
+        body { 
+            background: #080214; 
+            color: #ffffff; 
+            padding-bottom: 95px; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+        }
+
         .container { max-width: 420px; margin: 0 auto; padding: 12px; }
 
+        /* 3-STEP ANIMATED OPENING SCREEN */
+        #loader-screen { 
+            position: fixed; 
+            inset: 0; 
+            background: radial-gradient(circle at center, #1b073e, #080214); 
+            z-index: 999; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 20px; 
+        }
+        .loader-ring { 
+            width: 70px; 
+            height: 70px; 
+            border: 4px solid rgba(139, 92, 246, 0.2); 
+            border-top: 4px solid #facc15; 
+            border-radius: 50%; 
+            animation: spinLoader 0.8s linear infinite; 
+            box-shadow: 0 0 30px rgba(250, 204, 21, 0.6); 
+        }
+        .loader-dots { display: flex; gap: 8px; }
+        .loader-dot { width: 10px; height: 10px; background: #8b5cf6; border-radius: 50%; animation: pulseDot 1.2s infinite ease-in-out; }
+        .loader-dot:nth-child(2) { animation-delay: 0.2s; background: #facc15; }
+        .loader-dot:nth-child(3) { animation-delay: 0.4s; background: #10b981; }
+        @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulseDot { 0%, 100% { transform: scale(0.6); opacity: 0.3; } 50% { transform: scale(1.3); opacity: 1; } }
+
+        /* HEADER UI */
         .top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
         .user-profile { display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #7c3aed); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; border: 2px solid #fbbf24; box-shadow: 0 0 15px rgba(245, 158, 11, 0.6); }
-        .user-info h4 { font-size: 15px; font-weight: 700; color: #fff; }
+        .avatar { 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            background: linear-gradient(135deg, #a855f7, #6366f1); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: 800; 
+            font-size: 18px; 
+            border: 2px solid #c084fc; 
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6); 
+        }
+        .user-info h4 { font-size: 15px; font-weight: 800; color: #fff; }
         .user-info p { font-size: 11px; color: #a78bfa; }
         
-        .daily-btn { background: linear-gradient(135deg, #7c3aed, #4c1d95); border: 1px solid #c084fc; color: #facc15; padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 0 15px rgba(124, 58, 237, 0.6); }
+        .daily-top-btn { 
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(76, 29, 149, 0.5)); 
+            border: 1px solid #a855f7; 
+            color: #facc15; 
+            padding: 8px 14px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); 
+            backdrop-filter: blur(10px);
+        }
 
-        /* 9:16 RATIO SLIDER STYLES */
-        .slider-container { position: relative; width: 100%; aspect-ratio: 9/16; max-height: 220px; border-radius: 18px; overflow: hidden; margin-bottom: 12px; border: 1px solid rgba(168, 85, 247, 0.4); box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-        .slider-wrapper { display: flex; width: 300%; height: 100%; transition: transform 0.5s ease-in-out; }
-        .slide { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 15px; background-size: cover; background-position: center; position: relative; }
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,2,20,0.3) 0%, rgba(8,2,20,0.85) 100%); z-index: 1; }
-        .slide-content { position: relative; z-index: 2; }
-        .slide-content h3 { font-size: 18px; font-weight: 900; margin-bottom: 6px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .slide-content p { font-size: 11px; color: #e2e8f0; margin-bottom: 10px; }
-        .slide-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: bold; }
+        /* HERO SLIDER (UPI SIZE FIXED) */
+        .slider-container { 
+            position: relative; 
+            width: 100%; 
+            height: 155px; 
+            border-radius: 22px; 
+            overflow: hidden; 
+            margin-bottom: 12px; 
+            border: 1px solid rgba(59, 130, 246, 0.5); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.2); 
+            background: #090e2e; 
+        }
+        .slider-wrapper { display: flex; width: 300%; height: 100%; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .slide { 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 14px 16px; 
+            position: relative; 
+        }
+        .slide-overlay { position: absolute; inset: 0; background: radial-gradient(circle at right, rgba(59, 130, 246, 0.35), transparent 75%); z-index: 1; }
+        .slide-left { position: relative; z-index: 2; max-width: 60%; }
+        .slide-left h3 { font-size: 17px; font-weight: 900; color: #fff; line-height: 1.1; }
+        .slide-left h3 span { color: #facc15; }
+        .slide-left p { font-size: 10px; color: #cbd5e1; margin: 4px 0 8px 0; }
+        .slide-badge-pill { display: inline-block; background: #1e1b4b; border: 1px solid #6366f1; color: #facc15; font-size: 8px; font-weight: 800; padding: 2px 7px; border-radius: 8px; margin-bottom: 4px; }
+        .slide-btn-yellow { 
+            background: linear-gradient(135deg, #facc15, #eab308); 
+            border: 1px solid #fde047; 
+            color: #000; 
+            padding: 7px 16px; 
+            border-radius: 14px; 
+            font-size: 11px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            display: inline-block; 
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.5); 
+        }
+
+        /* FIXED SLIDER IMAGE BOX FOR UPI */
+        .slide-img-box { position: relative; z-index: 2; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
+        .slide-img-box img { max-width: 80px; max-height: 50px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(34,197,94,0.8)); }
 
         .slider-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 3; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); transition: 0.3s; }
-        .dot.active { background: #facc15; width: 18px; border-radius: 10px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: 0.3s; }
+        .dot.active { background: #facc15; width: 18px; border-radius: 8px; }
 
-        .active-users-card { background: linear-gradient(135deg, #1e1b4b, #312e81); border: 1px solid #6366f1; border-radius: 14px; padding: 10px 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); }
+        /* RECENT PAYOUT TICKER */
+        .payout-ticker { 
+            background: rgba(18, 8, 38, 0.8); 
+            border: 1px solid rgba(168, 85, 247, 0.25); 
+            border-radius: 14px; 
+            padding: 8px 14px; 
+            margin-bottom: 12px; 
+            font-size: 11px; 
+            color: #e2e8f0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
 
-        .wallet-card { background: linear-gradient(135deg, #1c0836, #2d0b5a); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 20px; padding: 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.7); }
-        .wallet-left { display: flex; align-items: center; gap: 12px; }
-        .wallet-icon { font-size: 38px; }
-        .wallet-info p { font-size: 11px; color: #c084fc; font-weight: 600; text-transform: uppercase; }
-        .wallet-info h2 { font-size: 28px; font-weight: 900; color: #fff; margin: 2px 0; }
-        .wallet-btn { background: linear-gradient(135deg, #9333ea, #6366f1); border: 1px solid #c084fc; color: #fff; padding: 9px 16px; border-radius: 14px; font-weight: 800; font-size: 12px; cursor: pointer; }
+        /* ONLINE PLAYERS CARD */
+        .active-users-card { 
+            background: rgba(18, 8, 38, 0.8); 
+            border: 1px solid rgba(168, 85, 247, 0.25); 
+            border-radius: 16px; 
+            padding: 10px 14px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+        }
+        .active-left { display: flex; align-items: center; gap: 10px; }
+        .active-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(99, 102, 241, 0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #818cf8; }
 
-        .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
-        .task-card { background: linear-gradient(180deg, #180838, #0a021c); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 18px; padding: 12px 6px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; height: 190px; }
-        .task-icon { font-size: 34px; margin-bottom: 2px; }
-        .task-card h4 { font-size: 13px; font-weight: 800; color: #fff; }
-        .task-card p { font-size: 9px; color: #94a3b8; margin: 2px 0 4px 0; }
-        .limit-badge { font-size: 9px; background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 2px 6px; border-radius: 6px; display: inline-block; margin-bottom: 6px; font-weight: 700; }
+        /* WALLET CARD */
+        .wallet-card { 
+            background: linear-gradient(135deg, #2a0b52, #100228); 
+            border: 1px solid rgba(192, 132, 252, 0.5); 
+            border-radius: 22px; 
+            padding: 16px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 14px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.2); 
+        }
+        .wallet-left { display: flex; align-items: center; gap: 14px; }
+        .wallet-info p { font-size: 10px; color: #c084fc; font-weight: 800; letter-spacing: 0.8px; }
+        .wallet-info h2 { font-size: 28px; font-weight: 900; color: #fff; margin-top: 1px; }
         
-        .btn-card { border: none; color: #fff; padding: 8px 0; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; }
-        .btn-card:disabled { background: #334155 !important; opacity: 0.5; color: #94a3b8; }
-        .btn-spin { background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid #60a5fa; }
-        .btn-scratch { background: linear-gradient(135deg, #d97706, #b45309); border: 1px solid #fbbf24; }
-        .btn-watch { background: linear-gradient(135deg, #0284c7, #0369a1); border: 1px solid #38bdf8; }
+        .premium-wallet-btn { 
+            background: linear-gradient(135deg, #9333ea, #6366f1); 
+            border: 1px solid #facc15; 
+            color: #ffffff; 
+            padding: 10px 20px; 
+            border-radius: 16px; 
+            font-weight: 900; 
+            font-size: 12px; 
+            cursor: pointer; 
+            box-shadow: 0 0 18px rgba(147, 51, 234, 0.8), 0 4px 10px rgba(0,0,0,0.5); 
+            transition: 0.2s;
+        }
+        .premium-wallet-btn:active { transform: scale(0.95); }
 
-        .refer-card { background: linear-gradient(135deg, #22074a, #0f0224); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 18px; padding: 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-        .refer-info h4 { font-size: 13px; font-weight: 800; color: #fff; }
-        .refer-info p { font-size: 10px; color: #a78bfa; margin-top: 1px; }
-        .refer-btn { background: linear-gradient(135deg, #7c3aed, #5b21b6); color: white; border: 1px solid #c084fc; padding: 8px 14px; border-radius: 12px; font-weight: 800; font-size: 11px; cursor: pointer; }
+        /* 3D REALISTIC TASK GRID */
+        .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+        .task-card { 
+            background: linear-gradient(180deg, #170732, #0b0219); 
+            border: 1px solid rgba(168, 85, 247, 0.3); 
+            border-radius: 20px; 
+            padding: 12px 8px; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            height: 195px; 
+            box-shadow: 0 8px 18px rgba(0,0,0,0.7); 
+            position: relative; 
+            overflow: hidden; 
+        }
+        .task-card::before { 
+            content:''; 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background: radial-gradient(circle at top, rgba(168, 85, 247, 0.2), transparent 70%); 
+            pointer-events: none; 
+        }
 
-        .leader-preview { background: #130628; border-radius: 18px; padding: 14px; border: 1px solid rgba(168, 85, 247, 0.2); }
+        .svg-icon-box { 
+            width: 62px; 
+            height: 62px; 
+            margin: 0 auto 2px auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.6)); 
+        }
+
+        .task-card h4 { font-size: 12px; font-weight: 800; color: #fff; line-height: 1.1; }
+        .task-card p { font-size: 9px; color: #94a3b8; margin: 2px 0; }
+        
+        .reward-badge { 
+            font-size: 9px; 
+            background: rgba(34, 197, 94, 0.15); 
+            color: #4ade80; 
+            padding: 2px 6px; 
+            border-radius: 6px; 
+            display: inline-block; 
+            margin-bottom: 4px; 
+            font-weight: 800; 
+            border: 1px solid rgba(34, 197, 94, 0.3); 
+        }
+
+        .btn-card { 
+            border: none; 
+            color: #fff; 
+            padding: 8px 0; 
+            border-radius: 12px; 
+            font-size: 10px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            width: 100%; 
+            transition: transform 0.2s; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
+        }
+        .btn-card:active { transform: scale(0.95); }
+        .btn-card:disabled { background: #334155 !important; opacity: 0.5; color: #94a3b8; box-shadow: none; border: none !important; }
+        
+        .btn-spin { background: linear-gradient(135deg, #4f46e5, #2563eb); border: 1px solid #818cf8; }
+        .btn-scratch { background: linear-gradient(135deg, #ea580c, #d97706); border: 1px solid #f2994a; }
+        .btn-watch { background: linear-gradient(135deg, #2563eb, #1d4ed8); border: 1px solid #60a5fa; }
+        .btn-daily { background: linear-gradient(135deg, #9333ea, #7c3aed); border: 1px solid #c084fc; }
+        .btn-task { background: linear-gradient(135deg, #16a34a, #059669); border: 1px solid #4ade80; }
+        .btn-refer { background: linear-gradient(135deg, #c026d3, #9333ea); border: 1px solid #f0abfc; }
+
+        /* LEADERBOARD PREVIEW */
+        .leader-preview { background: #0f0524; border-radius: 20px; padding: 14px; border: 1px solid rgba(168, 85, 247, 0.2); }
         .leader-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .leader-head h4 { font-size: 13px; color: #facc15; font-weight: 800; }
-        .leader-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .leader-row:last-child { border-bottom: none; }
-        .leader-user { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; }
+        .leader-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 12px; margin-bottom: 4px; background: rgba(255,255,255,0.03); }
+        .leader-user { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; }
+        .leader-rank { width: 22px; height: 22px; border-radius: 50%; background: #facc15; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; }
 
-        .withdraw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-        .withdraw-item { background: #130628; border: 1px dashed rgba(234, 179, 8, 0.5); border-radius: 16px; padding: 14px; text-align: center; }
-        .withdraw-item img { width: 42px; height: 42px; object-fit: contain; margin: 8px 0; }
-        .withdraw-item h5 { font-size: 11px; font-weight: 800; color: #eab308; margin-bottom: 6px; }
+        /* REFER PAGE STYLES */
+        .refer-steps-card { 
+            background: linear-gradient(180deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.9)); 
+            border: 1px solid rgba(99, 102, 241, 0.4); 
+            border-radius: 20px; 
+            padding: 14px 10px; 
+            margin: 12px 0; 
+            display: flex; 
+            justify-content: space-around; 
+            align-items: center; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5); 
+        }
+        .step-item { text-align: center; flex: 1; }
+        .step-icon { width: 40px; height: 40px; border-radius: 50%; background: rgba(124, 58, 237, 0.3); border: 1px solid #a855f7; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px auto; font-size: 18px; }
+        .step-title { font-size: 11px; font-weight: 800; color: #facc15; }
+        .step-desc { font-size: 8px; color: #cbd5e1; margin-top: 2px; }
+        .step-arrow { color: #6366f1; font-weight: 900; font-size: 16px; margin: 0 -4px; }
+
+        .reward-cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+        .reward-info-card { 
+            background: linear-gradient(180deg, #1e1b4b, #0f172a); 
+            border: 1px solid rgba(250, 204, 21, 0.3); 
+            border-radius: 16px; 
+            padding: 10px 6px; 
+            text-align: center; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4); 
+        }
+        .reward-info-card h5 { font-size: 10px; font-weight: 800; color: #facc15; margin-bottom: 4px; }
+        .reward-info-card p { font-size: 8px; color: #e2e8f0; }
+
+        /* WITHDRAW GRID WITH REAL LOGOS */
+        .withdraw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+        .withdraw-item { 
+            background: linear-gradient(180deg, #180838, #0a021c); 
+            border: 1px solid rgba(168, 85, 247, 0.35); 
+            border-radius: 20px; 
+            padding: 16px 12px; 
+            text-align: center; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: space-between; 
+            height: 150px; 
+        }
+        .withdraw-logo-box { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+        .withdraw-logo-box img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+        .withdraw-item h5 { font-size: 11px; font-weight: 900; color: #facc15; letter-spacing: 0.5px; }
         .btn-withdraw { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; }
 
-        .history-box { background: #130628; border-radius: 14px; padding: 12px; margin-top: 12px; border: 1px solid rgba(168, 85, 247, 0.2); max-height: 150px; overflow-y: auto; text-align: left; }
+        .history-box { background: #120426; border-radius: 16px; padding: 12px; margin-top: 12px; border: 1px solid rgba(168, 85, 247, 0.2); max-height: 150px; overflow-y: auto; text-align: left; }
         .history-item { font-size: 11px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
 
-        .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #070212; border-top: 1px solid rgba(168, 85, 247, 0.3); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; }
-        .nav-item { border: none; background: none; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; flex: 1; }
-        .nav-item.active { color: #c084fc; }
+        /* PROFILE UI */
+        .profile-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 20px; padding: 16px; margin-bottom: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+        .profile-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+        .music-controls { display: flex; gap: 8px; margin-top: 8px; justify-content: center; }
+        .music-ctrl-btn { background: #3b0764; border: 1px solid #a855f7; color: #fff; padding: 7px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 11px; }
+
+        /* BOTTOM NAVBAR */
+        .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #060112; border-top: 1px solid rgba(168, 85, 247, 0.25); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; backdrop-filter: blur(10px); }
+        .nav-item { border: none; background: none; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
+        .nav-item.active { color: #a855f7; }
         .nav-icon { font-size: 18px; }
-        .gift-center { background: linear-gradient(135deg, #9333ea, #c084fc); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #facc15; box-shadow: 0 0 20px rgba(168, 85, 247, 0.9); margin-top: -22px; cursor: pointer; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(6px); }
         .modal-content { background: linear-gradient(180deg, #1e0b3c, #0e0324); border: 1px solid #a855f7; padding: 20px; border-radius: 20px; width: 90%; max-width: 320px; text-align: center; position: relative; }
@@ -97,14 +348,20 @@
         .page { display: none; }
         .page.active { display: block; }
         .input-field, .select-field { width: 100%; padding: 11px; background: #080214; border: 1px solid #7c3aed; color: #fff; border-radius: 10px; margin: 10px 0; font-size: 12px; outline: none; }
-
-        /* ========================================================= */
-        /* 🎨 PLACE 1: ADD YOUR FUTURE CSS STYLES BELOW THIS LINE   */
-        /* ========================================================= */
-        
     </style>
 </head>
 <body>
+
+<!-- 3-STEP ANIMATED OPENING SCREEN -->
+<div id="loader-screen">
+    <div class="loader-ring"></div>
+    <div class="loader-dots">
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+        <div class="loader-dot"></div>
+    </div>
+    <h4 style="color:#c084fc; font-size:12px; font-weight:800; letter-spacing:1px;" id="loader-text">Initializing SpinWin App...</h4>
+</div>
 
 <div class="container">
 
@@ -118,34 +375,61 @@
                     <p id="user-handle">Welcome back! 👋</p>
                 </div>
             </div>
-            <button class="daily-btn" onclick="openBonusModal()">🎁 Daily Bonus</button>
+            <button class="daily-top-btn" onclick="openBonusModal()">🎁 Daily Bonus</button>
         </div>
 
-        <!-- 9:16 VERTICAL AUTO SLIDER -->
+        <!-- HERO SLIDER -->
         <div class="slider-container">
             <div class="slider-wrapper" id="slider-wrapper">
-                <div class="slide" style="background: linear-gradient(135deg, #4c1d95, #1e1b4b);">
+                <!-- Slide 1: 3D 2-Boy Blue & Yellow Hoodie Illustration -->
+                <div class="slide" style="background-image: radial-gradient(circle at right, #1d4ed8, #090e2e);">
                     <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <span class="slide-badge" style="background:#facc15; color:#000;">🔥 DAILY REWARDS</span>
-                        <h3 style="color:#facc15;">Spin & Win Big Rewards</h3>
-                        <p>Spin the wheel daily to earn extra coins!</p>
+                    <div class="slide-left">
+                        <span class="slide-badge-pill">🔥 REFER & EARN</span>
+                        <h3>INVITE FRIENDS<br><span>EARN ₹1 PER REFER</span></h3>
+                        <p>Share your link & start earning together!</p>
+                        <button class="slide-btn-yellow" onclick="switchPage('refer-page')">INVITE NOW ➔</button>
+                    </div>
+                    <div class="slide-img-box">
+                        <svg width="105" height="105" viewBox="0 0 100 100">
+                            <circle cx="20" cy="15" r="7" fill="#facc15" stroke="#fff" stroke-width="1"/>
+                            <text x="20" y="18" font-size="8" font-weight="900" fill="#000" text-anchor="middle">₹</text>
+                            <circle cx="80" cy="20" r="8" fill="#facc15" stroke="#fff" stroke-width="1"/>
+                            <text x="80" y="23" font-size="9" font-weight="900" fill="#000" text-anchor="middle">₹</text>
+                            <circle cx="30" cy="38" r="14" fill="#3b82f6"/>
+                            <path d="M 14 80 Q 30 50 46 80" fill="#2563eb"/>
+                            <line x1="38" y1="52" x2="58" y2="40" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
+                            <circle cx="70" cy="38" r="14" fill="#facc15"/>
+                            <path d="M 54 80 Q 70 50 86 80" fill="#d97706"/>
+                            <path d="M 64 52 L 64 36 Q 64 30 68 30 Q 72 30 72 36 L 72 52" stroke="#fbbf24" stroke-width="4" fill="none" stroke-linecap="round"/>
+                            <polygon points="50,22 53,28 60,30 55,35 56,42 50,38 44,42 45,35 40,30 47,28" fill="#fde047"/>
+                        </svg>
                     </div>
                 </div>
-                <div class="slide" style="background: linear-gradient(135deg, #065f46, #022c22);">
+
+                <!-- Slide 2: Real Official UPI Logo (PROPERLY RESIZED) -->
+                <div class="slide" style="background-image: radial-gradient(circle at right, #065f46, #0f0524);">
                     <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <span class="slide-badge" style="background:#34d399; color:#000;">👥 REFER & EARN</span>
-                        <h3 style="color:#34d399;">Earn ₹1.00 Per Referral</h3>
-                        <p>Invite your Telegram friends & boost earnings!</p>
+                    <div class="slide-left">
+                        <h3>INSTANT <span>₹10</span><br>UPI REDEEM</h3>
+                        <p>Withdraw earnings directly to UPI!</p>
+                        <button class="slide-btn-yellow" style="background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; border-color:#86efac;" onclick="switchPage('withdraw')">Withdraw ➔</button>
+                    </div>
+                    <div class="slide-img-box">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI Logo">
                     </div>
                 </div>
-                <div class="slide" style="background: linear-gradient(135deg, #991b1b, #450a0a);">
+
+                <!-- Slide 3: Spin & Win 3D -->
+                <div class="slide" style="background-image: radial-gradient(circle at right, #991b1b, #0f0524);">
                     <div class="slide-overlay"></div>
-                    <div class="slide-content">
-                        <span class="slide-badge" style="background:#fca5a5; color:#000;">⚡ INSTANT PAYOUTS</span>
-                        <h3 style="color:#f87171;">Withdraw via UPI & Gift Cards</h3>
-                        <p>Redeem your earnings quickly & safely!</p>
+                    <div class="slide-left">
+                        <h3>DAILY <span>REWARDS</span><br>& SPIN</h3>
+                        <p>Spin wheel daily to win big rewards!</p>
+                        <button class="slide-btn-yellow" style="background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border-color:#fca5a5;" onclick="switchPage('spin-page')">Spin Now ➔</button>
+                    </div>
+                    <div class="slide-img-box">
+                        <div style="font-size:55px; filter:drop-shadow(0 0 15px rgba(239,68,68,0.8));">🎡</div>
                     </div>
                 </div>
             </div>
@@ -156,69 +440,168 @@
             </div>
         </div>
 
-        <!-- ACTIVE USERS BANNER -->
-        <div class="active-users-card">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 20px;">👥</span>
-                <div>
-                    <h5 style="font-size: 10px; color: #a5b4fc; margin: 0;">Active Players Online</h5>
-                    <h3 style="font-size: 15px; color: #38bdf8; margin: 0; font-weight: 800;" id="active-user-count">12,845</h3>
-                </div>
-            </div>
-            <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; padding: 3px 8px; border-radius: 20px; font-size: 10px; font-weight: bold;">🟢 Live Activity</span>
+        <!-- RECENT PAYOUT TICKER -->
+        <div class="payout-ticker">
+            <div style="display:flex; align-items:center; gap:6px; color:#c084fc; font-weight:800;">📢 Recent Payout:</div>
+            <div id="ticker-text" style="color:#4ade80; font-weight:800;">User_5678 redeemed ₹170 via UPI</div>
         </div>
 
+        <!-- ACTIVE USERS BANNER -->
+        <div class="active-users-card">
+            <div class="active-left">
+                <div class="active-icon">👥</div>
+                <div>
+                    <h5 style="font-size: 10px; color: #a5b4fc; margin: 0;">Active Players Online</h5>
+                    <h3 style="font-size: 15px; color: #38bdf8; margin: 0; font-weight: 900;" id="active-user-count">12,923</h3>
+                </div>
+            </div>
+            <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold;">🟢 Live</span>
+        </div>
+
+        <!-- WALLET CARD -->
         <div class="wallet-card">
             <div class="wallet-left">
-                <div class="wallet-icon">👛</div>
+                <div style="font-size:38px; filter:drop-shadow(0 0 10px rgba(168,85,247,0.8));">👛</div>
                 <div class="wallet-info">
-                    <p>Your Balance</p>
+                    <p>YOUR BALANCE</p>
                     <h2>₹<span id="balance">0.00</span></h2>
                 </div>
             </div>
-            <button class="wallet-btn" onclick="switchPage('withdraw')">Wallet ➔</button>
+            <button class="premium-wallet-btn" onclick="switchPage('withdraw')">Wallet ➔</button>
         </div>
 
+        <!-- 3D REALISTIC HIGH-GLOSS TASK GRID -->
         <div class="task-grid">
+            <!-- 1. Spin & Win -->
             <div class="task-card">
                 <div>
-                    <div class="task-icon">🎡</div>
-                    <h4>Spin</h4>
-                    <p style="color:#60a5fa;">Win Big Prizes</p>
-                    <span class="limit-badge"><span id="spin-left">5</span>/5 Left</span>
+                    <div class="svg-icon-box">
+                        <svg width="58" height="58" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="44" fill="#1e1b4b" stroke="#facc15" stroke-width="5"/>
+                            <circle cx="50" cy="50" r="36" fill="url(#spinGrad)"/>
+                            <polygon points="50,18 60,82 40,82" fill="#ef4444"/>
+                            <polygon points="18,50 82,60 82,40" fill="#3b82f6"/>
+                            <circle cx="50" cy="50" r="12" fill="#facc15" stroke="#fff" stroke-width="2"/>
+                            <defs>
+                                <linearGradient id="spinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#4c1d95"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h4>Spin & Win</h4>
+                    <p>Lucky Wheel</p>
+                    <span class="reward-badge">₹3 / Spin</span>
+                    <br>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="spin-left">5</span>/5 Left</span>
                 </div>
                 <button class="btn-card btn-spin" id="btn-spin" onclick="switchPage('spin-page')">Spin Now ➔</button>
             </div>
 
+            <!-- 2. Scratch Card -->
             <div class="task-card">
                 <div>
-                    <div class="task-icon">🃏</div>
-                    <h4>Scratch</h4>
-                    <p style="color:#fbbf24;">Scratch & Win</p>
-                    <span class="limit-badge"><span id="scratch-left">5</span>/5 Left</span>
+                    <div class="svg-icon-box">
+                        <svg width="58" height="58" viewBox="0 0 100 100">
+                            <rect x="10" y="20" width="80" height="60" rx="10" fill="url(#scratchGold)" stroke="#fbbf24" stroke-width="3"/>
+                            <path d="M 25 35 Q 50 65 75 35" stroke="#fff" stroke-width="4" fill="none" stroke-dasharray="4"/>
+                            <text x="50" y="55" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">YOU WON</text>
+                            <defs>
+                                <linearGradient id="scratchGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h4>Scratch Card</h4>
+                    <p>Scratch & Earn</p>
+                    <span class="reward-badge">₹5 / Scratch</span>
+                    <br>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="scratch-left">5</span>/5 Left</span>
                 </div>
                 <button class="btn-card btn-scratch" id="btn-scratch" onclick="switchPage('scratch-page')">Scratch Now ➔</button>
             </div>
 
+            <!-- 3. Watch Video -->
             <div class="task-card">
                 <div>
-                    <div class="task-icon">🎬</div>
-                    <h4>Watch Earn</h4>
-                    <p style="color:#38bdf8;">Watch Videos</p>
-                    <span class="limit-badge"><span id="watch-left">5</span>/5 Left</span>
+                    <div class="svg-icon-box">
+                        <svg width="58" height="58" viewBox="0 0 100 100">
+                            <rect x="15" y="25" width="70" height="50" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="3"/>
+                            <polygon points="42,38 65,50 42,62" fill="#38bdf8"/>
+                            <circle cx="75" cy="65" r="10" fill="#facc15"/>
+                        </svg>
+                    </div>
+                    <h4>Watch Video</h4>
+                    <p>Watch & Earn</p>
+                    <span class="reward-badge">₹2 / Video</span>
+                    <br>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="watch-left">5</span>/5 Left</span>
                 </div>
                 <button class="btn-card btn-watch" id="btn-ad" onclick="triggerAdAndWatchVideo()">Watch Now ➔</button>
             </div>
-        </div>
 
-        <div class="refer-card">
-            <div class="refer-info">
-                <h4>👥 Refer & Earn (₹1/Refer)</h4>
-                <p>Invite friends & Earn ₹1 per refer</p>
+            <!-- 4. Daily Bonus -->
+            <div class="task-card">
+                <div>
+                    <div class="svg-icon-box">
+                        <svg width="58" height="58" viewBox="0 0 100 100">
+                            <rect x="20" y="40" width="60" height="45" rx="6" fill="#7c3aed" stroke="#c084fc" stroke-width="2"/>
+                            <rect x="15" y="30" width="70" height="14" rx="4" fill="#a855f7"/>
+                            <path d="M 50 30 L 50 85 M 20 62.5 L 80 62.5" stroke="#facc15" stroke-width="8"/>
+                        </svg>
+                    </div>
+                    <h4>Daily Bonus</h4>
+                    <p>Claim Everyday</p>
+                    <span class="reward-badge">Daily Gift</span>
+                    <br>
+                    <span style="font-size:9px; color:#94a3b8;">1/1 Daily</span>
+                </div>
+                <button class="btn-card btn-daily" onclick="openBonusModal()">Claim Now ➔</button>
             </div>
-            <button class="refer-btn" onclick="switchPage('refer-page')">Refer Now ➔</button>
+
+            <!-- 5. Task Ads -->
+            <div class="task-card">
+                <div>
+                    <div class="svg-icon-box">
+                        <svg width="58" height="58" viewBox="0 0 100 100">
+                            <rect x="25" y="15" width="50" height="70" rx="6" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+                            <rect x="35" y="10" width="30" height="10" rx="3" fill="#38bdf8"/>
+                            <path d="M 35 35 L 45 45 L 65 28" stroke="#4ade80" stroke-width="5" fill="none" stroke-linecap="round"/>
+                            <line x1="35" y1="58" x2="65" y2="58" stroke="#fff" stroke-width="4"/>
+                        </svg>
+                    </div>
+                    <h4>Task Ads</h4>
+                    <p>Complete Tasks</p>
+                    <span class="reward-badge">₹3 / Task</span>
+                    <br>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="task-left">5</span>/5 Left</span>
+                </div>
+                <button class="btn-card btn-task" id="btn-task-ad" onclick="triggerTaskAd()">Start Task ➔</button>
+            </div>
+
+            <!-- 6. Refer & Earn -->
+            <div class="task-card">
+                <div>
+                    <div class="svg-icon-box">
+                        <svg width="58" height="58" viewBox="0 0 100 100">
+                            <circle cx="35" cy="35" r="14" fill="#c026d3"/>
+                            <circle cx="65" cy="35" r="14" fill="#9333ea"/>
+                            <path d="M 15 75 Q 35 50 55 75" fill="#c026d3"/>
+                            <path d="M 45 75 Q 65 50 85 75" fill="#9333ea"/>
+                        </svg>
+                    </div>
+                    <h4>Refer & Earn</h4>
+                    <p>Earn More</p>
+                    <span class="reward-badge">₹1 / Refer</span>
+                    <br>
+                    <span style="font-size:9px; color:#94a3b8;">Unlimited</span>
+                </div>
+                <button class="btn-card btn-refer" onclick="switchPage('refer-page')">Refer Now ➔</button>
+            </div>
         </div>
 
+        <!-- LIVE GLOBAL LEADERBOARD -->
         <div class="leader-preview">
             <div class="leader-head">
                 <h4>🏆 Live Global Leaderboard</h4>
@@ -230,44 +613,98 @@
 
     <!-- FULL PAGE SPIN -->
     <div id="page-spin-page" class="page">
-        <h3 style="color:#c084fc; margin-bottom: 15px;">🎡 Spin Wheel</h3>
-        <div class="banner-box">
-            <div style="position: relative; width: 220px; height: 220px; margin: 15px auto;">
-                <div style="width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:18px solid #ef4444; position:absolute; top:-8px; left:50%; transform:translateX(-50%); z-index:10;"></div>
-                <canvas id="wheel-canvas" width="220" height="220" style="transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.15, 1);"></canvas>
+        <h3 style="color:#c084fc; margin-bottom: 12px; font-size:16px;">🎡 Spin & Win Wheel</h3>
+        <div class="profile-card" style="text-align:center; padding: 20px 14px;">
+            <p style="font-size:11px; color:#cbd5e1; margin-bottom:10px;">Spin the wheel to get instant rewards!</p>
+            <div style="position: relative; width: 230px; height: 230px; margin: 10px auto; border-radius:50%; background: radial-gradient(circle, rgba(168,85,247,0.3) 0%, transparent 70%); padding: 5px;">
+                <div style="width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:22px solid #ef4444; position:absolute; top:-10px; left:50%; transform:translateX(-50%); z-index:10; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.8));"></div>
+                <canvas id="wheel-canvas" width="220" height="220" style="transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.15, 1); border-radius:50%; box-shadow: 0 0 25px rgba(250,204,21,0.5);"></canvas>
             </div>
-            <button class="btn-card btn-spin" id="start-spin-btn" style="padding:12px; font-size:14px; font-weight:800;" onclick="executeSpin()">Start Spin 🎡</button>
+            <button class="btn-card btn-spin" id="start-spin-btn" style="padding:14px; font-size:14px; font-weight:900; margin-top:15px; background:linear-gradient(135deg, #7c3aed, #4f46e5); border:1px solid #c084fc;" onclick="executeSpin()">START SPIN WHEEL 🎡</button>
         </div>
     </div>
 
     <!-- FULL PAGE SCRATCH -->
     <div id="page-scratch-page" class="page">
-        <h3 style="color:#facc15; margin-bottom: 15px;">🃏 Scratch Card</h3>
-        <div class="banner-box">
-            <p style="font-size:12px; color:#94a3b8; margin-bottom:15px;">उंगली से पूरा स्क्रैच करें</p>
-            <div style="position: relative; width: 220px; height: 110px; margin: 0 auto;">
-                <div id="scratch-reward" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:20px; color:#22c55e; background:#080214; border:2px dashed #22c55e; border-radius:12px;">
+        <h3 style="color:#facc15; margin-bottom: 12px; font-size:16px;">🃏 Gold Scratch Card</h3>
+        <div class="profile-card" style="text-align:center; padding: 20px 14px;">
+            <p style="font-size:11px; color:#94a3b8; margin-bottom:15px;">अपनी उंगली से कार्ड को पूरा स्क्रैच करें!</p>
+            <div style="position: relative; width: 230px; height: 115px; margin: 0 auto;">
+                <div id="scratch-reward" style="position: absolute; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; font-weight:900; font-size:22px; color:#22c55e; background:#080214; border:2px dashed #22c55e; border-radius:14px; box-shadow: inset 0 0 15px rgba(34,197,94,0.3);">
                     ₹0.00
                 </div>
-                <canvas id="scratch-canvas" width="220" height="110" style="position: absolute; top:0; left:0; z-index:2; border-radius:12px;"></canvas>
+                <canvas id="scratch-canvas" width="230" height="115" style="position: absolute; top:0; left:0; z-index:2; border-radius:14px; box-shadow: 0 8px 20px rgba(0,0,0,0.8);"></canvas>
             </div>
         </div>
     </div>
 
     <!-- FULL PAGE REFER -->
     <div id="page-refer-page" class="page">
-        <h3 style="color:#c084fc; margin-bottom: 12px;">👥 Refer & Earn</h3>
-        <div class="banner-box" style="text-align:left;">
-            <p style="font-size:12px; color:#a78bfa;">Your Referral Link:</p>
-            <input type="text" id="ref-link-input" class="input-field" readonly>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
-                <button class="btn-card" style="background:#25D366;" onclick="shareOnWhatsApp()">WhatsApp</button>
-                <button class="btn-card" style="background:#0088cc;" onclick="shareOnTelegram()">Telegram</button>
+        <h3 style="color:#60a5fa; margin-bottom: 10px; font-size:18px; font-weight:900;">REFER & EARN</h3>
+        
+        <div class="profile-card" style="text-align:center; padding: 18px 14px; background: linear-gradient(180deg, #1e1b4b, #090e2e); border: 1px solid #6366f1;">
+            <div style="margin: 0 auto 10px auto; width: 120px; height: 110px;">
+                <svg width="120" height="110" viewBox="0 0 100 100">
+                    <circle cx="20" cy="15" r="7" fill="#facc15" stroke="#fff" stroke-width="1"/>
+                    <text x="20" y="18" font-size="8" font-weight="900" fill="#000" text-anchor="middle">₹</text>
+                    <circle cx="80" cy="20" r="8" fill="#facc15" stroke="#fff" stroke-width="1"/>
+                    <text x="80" y="23" font-size="9" font-weight="900" fill="#000" text-anchor="middle">₹</text>
+                    <circle cx="30" cy="38" r="14" fill="#3b82f6"/>
+                    <path d="M 14 80 Q 30 50 46 80" fill="#2563eb"/>
+                    <line x1="38" y1="52" x2="58" y2="40" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="70" cy="38" r="14" fill="#facc15"/>
+                    <path d="M 54 80 Q 70 50 86 80" fill="#d97706"/>
+                    <path d="M 64 52 L 64 36 Q 64 30 68 30 Q 72 30 72 36 L 72 52" stroke="#fbbf24" stroke-width="4" fill="none" stroke-linecap="round"/>
+                </svg>
             </div>
-            <button class="btn-card btn-spin" style="margin-top:8px;" onclick="copyReferLink()">Copy Link</button>
+
+            <!-- 3 CONNECTED STEPS CARD -->
+            <div class="refer-steps-card">
+                <div class="step-item">
+                    <div class="step-icon">🔗</div>
+                    <div class="step-title">1. Share</div>
+                    <div class="step-desc">Share link with friends</div>
+                </div>
+                <div class="step-arrow">➔</div>
+                <div class="step-item">
+                    <div class="step-icon">👥</div>
+                    <div class="step-title">2. Join</div>
+                    <div class="step-desc">Friend joins via link</div>
+                </div>
+                <div class="step-arrow">➔</div>
+                <div class="step-item">
+                    <div class="step-icon">💰</div>
+                    <div class="step-title">3. Earn</div>
+                    <div class="step-desc">Earn ₹1 reward instantly</div>
+                </div>
+            </div>
+
+            <p style="font-size:10px; color:#a78bfa; margin-top:8px; text-align:left; font-weight:700;">Your Referral Link Code:</p>
+            <input type="text" id="ref-link-input" class="input-field" style="margin-top:4px; text-align:center; font-weight:bold; border-color:#6366f1;" readonly>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:6px;">
+                <button class="btn-card" style="background:#25D366; padding:10px;" onclick="shareOnWhatsApp()">WhatsApp Share</button>
+                <button class="btn-card" style="background:#0088cc; padding:10px;" onclick="shareOnTelegram()">Telegram Share</button>
+            </div>
+            <button class="btn-card btn-spin" style="margin-top:10px; padding:12px; background:linear-gradient(135deg,#facc15,#eab308); color:#000; font-weight:900; border:1px solid #fde047;" onclick="copyReferLink()">Copy Referral Link 📋</button>
         </div>
 
-        <h4 style="font-size:12px; margin-top:15px; color:#facc15;">Referral History:</h4>
+        <div class="reward-cards-grid">
+            <div class="reward-info-card">
+                <h5>🔥 Invite More</h5>
+                <p>Earn Unlimited Money</p>
+            </div>
+            <div class="reward-info-card">
+                <h5>💰 You Earn</h5>
+                <p>₹1.00 Per Referral</p>
+            </div>
+            <div class="reward-info-card">
+                <h5>🎁 Friend Gets</h5>
+                <p>₹1.00 Joining Bonus</p>
+            </div>
+        </div>
+
+        <h4 style="font-size:12px; margin-top:14px; color:#facc15;">Referral History:</h4>
         <div class="history-box" id="refer-history-list">
             <div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>
         </div>
@@ -275,96 +712,120 @@
 
     <!-- LEADERBOARD PAGE -->
     <div id="page-leaderboard" class="page">
-        <h3 style="color:#facc15; margin-bottom: 12px;">🏆 Live Global Leaderboard</h3>
-        <div class="leader-preview" style="background:#130628;">
+        <h3 style="color:#facc15; margin-bottom: 10px;">🏆 Live Global Leaderboard</h3>
+        <div class="leader-preview" style="background:#120426;">
             <div id="full-leaderboard-list">Loading live standings...</div>
         </div>
     </div>
 
     <!-- WITHDRAW PAGE -->
     <div id="page-withdraw" class="page">
-        <h3 style="color:#c084fc; margin-bottom: 12px;">💸 Withdraw Earnings</h3>
+        <h3 style="color:#c084fc; margin-bottom: 10px;">💸 Withdraw Earnings</h3>
         <div class="wallet-card">
             <div class="wallet-left">
-                <div class="wallet-icon">💰</div>
+                <div style="font-size:38px;">💰</div>
                 <div class="wallet-info">
-                    <p>Available Balance</p>
+                    <p>AVAILABLE BALANCE</p>
                     <h2>₹<span id="withdraw-balance">0.00</span></h2>
                 </div>
             </div>
         </div>
 
-        <h4 style="font-size:13px; margin-top:15px; color:#e2e8f0;">Select Withdrawal Method</h4>
+        <h4 style="font-size:12px; margin-top:12px; color:#e2e8f0;">Select Withdrawal Method</h4>
         <div class="withdraw-grid">
             <div class="withdraw-item">
+                <div class="withdraw-logo-box">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" alt="Google Play">
+                </div>
                 <h5>GOOGLE CODE</h5>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" alt="Google">
                 <button class="btn-withdraw" onclick="openRedeemModal('Google Code')">Withdraw ➔</button>
             </div>
+
             <div class="withdraw-item">
+                <div class="withdraw-logo-box">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+                </div>
                 <h5>AMAZON CODE</h5>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
                 <button class="btn-withdraw" onclick="openRedeemModal('Amazon Code')">Withdraw ➔</button>
             </div>
+
             <div class="withdraw-item">
+                <div class="withdraw-logo-box">
+                    <img src="https://cdn.iconscout.com/icon/free/png-256/free-flipkart-logo-icon-download-in-svg-png-gif-file-formats--shopping-brand-social-media-pack-logos-icons-226594.png" alt="Flipkart">
+                </div>
                 <h5>FLIPKART</h5>
-                <img src="https://cdn.iconscout.com/icon/free/png-256/free-flipkart-logo-icon-download-in-svg-png-gif-file-formats--shopping-brand-social-media-pack-logos-icons-226594.png" alt="Flipkart">
                 <button class="btn-withdraw" onclick="openRedeemModal('Flipkart')">Withdraw ➔</button>
             </div>
+
             <div class="withdraw-item">
-                <h5>UPI CASH</h5>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI">
+                <div class="withdraw-logo-box">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI">
+                </div>
+                <h5>UPI CASH (Min ₹10)</h5>
                 <button class="btn-withdraw" style="background:linear-gradient(135deg,#16a34a,#15803d);" onclick="openRedeemModal('UPI Cash')">Withdraw ➔</button>
             </div>
         </div>
 
-        <h4 style="font-size:13px; margin-top:20px; color:#c084fc;">📜 Coin & Earnings History</h4>
+        <h4 style="font-size:12px; margin-top:15px; color:#c084fc;">📜 Coin & Earnings History</h4>
         <div class="history-box" id="coin-history-list">
-            <div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">No history yet.</div>
+            <div style="font-size:10px; color:#94a3b8; text-align:center; padding:8px;">No history yet.</div>
         </div>
     </div>
 
     <!-- PROFILE PAGE -->
     <div id="page-profile" class="page">
-        <h3 style="color:#a855f7; margin-bottom: 12px;">👤 My Profile</h3>
-        <div class="banner-box" style="text-align:left;">
-            <p>Name: <b id="profile-name" style="color:#fff;">User</b></p>
-            <p style="margin-top:6px;">Telegram Handle: <b id="profile-handle" style="color:#c084fc;">@SpinWinApp_bot</b></p>
-            <p style="margin-top:6px;">Total Earnings: <b style="color:#4ade80;">₹<span id="profile-balance">0.00</span></b></p>
-            <p style="margin-top:6px;">Support desk: <a href="https://t.me/NexoraHelpDesk" target="_blank" style="color:#60a5fa; text-decoration:none; font-weight:bold;">@NexoraHelpDesk 🎧</a></p>
+        <h3 style="color:#facc15; margin-bottom: 10px;">👤 My Account & Settings</h3>
+        
+        <div class="profile-card">
+            <div class="profile-row">
+                <span style="color:#a78bfa;">User Name</span>
+                <b id="profile-name" style="color:#fff;">User</b>
+            </div>
+            <div class="profile-row">
+                <span style="color:#a78bfa;">Telegram ID</span>
+                <b id="profile-handle" style="color:#c084fc;">@SpinWinApp_bot</b>
+            </div>
+            <div class="profile-row">
+                <span style="color:#a78bfa;">Total Earnings</span>
+                <b style="color:#4ade80; font-size:13px;">₹<span id="profile-balance">0.00</span></b>
+            </div>
+            <div class="profile-row">
+                <span style="color:#a78bfa;">Support Helpdesk</span>
+                <a href="https://t.me/NexoraHelpDesk" target="_blank" style="color:#38bdf8; text-decoration:none; font-weight:bold;">@NexoraHelpDesk 🎧</a>
+            </div>
         </div>
 
-        <div class="banner-box" style="margin-top:15px; text-align:left;">
-            <h4 style="color:#facc15; font-size:13px; margin-bottom:8px;">🎵 Background Music Playlist</h4>
-            <div style="display:flex; flex-direction:column; gap:6px;">
-                <button class="btn-card" style="background:#2563eb;" onclick="changeMusic(0)">🎶 Track 1: Lofi Chill</button>
-                <button class="btn-card" style="background:#7c3aed;" onclick="changeMusic(1)">🎵 Track 2: Relaxing Beats</button>
-                <button class="btn-card" style="background:#059669;" onclick="changeMusic(2)">🎧 Track 3: Game Vibe</button>
-                <button class="btn-card" style="background:#dc2626; margin-top:4px;" onclick="toggleAudioMute()" id="mute-btn">Mute Music 🔇</button>
+        <div class="profile-card" style="text-align:center;">
+            <h4 style="color:#facc15; font-size:12px; margin-bottom:3px;">🎧 Background Music Player</h4>
+            <p style="font-size:10px; color:#c084fc; font-weight:bold; margin-bottom:8px;" id="current-song-title">Playing Track 1: Lofi Beats</p>
+            
+            <div class="music-controls">
+                <button class="music-ctrl-btn" onclick="prevMusic()">⏮️ Prev</button>
+                <button class="music-ctrl-btn" style="background:#ef4444; border-color:#fca5a5;" id="mute-btn" onclick="toggleAudioMute()">Mute 🔇</button>
+                <button class="music-ctrl-btn" onclick="nextMusic()">Next ⏭️</button>
             </div>
         </div>
     </div>
 
-    <!-- ========================================================= -->
-    <!-- 📦 PLACE 2: ADD YOUR FUTURE HTML ELEMENTS BELOW THIS LINE -->
-    <!-- ========================================================= -->
-
 </div>
 
-<!-- Bottom Navigation Bar -->
+<!-- BOTTOM NAVBAR -->
 <div class="navbar">
     <button class="nav-item active" id="nav-home" onclick="switchPage('home')">
         <span class="nav-icon">🏠</span>
         <span>Home</span>
     </button>
-    <button class="nav-item" id="nav-leaderboard" onclick="switchPage('leaderboard')">
-        <span class="nav-icon">🏆</span>
-        <span>Leaderboard</span>
+    <button class="nav-item" id="nav-earn" onclick="switchPage('home')">
+        <span class="nav-icon">₹</span>
+        <span>Earn</span>
     </button>
-    <div class="gift-center" onclick="openBonusModal()">🎁</div>
     <button class="nav-item" id="nav-withdraw" onclick="switchPage('withdraw')">
         <span class="nav-icon">👛</span>
         <span>Wallet</span>
+    </button>
+    <button class="nav-item" id="nav-refer" onclick="switchPage('refer-page')">
+        <span class="nav-icon">👥</span>
+        <span>Refer</span>
     </button>
     <button class="nav-item" id="nav-profile" onclick="switchPage('profile')">
         <span class="nav-icon">👤</span>
@@ -375,8 +836,8 @@
 <!-- Modals -->
 <div id="claim-modal" class="modal">
     <div class="modal-content">
-        <h3 style="color:#4ade80; margin-bottom: 8px;">🎉 You Won ₹<span id="claim-amount">0.00</span>!</h3>
-        <p style="font-size: 11px; color:#94a3b8; margin-bottom: 15px;">रिवॉर्ड क्लेम करने के लिए नीचे क्लिक करें:</p>
+        <h3 style="color:#4ade80; margin-bottom: 6px;">🎉 You Won ₹<span id="claim-amount">0.00</span>!</h3>
+        <p style="font-size: 10px; color:#94a3b8; margin-bottom: 12px;">रिवॉर्ड क्लेम करने के लिए नीचे क्लिक करें:</p>
         <button class="btn-card btn-spin" style="background:linear-gradient(135deg,#16a34a,#15803d);" onclick="claimRewardWithAd()">Claim Reward (Watch Ad)</button>
     </div>
 </div>
@@ -385,7 +846,7 @@
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('redeem-modal')">&times;</span>
         <h3 id="redeem-title" style="color:#c084fc;">Withdrawal</h3>
-        <p style="font-size:10px; color:#94a3b8; margin-top:2px;">Select Amount (Min ₹10, Max ₹100)</p>
+        <p style="font-size:9px; color:#94a3b8; margin-top:2px;">Select Amount (Min ₹10, Max ₹100)</p>
         <select id="redeem-amount-select" class="select-field">
             <option value="10">₹10</option>
             <option value="20">₹20</option>
@@ -398,6 +859,32 @@
 </div>
 
 <script>
+    // --- 3-STEP OPENING SCREEN LOGIC ---
+    const loaderSteps = ["Initializing SpinWin...", "Connecting Firebase...", "Syncing Live Players..."];
+    let stepIdx = 0;
+    const stepInterval = setInterval(() => {
+        stepIdx++;
+        if (stepIdx < loaderSteps.length) {
+            document.getElementById('loader-text').innerText = loaderSteps[stepIdx];
+        } else {
+            clearInterval(stepInterval);
+            document.getElementById('loader-screen').style.display = 'none';
+        }
+    }, 750);
+
+    // --- RECENT PAYOUT TICKER ---
+    const payouts = [
+        "User_5678 redeemed ₹170 via UPI",
+        "Rahul_K earned ₹50 Google Code",
+        "Aman_786 redeemed ₹10 via UPI",
+        "Sonia_M redeemed ₹100 Flipkart Code"
+    ];
+    let tickerIdx = 0;
+    setInterval(() => {
+        tickerIdx = (tickerIdx + 1) % payouts.length;
+        document.getElementById('ticker-text').innerText = payouts[tickerIdx];
+    }, 3800);
+
     // --- FIREBASE INITIALIZATION ---
     const firebaseConfig = {
         apiKey: "AIzaSyBtBMmxX2_PdmgHZ191A5hvR7kcpWUYVoU",
@@ -417,11 +904,20 @@
     tg.expand();
 
     const BOT_USERNAME = "SpinWinApp_bot";
-    const ADSGRAM_BLOCK_ID = "39162";
 
-    let AdController = null;
-    if (window.Adsgram && ADSGRAM_BLOCK_ID) {
-        AdController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID });
+    // --- ALL ADSGRAM BLOCK IDs ---
+    const REWARDED_AD_ID = "39162";
+    const TASK_AD_ID = "39213";
+    const INTERSTITIAL_AD_ID = "39353";
+
+    let RewardedAdController = null;
+    let TaskAdController = null;
+    let InterstitialAdController = null;
+
+    if (window.Adsgram) {
+        if (REWARDED_AD_ID) RewardedAdController = window.Adsgram.init({ blockId: REWARDED_AD_ID });
+        if (TASK_AD_ID) TaskAdController = window.Adsgram.init({ blockId: TASK_AD_ID });
+        if (INTERSTITIAL_AD_ID) InterstitialAdController = window.Adsgram.init({ blockId: INTERSTITIAL_AD_ID });
     }
 
     const tgUser = tg.initDataUnsafe?.user;
@@ -437,7 +933,7 @@
     document.getElementById('user-avatar').innerText = userAvatarText;
     document.getElementById('ref-link-input').value = refLink;
 
-    // AUTO SLIDER
+    // AUTO HERO SLIDER
     let currentSlide = 0;
     const sliderWrapper = document.getElementById('slider-wrapper');
     const dots = document.querySelectorAll('.dot');
@@ -448,42 +944,55 @@
     }
     setInterval(autoSlide, 3500);
 
-    // MULTIPLE MUSIC PLAYLIST
+    // --- 5 HIGH-BEAT RHYTHMIC MUSIC PLAYLIST ---
     const musicPlaylist = [
-        'https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=relaxing-music-113824.mp3',
-        'https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a73213.mp3?filename=lofi-study-112191.mp3',
-        'https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=game-music-7408.mp3'
+        { name: "Track 1: Lofi Beats (Upbeat)", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Shattered_Becalm/Kai_Engel_-_04_-_Shattered_Becalm.mp3' },
+        { name: "Track 2: Chill Gaming Vibe", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Reflections/Ketsa_-_12_-_Reflections.mp3' },
+        { name: "Track 3: Game Electro Funk", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3' },
+        { name: "Track 4: Soft Rhythmic Beat", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3' },
+        { name: "Track 5: Jazz Game Grooves", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Jahzzar/Super/Jahzzar_-_05_-_Siesta.mp3' }
     ];
     let currentTrackIdx = 0;
     let bgAudio = null;
     let isUserMuted = false;
 
+    function playTrack(idx) {
+        if (bgAudio) { bgAudio.pause(); }
+        currentTrackIdx = idx;
+        bgAudio = new Audio(musicPlaylist[currentTrackIdx].url);
+        bgAudio.volume = 0.2;
+        bgAudio.muted = isUserMuted;
+
+        bgAudio.onended = () => { nextMusic(); };
+
+        if(!isUserMuted) {
+            bgAudio.play().catch(() => {});
+        }
+        document.getElementById('current-song-title').innerText = `Playing ${musicPlaylist[currentTrackIdx].name}`;
+    }
+
     function initBackgroundMusic() {
-        try {
-            bgAudio = new Audio(musicPlaylist[currentTrackIdx]);
-            bgAudio.loop = true; bgAudio.volume = 0.2;
-            bgAudio.play().catch(() => {
-                window.addEventListener('click', () => { if(bgAudio && bgAudio.paused && !isUserMuted) bgAudio.play(); }, {once: true});
-            });
-        } catch(e) {}
+        playTrack(0);
+        window.addEventListener('click', () => { 
+            if(bgAudio && bgAudio.paused && !isUserMuted) bgAudio.play().catch(() => {}); 
+        }, {once: true});
     }
     initBackgroundMusic();
 
-    function changeMusic(index) {
-        currentTrackIdx = index;
-        if (bgAudio) {
-            bgAudio.pause();
-            bgAudio = new Audio(musicPlaylist[currentTrackIdx]);
-            bgAudio.loop = true; bgAudio.volume = 0.2;
-            if(!isUserMuted) bgAudio.play();
-            alert(`Music Track ${index + 1} Selected! 🎵`);
-        }
+    function nextMusic() {
+        let nextIdx = (currentTrackIdx + 1) % musicPlaylist.length;
+        playTrack(nextIdx);
+    }
+
+    function prevMusic() {
+        let prevIdx = (currentTrackIdx - 1 + musicPlaylist.length) % musicPlaylist.length;
+        playTrack(prevIdx);
     }
 
     function toggleAudioMute() {
         isUserMuted = !isUserMuted;
         if(bgAudio) bgAudio.muted = isUserMuted;
-        document.getElementById('mute-btn').innerText = isUserMuted ? "Play Music 🎵" : "Mute Music 🔇";
+        document.getElementById('mute-btn').innerText = isUserMuted ? "Unmute 🎵" : "Mute 🔇";
     }
 
     function muteMusic() { if(bgAudio) bgAudio.muted = true; }
@@ -511,6 +1020,7 @@
         savedData.spinLeft = 5;
         savedData.scratchLeft = 5;
         savedData.watchLeft = 5;
+        savedData.taskLeft = 5;
         delete savedData.bonusClaimedDate;
     }
 
@@ -518,6 +1028,7 @@
     let spinLeft = savedData.spinLeft ?? 5;
     let scratchLeft = savedData.scratchLeft ?? 5;
     let watchLeft = savedData.watchLeft ?? 5;
+    let taskLeft = savedData.taskLeft ?? 5;
     let coinHistory = savedData.coinHistory || [];
     let referHistory = savedData.referHistory || [];
 
@@ -531,7 +1042,6 @@
             balance = parseFloat((balance + 1.00).toFixed(2));
             coinHistory.unshift({ text: `Earned ₹1.00 Welcome Referral Bonus`, time: new Date().toLocaleTimeString() });
             
-            // Credit ₹1.00 to Referrer's Realtime Firebase Account
             db.ref('users/' + referrerId).once('value', (snapshot) => {
                 let refData = snapshot.val() || {};
                 let refBal = parseFloat((refData.balance || 0) + 1.00).toFixed(2);
@@ -542,7 +1052,7 @@
                     balance: parseFloat(refBal),
                     referHistory: refHist
                 });
-            });
+            }).catch(() => {});
             saveData();
         }
     }
@@ -563,7 +1073,7 @@
 
     // DYNAMIC LIVE ACTIVE USERS COUNTER
     function updateActiveUserCount() {
-        const baseCount = 12840;
+        const baseCount = 12920;
         const dynamicCount = baseCount + (Math.floor(Date.now() / 60000) % 100);
         document.getElementById('active-user-count').innerText = dynamicCount.toLocaleString('en-IN');
     }
@@ -580,47 +1090,56 @@
         savedData.spinLeft = spinLeft;
         savedData.scratchLeft = scratchLeft;
         savedData.watchLeft = watchLeft;
+        savedData.taskLeft = taskLeft;
         savedData.coinHistory = coinHistory;
         savedData.referHistory = referHistory;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
 
-        // Sync to Firebase Database (For Live Global Leaderboard)
         db.ref('users/' + userId).set({
             name: userName,
             balance: balance,
             userHandle: userHandle,
             referHistory: referHistory,
             lastSeen: Date.now()
-        });
+        }).catch(() => {});
 
         updateUI();
     }
 
-    // REALTIME GLOBAL LEADERBOARD (FETCHES ALL REAL USERS FROM FIREBASE)
+    // REALTIME GLOBAL LEADERBOARD
     function fetchGlobalLeaderboard() {
-        db.ref('users').orderByChild('balance').limitToLast(10).on('value', (snapshot) => {
+        let myRowStr = `<div class="leader-row" style="background: rgba(168, 85, 247, 0.25);">
+            <div class="leader-user"><div class="leader-rank">1</div> 👤 ${userName} (You)</div>
+            <div style="color:#4ade80; font-weight:bold;">₹${balance.toFixed(2)}</div>
+        </div>`;
+        document.getElementById('home-leaderboard-list').innerHTML = myRowStr;
+        document.getElementById('full-leaderboard-list').innerHTML = myRowStr;
+
+        db.ref('users').on('value', (snapshot) => {
             let players = [];
             snapshot.forEach((childSnap) => {
                 let p = childSnap.val();
-                players.push({ name: p.name || 'User', amount: p.balance || 0, id: childSnap.key });
-            });
-            players.reverse(); // Highest earning first
-
-            let homeHtml = "", fullHtml = "";
-            players.forEach((p, idx) => {
-                let rankNum = idx + 1;
-                let iconMark = rankNum === 1 ? "🥇" : rankNum === 2 ? "🥈" : rankNum === 3 ? "🥉" : `${rankNum}️⃣`;
-                let isMe = (p.id === userId);
-                let rowStr = `<div class="leader-row" ${isMe ? 'style="background: rgba(168, 85, 247, 0.25); border-radius:8px; padding:6px 8px;"' : ''}>
-                    <div class="leader-user">${iconMark} ${p.name} ${isMe ? '(You)' : ''}</div>
-                    <div style="color:#4ade80; font-weight:bold;">₹${parseFloat(p.amount).toFixed(2)}</div>
-                </div>`;
-                if(idx < 3) homeHtml += rowStr;
-                fullHtml += rowStr;
+                players.push({ name: p.name || 'User', amount: parseFloat(p.balance || 0), id: childSnap.key });
             });
 
-            document.getElementById('home-leaderboard-list').innerHTML = homeHtml || '<div style="font-size:11px; color:#94a3b8;">No players yet.</div>';
-            document.getElementById('full-leaderboard-list').innerHTML = fullHtml || '<div style="font-size:11px; color:#94a3b8;">No players yet.</div>';
+            players.sort((a, b) => b.amount - a.amount);
+
+            if (players.length > 0) {
+                let homeHtml = "", fullHtml = "";
+                players.forEach((p, idx) => {
+                    let rankNum = idx + 1;
+                    let isMe = (p.id === userId);
+                    let rowStr = `<div class="leader-row" ${isMe ? 'style="background: rgba(168, 85, 247, 0.25);"' : ''}>
+                        <div class="leader-user"><div class="leader-rank" ${rankNum===1?'style="background:#facc15"':rankNum===2?'style="background:#cbd5e1"':'style="background:#b45309;color:#fff"'}>${rankNum}</div> 👤 ${p.name} ${isMe ? '(You)' : ''}</div>
+                        <div style="color:#4ade80; font-weight:bold;">₹${p.amount.toFixed(2)}</div>
+                    </div>`;
+                    if(idx < 3) homeHtml += rowStr;
+                    fullHtml += rowStr;
+                });
+
+                document.getElementById('home-leaderboard-list').innerHTML = homeHtml;
+                document.getElementById('full-leaderboard-list').innerHTML = fullHtml;
+            }
         });
     }
     fetchGlobalLeaderboard();
@@ -653,13 +1172,17 @@
         if(targetNav) targetNav.classList.add('active');
 
         if(page === 'scratch-page') initScratchCard();
+
+        if (InterstitialAdController && Math.random() < 0.3) {
+            InterstitialAdController.show().catch(() => {});
+        }
     }
 
     function openBonusModal() {
         if (savedData.bonusClaimedDate === today) {
             return alert("आप आज का डेली बोनस क्लेम कर चुकी हैं! कल रात 12 बजे के बाद दोबारा मिलेगा।");
         }
-        pendingReward = 0.50; pendingType = "Daily Bonus";
+        pendingReward = 1.00; pendingType = "Daily Bonus";
         document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
         document.getElementById('claim-modal').style.display = 'flex';
     }
@@ -672,7 +1195,11 @@
     }
 
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    function getRandomReward() { return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2)); }
+    
+    // REWARD CALCULATION: STRICTLY RANDOM BETWEEN ₹0.30 - ₹0.50
+    function getRandomRewardUnder50() { 
+        return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2)); 
+    }
 
     function executeSpin() {
         if (spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है!");
@@ -680,7 +1207,7 @@
         const btn = document.getElementById('start-spin-btn');
         btn.disabled = true; spinLeft--;
 
-        const reward = getRandomReward();
+        const reward = getRandomRewardUnder50();
         const segmentAngle = 360 / rewards.length;
         const randomSegment = Math.floor(Math.random() * rewards.length);
         currentSpinDeg += (5 * 360) + (randomSegment * segmentAngle) + (segmentAngle / 2);
@@ -696,20 +1223,27 @@
 
     function triggerAdAndWatchVideo() {
         if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है!");
-        playAdThenReward(getRandomReward(), "Video Ad", () => { watchLeft--; });
+        playAdThenReward(getRandomRewardUnder50(), "Video Ad", () => { watchLeft--; }, RewardedAdController);
+    }
+
+    function triggerTaskAd() {
+        if (taskLeft <= 0) return alert("आज की Task Ads लिमिट खत्म हो गई है!");
+        playAdThenReward(getRandomRewardUnder50(), "Task Ad", () => { taskLeft--; }, TaskAdController || RewardedAdController);
     }
 
     function claimRewardWithAd() {
         closeModal('claim-modal');
         playAdThenReward(pendingReward, pendingType, () => {
             if (pendingType === "Daily Bonus") savedData.bonusClaimedDate = today;
-        });
+        }, RewardedAdController);
     }
 
-    function playAdThenReward(amount, type, callback) {
+    function playAdThenReward(amount, type, callback, adControllerInstance) {
         muteMusic();
-        if (AdController) {
-            AdController.show().then(() => {
+        const activeAd = adControllerInstance || RewardedAdController;
+        
+        if (activeAd) {
+            activeAd.show().then(() => {
                 unmuteMusic(); if(callback) callback(); addReward(amount, type);
             }).catch(() => {
                 unmuteMusic(); alert("विज्ञापन पूरा नहीं देखा गया या नेटवर्क समस्या है।");
@@ -722,10 +1256,10 @@
     function initScratchCard() {
         const sCanvas = document.getElementById('scratch-canvas');
         const sCtx = sCanvas.getContext('2d');
-        const reward = getRandomReward();
-        document.getElementById('scratch-reward').innerText = `₹${reward}`;
-        sCtx.fillStyle = '#475569'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
-        sCtx.fillStyle = '#ffffff'; sCtx.font = 'bold 13px Arial'; sCtx.fillText('Scratch Here!', 60, 60);
+        const reward = getRandomRewardUnder50();
+        document.getElementById('scratch-reward').innerText = `₹${reward.toFixed(2)}`;
+        sCtx.fillStyle = '#d97706'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+        sCtx.fillStyle = '#ffffff'; sCtx.font = 'bold 14px Arial'; sCtx.fillText('Scratch Here!', 70, 62);
 
         let isScratching = false;
         function scratch(e) {
@@ -734,7 +1268,7 @@
             const x = (e.clientX || e.touches[0].clientX) - rect.left;
             const y = (e.clientY || e.touches[0].clientY) - rect.top;
             sCtx.globalCompositeOperation = 'destination-out';
-            sCtx.beginPath(); sCtx.arc(x, y, 16, 0, Math.PI * 2); sCtx.fill();
+            sCtx.beginPath(); sCtx.arc(x, y, 18, 0, Math.PI * 2); sCtx.fill();
         }
         sCanvas.onmousedown = sCanvas.ontouchstart = () => isScratching = true;
         sCanvas.onmouseup = sCanvas.ontouchend = () => {
@@ -765,12 +1299,14 @@
         document.getElementById('spin-left').innerText = spinLeft;
         document.getElementById('scratch-left').innerText = scratchLeft;
         document.getElementById('watch-left').innerText = watchLeft;
+        document.getElementById('task-left').innerText = taskLeft;
 
         document.getElementById('btn-spin').disabled = (spinLeft <= 0);
         document.getElementById('btn-scratch').disabled = (scratchLeft <= 0);
         document.getElementById('btn-ad').disabled = (watchLeft <= 0);
+        document.getElementById('btn-task-ad').disabled = (taskLeft <= 0);
 
-        let histHtml = coinHistory.length ? coinHistory.map(h => `<div class="history-item"><span>${h.text}</span><span style="color:#94a3b8">${h.time}</span></div>`).join('') : '<div style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">No history yet.</div>';
+        let histHtml = coinHistory.length ? coinHistory.map(h => `<div class="history-item"><span>${h.text}</span><span style="color:#94a3b8">${h.time}</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center; padding:8px;">No history yet.</div>';
         document.getElementById('coin-history-list').innerHTML = histHtml;
 
         let refHistHtml = referHistory.length ? referHistory.map(r => `<div class="history-item"><span>${r.name}</span><span style="color:#4ade80">+₹1.00</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>';
@@ -812,11 +1348,6 @@
 
     saveData();
     updateUI();
-
-    // =========================================================
-    // ⚙️ PLACE 3: ADD YOUR FUTURE JAVASCRIPT FUNCTIONS BELOW THIS LINE
-    // =========================================================
-
 </script>
 
 </body>
