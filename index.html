@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpinWin Bot - Master HD Edition</title>
+    <title>SpinWin Bot - Telegram Edition</title>
     
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -27,17 +27,20 @@
 
         .container { max-width: 420px; margin: 0 auto; padding: 12px; }
 
-        /* 3-STEP ANIMATED OPENING SCREEN */
+        /* TELEGRAM OPTIMIZED OPENING LOADING SCREEN ANIMATION */
         #loader-screen { 
-            position: fixed; 
+            position: absolute; 
             inset: 0; 
+            width: 100%;
+            height: 100vh;
             background: radial-gradient(circle at center, #1b073e, #080214); 
-            z-index: 999; 
+            z-index: 99999; 
             display: flex; 
             flex-direction: column; 
             justify-content: center; 
             align-items: center; 
             gap: 20px; 
+            transition: opacity 0.4s ease-in-out;
         }
         .loader-ring { 
             width: 70px; 
@@ -90,7 +93,7 @@
             backdrop-filter: blur(10px);
         }
 
-        /* HERO SLIDER (UPI SIZE FIXED) */
+        /* HERO SLIDER */
         .slider-container { 
             position: relative; 
             width: 100%; 
@@ -113,7 +116,7 @@
             position: relative; 
         }
         .slide-overlay { position: absolute; inset: 0; background: radial-gradient(circle at right, rgba(59, 130, 246, 0.35), transparent 75%); z-index: 1; }
-        .slide-left { position: relative; z-index: 2; max-width: 60%; }
+        .slide-left { position: relative; z-index: 2; max-width: 58%; }
         .slide-left h3 { font-size: 17px; font-weight: 900; color: #fff; line-height: 1.1; }
         .slide-left h3 span { color: #facc15; }
         .slide-left p { font-size: 10px; color: #cbd5e1; margin: 4px 0 8px 0; }
@@ -131,9 +134,8 @@
             box-shadow: 0 4px 15px rgba(250, 204, 21, 0.5); 
         }
 
-        /* FIXED SLIDER IMAGE BOX FOR UPI */
         .slide-img-box { position: relative; z-index: 2; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
-        .slide-img-box img { max-width: 80px; max-height: 50px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(34,197,94,0.8)); }
+        .slide-img-box img { max-width: 80px; max-height: 50px; object-fit: contain; }
 
         .slider-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 3; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: 0.3s; }
@@ -268,14 +270,6 @@
         .btn-task { background: linear-gradient(135deg, #16a34a, #059669); border: 1px solid #4ade80; }
         .btn-refer { background: linear-gradient(135deg, #c026d3, #9333ea); border: 1px solid #f0abfc; }
 
-        /* LEADERBOARD PREVIEW */
-        .leader-preview { background: #0f0524; border-radius: 20px; padding: 14px; border: 1px solid rgba(168, 85, 247, 0.2); }
-        .leader-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .leader-head h4 { font-size: 13px; color: #facc15; font-weight: 800; }
-        .leader-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 12px; margin-bottom: 4px; background: rgba(255,255,255,0.03); }
-        .leader-user { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; }
-        .leader-rank { width: 22px; height: 22px; border-radius: 50%; background: #facc15; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; }
-
         /* REFER PAGE STYLES */
         .refer-steps-card { 
             background: linear-gradient(180deg, rgba(30, 27, 75, 0.8), rgba(15, 23, 42, 0.9)); 
@@ -335,7 +329,7 @@
         .music-controls { display: flex; gap: 8px; margin-top: 8px; justify-content: center; }
         .music-ctrl-btn { background: #3b0764; border: 1px solid #a855f7; color: #fff; padding: 7px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 11px; }
 
-        /* BOTTOM NAVBAR */
+        /* BOTTOM NAVBAR (4 ITEMS - LEADERBOARD REMOVED) */
         .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #060112; border-top: 1px solid rgba(168, 85, 247, 0.25); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; backdrop-filter: blur(10px); }
         .nav-item { border: none; background: none; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
         .nav-item.active { color: #a855f7; }
@@ -352,7 +346,7 @@
 </head>
 <body>
 
-<!-- 3-STEP ANIMATED OPENING SCREEN -->
+<!-- 3-STEP ANIMATED OPENING SCREEN (TELEGRAM OPTIMIZED) -->
 <div id="loader-screen">
     <div class="loader-ring"></div>
     <div class="loader-dots">
@@ -407,7 +401,7 @@
                     </div>
                 </div>
 
-                <!-- Slide 2: Real Official UPI Logo (PROPERLY RESIZED) -->
+                <!-- Slide 2: Real Official UPI Logo -->
                 <div class="slide" style="background-image: radial-gradient(circle at right, #065f46, #0f0524);">
                     <div class="slide-overlay"></div>
                     <div class="slide-left">
@@ -429,7 +423,7 @@
                         <button class="slide-btn-yellow" style="background:linear-gradient(135deg,#ef4444,#dc2626); color:#fff; border-color:#fca5a5;" onclick="switchPage('spin-page')">Spin Now ➔</button>
                     </div>
                     <div class="slide-img-box">
-                        <div style="font-size:55px; filter:drop-shadow(0 0 15px rgba(239,68,68,0.8));">🎡</div>
+                        <div style="font-size:50px; filter:drop-shadow(0 0 15px rgba(239,68,68,0.8));">🎡</div>
                     </div>
                 </div>
             </div>
@@ -600,15 +594,6 @@
                 <button class="btn-card btn-refer" onclick="switchPage('refer-page')">Refer Now ➔</button>
             </div>
         </div>
-
-        <!-- LIVE GLOBAL LEADERBOARD -->
-        <div class="leader-preview">
-            <div class="leader-head">
-                <h4>🏆 Live Global Leaderboard</h4>
-                <span style="font-size: 11px; color: #c084fc; cursor: pointer;" onclick="switchPage('leaderboard')">View All ➔</span>
-            </div>
-            <div id="home-leaderboard-list">Loading live players...</div>
-        </div>
     </div>
 
     <!-- FULL PAGE SPIN -->
@@ -710,14 +695,6 @@
         </div>
     </div>
 
-    <!-- LEADERBOARD PAGE -->
-    <div id="page-leaderboard" class="page">
-        <h3 style="color:#facc15; margin-bottom: 10px;">🏆 Live Global Leaderboard</h3>
-        <div class="leader-preview" style="background:#120426;">
-            <div id="full-leaderboard-list">Loading live standings...</div>
-        </div>
-    </div>
-
     <!-- WITHDRAW PAGE -->
     <div id="page-withdraw" class="page">
         <h3 style="color:#c084fc; margin-bottom: 10px;">💸 Withdraw Earnings</h3>
@@ -809,7 +786,7 @@
 
 </div>
 
-<!-- BOTTOM NAVBAR -->
+<!-- BOTTOM NAVBAR (4 ITEMS - LEADERBOARD REMOVED) -->
 <div class="navbar">
     <button class="nav-item active" id="nav-home" onclick="switchPage('home')">
         <span class="nav-icon">🏠</span>
@@ -859,18 +836,29 @@
 </div>
 
 <script>
-    // --- 3-STEP OPENING SCREEN LOGIC ---
-    const loaderSteps = ["Initializing SpinWin...", "Connecting Firebase...", "Syncing Live Players..."];
-    let stepIdx = 0;
-    const stepInterval = setInterval(() => {
-        stepIdx++;
-        if (stepIdx < loaderSteps.length) {
-            document.getElementById('loader-text').innerText = loaderSteps[stepIdx];
-        } else {
-            clearInterval(stepInterval);
-            document.getElementById('loader-screen').style.display = 'none';
-        }
-    }, 750);
+    // --- TELEGRAM WEB APP ROBUST INITIALIZATION ---
+    const tg = window.Telegram.WebApp;
+    try {
+        tg.expand();
+        tg.ready();
+    } catch(e) {}
+
+    // --- GUARANTEED OPENING LOADER REMOVAL ---
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const lScreen = document.getElementById('loader-screen');
+            if(lScreen) {
+                lScreen.style.opacity = '0';
+                setTimeout(() => lScreen.style.display = 'none', 400);
+            }
+        }, 1200);
+    });
+
+    // Failsafe timer so screen opens no matter what
+    setTimeout(() => {
+        const lScreen = document.getElementById('loader-screen');
+        if(lScreen) lScreen.style.display = 'none';
+    }, 2000);
 
     // --- RECENT PAYOUT TICKER ---
     const payouts = [
@@ -882,7 +870,8 @@
     let tickerIdx = 0;
     setInterval(() => {
         tickerIdx = (tickerIdx + 1) % payouts.length;
-        document.getElementById('ticker-text').innerText = payouts[tickerIdx];
+        const tickEl = document.getElementById('ticker-text');
+        if(tickEl) tickEl.innerText = payouts[tickerIdx];
     }, 3800);
 
     // --- FIREBASE INITIALIZATION ---
@@ -897,11 +886,10 @@
         databaseURL: "https://spinwinapp-961c6-default-rtdb.firebaseio.com"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.database();
-
-    const tg = window.Telegram.WebApp;
-    tg.expand();
 
     const BOT_USERNAME = "SpinWinApp_bot";
 
@@ -939,7 +927,7 @@
     const dots = document.querySelectorAll('.dot');
     function autoSlide() {
         currentSlide = (currentSlide + 1) % 3;
-        sliderWrapper.style.transform = `translateX(-${currentSlide * 33.333}%)`;
+        if(sliderWrapper) sliderWrapper.style.transform = `translateX(-${currentSlide * 33.333}%)`;
         dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentSlide));
     }
     setInterval(autoSlide, 3500);
@@ -968,7 +956,8 @@
         if(!isUserMuted) {
             bgAudio.play().catch(() => {});
         }
-        document.getElementById('current-song-title').innerText = `Playing ${musicPlaylist[currentTrackIdx].name}`;
+        const sTitle = document.getElementById('current-song-title');
+        if(sTitle) sTitle.innerText = `Playing ${musicPlaylist[currentTrackIdx].name}`;
     }
 
     function initBackgroundMusic() {
@@ -992,7 +981,8 @@
     function toggleAudioMute() {
         isUserMuted = !isUserMuted;
         if(bgAudio) bgAudio.muted = isUserMuted;
-        document.getElementById('mute-btn').innerText = isUserMuted ? "Unmute 🎵" : "Mute 🔇";
+        const mBtn = document.getElementById('mute-btn');
+        if(mBtn) mBtn.innerText = isUserMuted ? "Unmute 🎵" : "Mute 🔇";
     }
 
     function muteMusic() { if(bgAudio) bgAudio.muted = true; }
@@ -1075,7 +1065,8 @@
     function updateActiveUserCount() {
         const baseCount = 12920;
         const dynamicCount = baseCount + (Math.floor(Date.now() / 60000) % 100);
-        document.getElementById('active-user-count').innerText = dynamicCount.toLocaleString('en-IN');
+        const acEl = document.getElementById('active-user-count');
+        if(acEl) acEl.innerText = dynamicCount.toLocaleString('en-IN');
     }
     updateActiveUserCount();
     setInterval(updateActiveUserCount, 30000);
@@ -1106,50 +1097,13 @@
         updateUI();
     }
 
-    // REALTIME GLOBAL LEADERBOARD
-    function fetchGlobalLeaderboard() {
-        let myRowStr = `<div class="leader-row" style="background: rgba(168, 85, 247, 0.25);">
-            <div class="leader-user"><div class="leader-rank">1</div> 👤 ${userName} (You)</div>
-            <div style="color:#4ade80; font-weight:bold;">₹${balance.toFixed(2)}</div>
-        </div>`;
-        document.getElementById('home-leaderboard-list').innerHTML = myRowStr;
-        document.getElementById('full-leaderboard-list').innerHTML = myRowStr;
-
-        db.ref('users').on('value', (snapshot) => {
-            let players = [];
-            snapshot.forEach((childSnap) => {
-                let p = childSnap.val();
-                players.push({ name: p.name || 'User', amount: parseFloat(p.balance || 0), id: childSnap.key });
-            });
-
-            players.sort((a, b) => b.amount - a.amount);
-
-            if (players.length > 0) {
-                let homeHtml = "", fullHtml = "";
-                players.forEach((p, idx) => {
-                    let rankNum = idx + 1;
-                    let isMe = (p.id === userId);
-                    let rowStr = `<div class="leader-row" ${isMe ? 'style="background: rgba(168, 85, 247, 0.25);"' : ''}>
-                        <div class="leader-user"><div class="leader-rank" ${rankNum===1?'style="background:#facc15"':rankNum===2?'style="background:#cbd5e1"':'style="background:#b45309;color:#fff"'}>${rankNum}</div> 👤 ${p.name} ${isMe ? '(You)' : ''}</div>
-                        <div style="color:#4ade80; font-weight:bold;">₹${p.amount.toFixed(2)}</div>
-                    </div>`;
-                    if(idx < 3) homeHtml += rowStr;
-                    fullHtml += rowStr;
-                });
-
-                document.getElementById('home-leaderboard-list').innerHTML = homeHtml;
-                document.getElementById('full-leaderboard-list').innerHTML = fullHtml;
-            }
-        });
-    }
-    fetchGlobalLeaderboard();
-
     const canvas = document.getElementById('wheel-canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
     const rewards = ["₹0.30", "₹0.35", "₹0.40", "₹0.45", "₹0.50", "₹0.30"];
     const colors = ["#7c3aed", "#facc15", "#10b981", "#3b82f6", "#ec4899", "#f97316"];
 
     function drawWheel() {
+        if(!canvas || !ctx) return;
         const angle = (2 * Math.PI) / rewards.length;
         for (let i = 0; i < rewards.length; i++) {
             ctx.beginPath(); ctx.fillStyle = colors[i];
@@ -1183,20 +1137,27 @@
             return alert("आप आज का डेली बोनस क्लेम कर चुकी हैं! कल रात 12 बजे के बाद दोबारा मिलेगा।");
         }
         pendingReward = 1.00; pendingType = "Daily Bonus";
-        document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
-        document.getElementById('claim-modal').style.display = 'flex';
+        const cAmount = document.getElementById('claim-amount');
+        if(cAmount) cAmount.innerText = pendingReward.toFixed(2);
+        const cModal = document.getElementById('claim-modal');
+        if(cModal) cModal.style.display = 'flex';
     }
 
     function openRedeemModal(method) {
         selectedMethod = method;
-        document.getElementById('redeem-title').innerText = `${method} Withdrawal`;
-        document.getElementById('redeem-account').placeholder = method === 'UPI Cash' ? 'Enter UPI ID' : 'Enter Email/Mobile No.';
-        document.getElementById('redeem-modal').style.display = 'flex';
+        const rTitle = document.getElementById('redeem-title');
+        const rAcc = document.getElementById('redeem-account');
+        const rModal = document.getElementById('redeem-modal');
+        if(rTitle) rTitle.innerText = `${method} Withdrawal`;
+        if(rAcc) rAcc.placeholder = method === 'UPI Cash' ? 'Enter UPI ID' : 'Enter Email/Mobile No.';
+        if(rModal) rModal.style.display = 'flex';
     }
 
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    
-    // REWARD CALCULATION: STRICTLY RANDOM BETWEEN ₹0.30 - ₹0.50
+    function closeModal(id) { 
+        const m = document.getElementById(id);
+        if(m) m.style.display = 'none'; 
+    }
+
     function getRandomRewardUnder50() { 
         return parseFloat((Math.random() * (0.50 - 0.30) + 0.30).toFixed(2)); 
     }
@@ -1205,19 +1166,23 @@
         if (spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है!");
         
         const btn = document.getElementById('start-spin-btn');
-        btn.disabled = true; spinLeft--;
+        if(btn) btn.disabled = true; 
+        spinLeft--;
 
         const reward = getRandomRewardUnder50();
         const segmentAngle = 360 / rewards.length;
         const randomSegment = Math.floor(Math.random() * rewards.length);
         currentSpinDeg += (5 * 360) + (randomSegment * segmentAngle) + (segmentAngle / 2);
 
-        canvas.style.transform = `rotate(${currentSpinDeg}deg)`;
+        if(canvas) canvas.style.transform = `rotate(${currentSpinDeg}deg)`;
 
         setTimeout(() => {
-            btn.disabled = false; pendingReward = reward; pendingType = "Spin & Win";
-            document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
-            document.getElementById('claim-modal').style.display = 'flex';
+            if(btn) btn.disabled = false; 
+            pendingReward = reward; pendingType = "Spin & Win";
+            const cAmount = document.getElementById('claim-amount');
+            if(cAmount) cAmount.innerText = pendingReward.toFixed(2);
+            const cModal = document.getElementById('claim-modal');
+            if(cModal) cModal.style.display = 'flex';
         }, 3600);
     }
 
@@ -1255,9 +1220,12 @@
 
     function initScratchCard() {
         const sCanvas = document.getElementById('scratch-canvas');
+        if(!sCanvas) return;
         const sCtx = sCanvas.getContext('2d');
         const reward = getRandomRewardUnder50();
-        document.getElementById('scratch-reward').innerText = `₹${reward.toFixed(2)}`;
+        const sReward = document.getElementById('scratch-reward');
+        if(sReward) sReward.innerText = `₹${reward.toFixed(2)}`;
+        
         sCtx.fillStyle = '#d97706'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
         sCtx.fillStyle = '#ffffff'; sCtx.font = 'bold 14px Arial'; sCtx.fillText('Scratch Here!', 70, 62);
 
@@ -1276,8 +1244,10 @@
                 isScratching = false;
                 if (scratchLeft <= 0) return alert("आज की Scratch लिमिट खत्म हो गई है!");
                 scratchLeft--; pendingReward = reward; pendingType = "Scratch Card";
-                document.getElementById('claim-amount').innerText = pendingReward.toFixed(2);
-                document.getElementById('claim-modal').style.display = 'flex';
+                const cAmount = document.getElementById('claim-amount');
+                if(cAmount) cAmount.innerText = pendingReward.toFixed(2);
+                const cModal = document.getElementById('claim-modal');
+                if(cModal) cModal.style.display = 'flex';
             }
         };
         sCanvas.onmousemove = sCanvas.ontouchmove = scratch;
@@ -1292,25 +1262,38 @@
     }
 
     function updateUI() {
-        document.getElementById('balance').innerText = balance.toFixed(2);
-        document.getElementById('withdraw-balance').innerText = balance.toFixed(2);
-        document.getElementById('profile-balance').innerText = balance.toFixed(2);
+        const bEl = document.getElementById('balance');
+        const wBEl = document.getElementById('withdraw-balance');
+        const pBEl = document.getElementById('profile-balance');
+        if(bEl) bEl.innerText = balance.toFixed(2);
+        if(wBEl) wBEl.innerText = balance.toFixed(2);
+        if(pBEl) pBEl.innerText = balance.toFixed(2);
         
-        document.getElementById('spin-left').innerText = spinLeft;
-        document.getElementById('scratch-left').innerText = scratchLeft;
-        document.getElementById('watch-left').innerText = watchLeft;
-        document.getElementById('task-left').innerText = taskLeft;
+        const sLEl = document.getElementById('spin-left');
+        const scLEl = document.getElementById('scratch-left');
+        const wLEl = document.getElementById('watch-left');
+        const tLEl = document.getElementById('task-left');
+        if(sLEl) sLEl.innerText = spinLeft;
+        if(scLEl) scLEl.innerText = scratchLeft;
+        if(wLEl) wLEl.innerText = watchLeft;
+        if(tLEl) tLEl.innerText = taskLeft;
 
-        document.getElementById('btn-spin').disabled = (spinLeft <= 0);
-        document.getElementById('btn-scratch').disabled = (scratchLeft <= 0);
-        document.getElementById('btn-ad').disabled = (watchLeft <= 0);
-        document.getElementById('btn-task-ad').disabled = (taskLeft <= 0);
+        const bSpin = document.getElementById('btn-spin');
+        const bScratch = document.getElementById('btn-scratch');
+        const bAd = document.getElementById('btn-ad');
+        const bTask = document.getElementById('btn-task-ad');
+        if(bSpin) bSpin.disabled = (spinLeft <= 0);
+        if(bScratch) bScratch.disabled = (scratchLeft <= 0);
+        if(bAd) bAd.disabled = (watchLeft <= 0);
+        if(bTask) bTask.disabled = (taskLeft <= 0);
 
+        const cHist = document.getElementById('coin-history-list');
         let histHtml = coinHistory.length ? coinHistory.map(h => `<div class="history-item"><span>${h.text}</span><span style="color:#94a3b8">${h.time}</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center; padding:8px;">No history yet.</div>';
-        document.getElementById('coin-history-list').innerHTML = histHtml;
+        if(cHist) cHist.innerHTML = histHtml;
 
+        const rHist = document.getElementById('refer-history-list');
         let refHistHtml = referHistory.length ? referHistory.map(r => `<div class="history-item"><span>${r.name}</span><span style="color:#4ade80">+₹1.00</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>';
-        document.getElementById('refer-history-list').innerHTML = refHistHtml;
+        if(rHist) rHist.innerHTML = refHistHtml;
     }
 
     function copyReferLink() {
@@ -1324,8 +1307,11 @@
     }
 
     function submitRedeem() {
-        const amt = parseFloat(document.getElementById('redeem-amount-select').value);
-        const acc = document.getElementById('redeem-account').value.trim();
+        const amtEl = document.getElementById('redeem-amount-select');
+        const accEl = document.getElementById('redeem-account');
+        if(!amtEl || !accEl) return;
+        const amt = parseFloat(amtEl.value);
+        const acc = accEl.value.trim();
         
         if (balance < amt) return alert(`आपके वॉलेट में कम से कम ₹${amt} होना चाहिए!`);
         if (!acc) return alert("कृपया UPI ID या अकाउंट विवरण दर्ज करें!");
