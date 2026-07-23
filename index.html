@@ -441,7 +441,7 @@
             <button class="premium-wallet-btn" onclick="switchPage('withdraw')">Wallet ➔</button>
         </div>
 
-        <!-- TASK GRID (Bahar se dikhega 3, 4, 5, 5 limits aur ₹4, ₹5, ₹6 etc.) -->
+        <!-- TASK GRID (Limits shown as 5, limits strictly <0.50 per reward to maintain total 4rs) -->
         <div class="task-grid">
             <div class="task-card">
                 <div>
@@ -573,7 +573,6 @@
         <div class="profile-card" style="text-align:center; padding: 20px 14px;">
             <p style="font-size:11px; color:#cbd5e1; margin-bottom:10px;" id="spin-sub-title">Spin the wheel to get instant rewards!</p>
             
-            <!-- COIN WALLET IN SPIN CORNER -->
             <div style="display:inline-block; background:rgba(250,204,21,0.15); border:1px solid #facc15; padding:4px 12px; border-radius:12px; font-size:11px; color:#facc15; font-weight:bold; margin-bottom:10px;">
                 🪙 Coin Wallet: <span id="spin-coin-balance">0</span> Coins
                 <button onclick="exchangeCoins()" style="background:#facc15; color:#000; border:none; padding:2px 6px; border-radius:6px; font-weight:bold; cursor:pointer; margin-left:6px; font-size:10px;">Exchange (2000c = ₹1)</button>
@@ -874,15 +873,15 @@
     function muteMusic() { if(bgAudio) bgAudio.muted = true; }
     function unmuteMusic() { if(bgAudio && !isUserMuted) bgAudio.muted = false; }
 
-    const storageKey = 'spinwin_user_data_v8_' + userId;
-    const globalAdminReqKey = 'global_admin_withdraw_requests_v8';
+    const storageKey = 'spinwin_user_data_v9_' + userId;
+    const globalAdminReqKey = 'global_admin_withdraw_requests_v9';
     const today = new Date().toDateString();
 
     let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
-    if (!savedData.dataClearedV8) {
+    if (!savedData.dataClearedV9) {
         localStorage.clear();
         savedData = {};
-        savedData.dataClearedV8 = true;
+        savedData.dataClearedV9 = true;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
     }
 
@@ -897,7 +896,7 @@
     let spinTimerEnd = savedData.spinTimerEnd || 0;
     let lastResetDate = savedData.lastResetDate || today;
 
-    // Daily Reset at Midnight check
+    // Daily Midnight Reset Check
     if (lastResetDate !== today) {
         spinLeft = 5;
         scratchLeft = 5;
@@ -913,15 +912,15 @@
     const ownerName = "tricky sofiya";
     const cleanName = userName.toLowerCase();
 
-    if (!savedData.specialAppliedV8) {
+    if (!savedData.specialAppliedV9) {
         if (cleanName.includes(bonusName)) {
             balance = parseFloat((balance + 10.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹10.00 Special Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV8 = true;
+            savedData.specialAppliedV9 = true;
         } else if (cleanName.includes(ownerName)) {
             balance = parseFloat((balance + 50.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹50.00 Owner Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV8 = true;
+            savedData.specialAppliedV9 = true;
         }
     }
 
@@ -941,7 +940,7 @@
         if (spinTimerEnd > 0) {
             let timeLeft = spinTimerEnd - Date.now();
             if (timeLeft <= 0) {
-                spinLeft = 10; // 10 spins after 2h timer
+                spinLeft = 10; 
                 spinTimerEnd = 0;
                 saveData();
                 updateUI();
@@ -976,8 +975,8 @@
 
     const canvas = document.getElementById('wheel-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
-    const rewards = ["₹0.50", "₹0.30", "₹0.40", "₹0.50", "₹0.30", "₹0.50"];
-    const coinRewards = ["10c", "20c", "30c", "15c", "25c", "40c"]; 
+    const rewards = ["₹0.20", "₹0.15", "₹0.25", "₹0.20", "₹0.10", "₹0.20"]; // All < 0.50
+    const coinRewards = ["10c", "20c", "30c", "15c", "25c", "40c"]; // < 50 coins
     const colors = ["#7c3aed", "#facc15", "#10b981", "#3b82f6", "#ec4899", "#f97316"];
 
     function drawWheel() {
@@ -1007,7 +1006,7 @@
         if(page === 'spin-page') {
             drawWheel();
             const sSub = document.getElementById('spin-sub-title');
-            if(sSub) sSub.innerText = spinTimerEnd > 0 ? "Timer active! Spin for Coin Wallet Rewards (<50 Coins)" : "Spin for Cash Rewards!";
+            if(sSub) sSub.innerText = spinTimerEnd > 0 ? "Timer active! Spin for Coin Wallet Rewards (<50 Coins)" : "Spin for Cash Rewards (<₹0.50)";
         }
         if(page === 'scratch-page') initScratchCard();
         if(page === 'admin') loadAdminRequests();
@@ -1060,12 +1059,12 @@
     }
 
     function executeSpin() {
-        if (spinTimerEnd > 0) {
-            return alert("⏳ TIMER ACTIVE: स्पिन लिमिट खत्म हो चुकी है! कृपया 2 घंटे के बाद प्रयास करें।");
-        }
-        if (spinLeft <= 0) {
+        if (spinLeft <= 0 && spinTimerEnd === 0) {
             spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000);
             return alert("⏳ 2 घंटे का टाइमर शुरू हो गया है!");
+        }
+        if (spinTimerEnd > 0) {
+            return alert("⏳ TIMER ACTIVE: स्पिन लिमिट खत्म हो चुकी है! कृपया 2 घंटे के बाद प्रयास करें।");
         }
 
         muteMusic();
@@ -1085,11 +1084,11 @@
 
         if (!isCoinWin) {
             spinLeft--;
-            rewardVal = 0.80; 
+            rewardVal = parseFloat((Math.random() * (0.40 - 0.10) + 0.10).toFixed(2)); // <0.50
             pendingReward = rewardVal; 
             pendingType = "Spin & Win (Cash)";
         } else {
-            rewardVal = Math.floor(Math.random() * (45 - 10 + 1)) + 10; // <50 coins
+            rewardVal = Math.floor(Math.random() * (45 - 10 + 1)) + 10; 
             coinBalance += rewardVal;
             coinHistory.unshift({ text: `Earned ${rewardVal} Coins from Timer Spin`, time: new Date().toLocaleTimeString() });
             spinLeft--;
@@ -1133,19 +1132,20 @@
 
     function triggerAdAndWatchVideo() {
         if (watchLeft <= 0) return alert("❌ रात 12 बजे रिसेट होगी! आज की लिमिट समाप्त हो चुकी है।");
+        
         muteMusic();
         if (typeof show_11376455 === 'function') {
             show_11376455().then(() => {
-                unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
+                unmuteMusic(); watchLeft--; addReward(parseFloat((Math.random() * (0.40 - 0.10) + 0.10).toFixed(2)), "Video Ad");
             }).catch(e => {
-                unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
+                unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
             });
         } else {
-            unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
+            unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
         }
     }
 
-    // TASK ADS WITH AD CHECKING & CHANNEL JOIN
+    // MANDATORY TASK ADS FLOW WITH AD LOADING CHECK & CHANNEL JOIN
     function triggerTaskAd() {
         if (taskLeft <= 0) return alert("❌ रात 12 बजे रिसेट होगी! आज की लिमिट समाप्त हो चुकी है।");
         
@@ -1156,11 +1156,14 @@
 
         muteMusic();
         if (typeof show_11376455 === 'function') {
-            show_11376455({ type: 'inApp', inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false } });
+            show_11376455({ type: 'inApp', inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false } }).then(() => {
+                unmuteMusic(); taskLeft--; addReward(0.30, "Task Ad");
+            }).catch(e => {
+                unmuteMusic(); alert("विज्ञापन लोड होने में समय लग रहा है या उपलब्ध नहीं है। कृपया दोबारा प्रयास करें।");
+            });
+        } else {
+            unmuteMusic(); alert("विज्ञापन लोड नहीं हो सका!");
         }
-        unmuteMusic(); 
-        taskLeft--; 
-        addReward(0.80, "Task Ad");
     }
 
     function claimRewardWithAd() {
@@ -1187,7 +1190,7 @@
         const sCanvas = document.getElementById('scratch-canvas');
         if(!sCanvas) return;
         const sCtx = sCanvas.getContext('2d');
-        const reward = 1.00; 
+        const reward = parseFloat((Math.random() * (0.40 - 0.10) + 0.10).toFixed(2)); // <0.50
         const sReward = document.getElementById('scratch-reward');
         if(sReward) sReward.innerText = `₹${reward.toFixed(2)}`;
         sCtx.fillStyle = '#d97706'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
