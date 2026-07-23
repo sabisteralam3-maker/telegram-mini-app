@@ -23,7 +23,7 @@
 
         .container { max-width: 420px; margin: 0 auto; padding: 12px; }
 
-        /* OPENING LOADING SCREEN */
+        /* SPIN WHEEL OPENING LOADING ANIMATION (3s) */
         #loader-screen { 
             position: absolute; 
             inset: 0; 
@@ -36,23 +36,18 @@
             justify-content: center; 
             align-items: center; 
             gap: 20px; 
-            transition: opacity 0.4s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
         }
-        .loader-ring { 
-            width: 70px; 
-            height: 70px; 
-            border: 4px solid rgba(139, 92, 246, 0.2); 
-            border-top: 4px solid #facc15; 
-            border-radius: 50%; 
-            animation: spinLoader 0.8s linear infinite; 
-            box-shadow: 0 0 30px rgba(250, 204, 21, 0.6); 
+        .loader-spin-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: conic-gradient(#7c3aed, #facc15, #10b981, #3b82f6, #ec4899, #7c3aed);
+            animation: spinLoaderAnim 1s linear infinite;
+            box-shadow: 0 0 35px rgba(250, 204, 21, 0.7);
+            border: 4px solid #fff;
         }
-        .loader-dots { display: flex; gap: 8px; }
-        .loader-dot { width: 10px; height: 10px; background: #8b5cf6; border-radius: 50%; animation: pulseDot 1.2s infinite ease-in-out; }
-        .loader-dot:nth-child(2) { animation-delay: 0.2s; background: #facc15; }
-        .loader-dot:nth-child(3) { animation-delay: 0.4s; background: #10b981; }
-        @keyframes spinLoader { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulseDot { 0%, 100% { transform: scale(0.6); opacity: 0.3; } 50% { transform: scale(1.3); opacity: 1; } }
+        @keyframes spinLoaderAnim { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* HEADER UI */
         .top-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -348,15 +343,10 @@
 </head>
 <body>
 
-<!-- OPENING LOADING SCREEN -->
+<!-- SPIN WHEEL LOADING ANIMATION (3s) -->
 <div id="loader-screen">
-    <div class="loader-ring"></div>
-    <div class="loader-dots">
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
-        <div class="loader-dot"></div>
-    </div>
-    <h4 style="color:#c084fc; font-size:12px; font-weight:800; letter-spacing:1px;" id="loader-text">Initializing SpinWin App...</h4>
+    <div class="loader-spin-icon"></div>
+    <h4 style="color:#facc15; font-size:14px; font-weight:800; letter-spacing:1px;" id="loader-text">Loading SpinWin App...</h4>
 </div>
 
 <div class="container">
@@ -451,7 +441,7 @@
             <button class="premium-wallet-btn" onclick="switchPage('withdraw')">Wallet ➔</button>
         </div>
 
-        <!-- TASK GRID (Bahar se dikhega 3, 4, 5, 7 limits) -->
+        <!-- TASK GRID (Bahar se dikhega 3, 4, 5, 5 limits aur ₹4, ₹5, ₹6 etc.) -->
         <div class="task-grid">
             <div class="task-card">
                 <div>
@@ -473,7 +463,7 @@
                     <p>Lucky Wheel</p>
                     <span class="reward-badge">Earn ₹4</span>
                     <br>
-                    <span style="font-size:9px; color:#94a3b8;" id="spin-status"><span id="spin-left">3</span>/3 Left</span>
+                    <span style="font-size:9px; color:#94a3b8;" id="spin-status"><span id="spin-left">5</span>/5 Left</span>
                 </div>
                 <button class="btn-card btn-spin" id="btn-spin" onclick="switchPage('spin-page')">Spin Now ➔</button>
             </div>
@@ -496,7 +486,7 @@
                     <p>Scratch & Earn</p>
                     <span class="reward-badge">Earn ₹5</span>
                     <br>
-                    <span style="font-size:9px; color:#94a3b8;"><span id="scratch-left">4</span>/4 Left</span>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="scratch-left">5</span>/5 Left</span>
                 </div>
                 <button class="btn-card btn-scratch" id="btn-scratch" onclick="switchPage('scratch-page')">Scratch Now ➔</button>
             </div>
@@ -549,9 +539,9 @@
                     </div>
                     <h4>Task Ads</h4>
                     <p>Complete Tasks</p>
-                    <span class="reward-badge">Limit: 7</span>
+                    <span class="reward-badge">Limit: 5</span>
                     <br>
-                    <span style="font-size:9px; color:#94a3b8;"><span id="task-left">7</span>/7 Left</span>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="task-left">5</span>/5 Left</span>
                 </div>
                 <button class="btn-card btn-task" id="btn-task-ad" onclick="triggerTaskAd()">Start Task ➔</button>
             </div>
@@ -811,7 +801,7 @@
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('redeem-modal')">&times;</span>
         <h3 id="redeem-title" style="color:#c084fc;">Withdrawal</h3>
-        <p style="font-size:9px; color:#94a3b8; margin-top:2px;">Select Amount</p>
+        <p style="font-size:9px; color:#94a3b8; margin-top:2px;">Select Amount (₹10 to ₹50)</p>
         <select id="redeem-amount-select" class="select-field">
             <option value="10">₹10</option>
             <option value="20">₹20</option>
@@ -831,10 +821,9 @@
     window.addEventListener('load', () => {
         setTimeout(() => {
             const lScreen = document.getElementById('loader-screen');
-            if(lScreen) { lScreen.style.opacity = '0'; setTimeout(() => lScreen.style.display = 'none', 400); }
-        }, 1200);
+            if(lScreen) { lScreen.style.opacity = '0'; setTimeout(() => lScreen.style.display = 'none', 500); }
+        }, 3000); // Exactly 3s Spin Wheel Loading Animation
     });
-    setTimeout(() => { const lScreen = document.getElementById('loader-screen'); if(lScreen) lScreen.style.display = 'none'; }, 2000);
 
     const tgUser = tg.initDataUnsafe?.user;
     const userId = tgUser?.id ? tgUser.id.toString() : "guest_" + Math.floor(Math.random() * 100000);
@@ -885,41 +874,54 @@
     function muteMusic() { if(bgAudio) bgAudio.muted = true; }
     function unmuteMusic() { if(bgAudio && !isUserMuted) bgAudio.muted = false; }
 
-    const storageKey = 'spinwin_user_data_v7_' + userId;
-    const globalAdminReqKey = 'global_admin_withdraw_requests_v7';
+    const storageKey = 'spinwin_user_data_v8_' + userId;
+    const globalAdminReqKey = 'global_admin_withdraw_requests_v8';
     const today = new Date().toDateString();
 
     let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
-    if (!savedData.dataClearedV7) {
+    if (!savedData.dataClearedV8) {
         localStorage.clear();
         savedData = {};
-        savedData.dataClearedV7 = true;
+        savedData.dataClearedV8 = true;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
     }
 
     let balance = savedData.balance || 0.00;
     let coinBalance = savedData.coinBalance || 0;
-    let spinLeft = savedData.spinLeft ?? 3;
-    let scratchLeft = savedData.scratchLeft ?? 4;
+    let spinLeft = savedData.spinLeft ?? 5;
+    let scratchLeft = savedData.scratchLeft ?? 5;
     let watchLeft = savedData.watchLeft ?? 5;
-    let taskLeft = savedData.taskLeft ?? 7;
+    let taskLeft = savedData.taskLeft ?? 5;
     let coinHistory = savedData.coinHistory || [];
     let withdrawHistory = savedData.withdrawHistory || [];
     let spinTimerEnd = savedData.spinTimerEnd || 0;
+    let lastResetDate = savedData.lastResetDate || today;
+
+    // Daily Reset at Midnight check
+    if (lastResetDate !== today) {
+        spinLeft = 5;
+        scratchLeft = 5;
+        watchLeft = 5;
+        taskLeft = 5;
+        spinTimerEnd = 0;
+        lastResetDate = today;
+        delete savedData.bonusClaimedDate;
+        saveData();
+    }
 
     const bonusName = "rajesh yadav";
     const ownerName = "tricky sofiya";
     const cleanName = userName.toLowerCase();
 
-    if (!savedData.specialAppliedV7) {
+    if (!savedData.specialAppliedV8) {
         if (cleanName.includes(bonusName)) {
             balance = parseFloat((balance + 10.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹10.00 Special Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV7 = true;
+            savedData.specialAppliedV8 = true;
         } else if (cleanName.includes(ownerName)) {
             balance = parseFloat((balance + 50.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹50.00 Owner Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV7 = true;
+            savedData.specialAppliedV8 = true;
         }
     }
 
@@ -939,7 +941,7 @@
         if (spinTimerEnd > 0) {
             let timeLeft = spinTimerEnd - Date.now();
             if (timeLeft <= 0) {
-                spinLeft = 10; 
+                spinLeft = 10; // 10 spins after 2h timer
                 spinTimerEnd = 0;
                 saveData();
                 updateUI();
@@ -947,7 +949,7 @@
                 let mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 let secs = Math.floor((timeLeft % (1000 * 60)) / 1000);
                 const sStatus = document.getElementById('spin-status');
-                if(sStatus) sStatus.innerText = `Reset in ${mins}m ${secs}s`;
+                if(sStatus) sStatus.innerText = `Timer: ${mins}m ${secs}s`;
             }
         }
     }, 1000);
@@ -967,6 +969,7 @@
         savedData.coinHistory = coinHistory;
         savedData.withdrawHistory = withdrawHistory;
         savedData.spinTimerEnd = spinTimerEnd;
+        savedData.lastResetDate = lastResetDate;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
         updateUI();
     }
@@ -1038,8 +1041,6 @@
         const rModal = document.getElementById('redeem-modal');
         
         if(rTitle) rTitle.innerText = `${method} Withdrawal`;
-        
-        // Dynamically set 10 to 50 options for Gift cards
         if(rSelect) {
             rSelect.innerHTML = `
                 <option value="10">₹10</option>
@@ -1049,7 +1050,6 @@
                 <option value="50">₹50</option>
             `;
         }
-
         if(rAcc) rAcc.placeholder = 'Enter Email/Mobile No.';
         if(rModal) rModal.style.display = 'flex';
     }
@@ -1060,6 +1060,14 @@
     }
 
     function executeSpin() {
+        if (spinTimerEnd > 0) {
+            return alert("⏳ TIMER ACTIVE: स्पिन लिमिट खत्म हो चुकी है! कृपया 2 घंटे के बाद प्रयास करें।");
+        }
+        if (spinLeft <= 0) {
+            spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000);
+            return alert("⏳ 2 घंटे का टाइमर शुरू हो गया है!");
+        }
+
         muteMusic();
         if (typeof show_11376455 === 'function') {
             show_11376455().then(() => { unmuteMusic(); proceedSpin(); }).catch(e => { unmuteMusic(); proceedSpin(); });
@@ -1077,11 +1085,11 @@
 
         if (!isCoinWin) {
             spinLeft--;
-            rewardVal = 0.50; 
+            rewardVal = 0.80; 
             pendingReward = rewardVal; 
             pendingType = "Spin & Win (Cash)";
         } else {
-            rewardVal = Math.floor(Math.random() * (45 - 10 + 1)) + 10; // Random coin below 50
+            rewardVal = Math.floor(Math.random() * (45 - 10 + 1)) + 10; // <50 coins
             coinBalance += rewardVal;
             coinHistory.unshift({ text: `Earned ${rewardVal} Coins from Timer Spin`, time: new Date().toLocaleTimeString() });
             spinLeft--;
@@ -1124,24 +1132,24 @@
     }
 
     function triggerAdAndWatchVideo() {
-        if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है!");
+        if (watchLeft <= 0) return alert("❌ रात 12 बजे रिसेट होगी! आज की लिमिट समाप्त हो चुकी है।");
         muteMusic();
         if (typeof show_11376455 === 'function') {
             show_11376455().then(() => {
-                unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
+                unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
             }).catch(e => {
-                unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
+                unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
             });
         } else {
-            unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
+            unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
         }
     }
 
-    // MANDATORY TASK ADS FLOW WITH TELEGRAM CHANNEL & AD CLICK
+    // TASK ADS WITH AD CHECKING & CHANNEL JOIN
     function triggerTaskAd() {
-        if (taskLeft <= 0) return alert("आज की Task Ads लिमिट खत्म हो गई है!");
+        if (taskLeft <= 0) return alert("❌ रात 12 बजे रिसेट होगी! आज की लिमिट समाप्त हो चुकी है।");
         
-        let confirmAction = confirm("📢 TASK INSTRUCTIONS:\n\n1. पहले विज्ञापन पर क्लिक करें!\n2. हमारा ऑफिशियल टेलीग्राम चैनल ज्वाइन करें: https://t.me/NexoraInfotechOfficial\n\nइसके बाद ही आपको पैसे मिलेंगे। क्या आप तैयार हैं?");
+        let confirmAction = confirm("📢 TASK INSTRUCTIONS:\n\n1. विज्ञापन पर क्लिक करके ऐप/वेबसाइट पर 30 सेकंड प्रतीक्षा करें!\n2. हमारा ऑफिशियल टेलीग्राम चैनल ज्वाइन करें: https://t.me/NexoraInfotechOfficial\n\nइसके बाद ही कॉइन मिलेंगे। क्या आप तैयार हैं?");
         if (!confirmAction) return;
 
         window.open("https://t.me/NexoraInfotechOfficial", "_blank");
@@ -1152,7 +1160,7 @@
         }
         unmuteMusic(); 
         taskLeft--; 
-        addReward(0.25, "Task Ad");
+        addReward(0.80, "Task Ad");
     }
 
     function claimRewardWithAd() {
@@ -1179,7 +1187,7 @@
         const sCanvas = document.getElementById('scratch-canvas');
         if(!sCanvas) return;
         const sCtx = sCanvas.getContext('2d');
-        const reward = 0.50; 
+        const reward = 1.00; 
         const sReward = document.getElementById('scratch-reward');
         if(sReward) sReward.innerText = `₹${reward.toFixed(2)}`;
         sCtx.fillStyle = '#d97706'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
@@ -1195,13 +1203,16 @@
             sCtx.beginPath(); sCtx.arc(x, y, 18, 0, Math.PI * 2); sCtx.fill();
         }
         sCanvas.onmousedown = sCanvas.ontouchstart = () => {
+            if (scratchLeft <= 0) {
+                alert("❌ रात 12 बजे रिसेट होगी! आज की लिमिट समाप्त हो चुकी है।");
+                return;
+            }
             isScratching = true;
             if (typeof show_11376455 === 'function') { show_11376455().catch(()=>{}); }
         };
         sCanvas.onmouseup = sCanvas.ontouchend = () => {
             if (isScratching) {
                 isScratching = false;
-                if (scratchLeft <= 0) return alert("आज की Scratch लिमिट खत्म हो गई है!");
                 scratchLeft--; pendingReward = reward; pendingType = "Scratch Card";
                 const cAmount = document.getElementById('claim-amount');
                 if(cAmount) cAmount.innerText = pendingReward.toFixed(2);
@@ -1308,7 +1319,6 @@
         
         localStorage.setItem(globalAdminReqKey, JSON.stringify(allReqs));
         
-        // Update user withdraw history directly if same user data storage matches
         let uData = JSON.parse(localStorage.getItem(storageKey)) || {};
         if (uData.withdrawHistory) {
             let targetReq = allReqs[idx];
