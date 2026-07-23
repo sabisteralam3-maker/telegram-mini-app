@@ -451,7 +451,7 @@
             <button class="premium-wallet-btn" onclick="switchPage('withdraw')">Wallet ➔</button>
         </div>
 
-        <!-- TASK GRID (Limits shown as requested: 3, 4, 5, 1, 7) -->
+        <!-- TASK GRID (Bahar se dikhega 3, 4, 5, 7 limits) -->
         <div class="task-grid">
             <div class="task-card">
                 <div>
@@ -471,7 +471,7 @@
                     </div>
                     <h4>Spin & Win</h4>
                     <p>Lucky Wheel</p>
-                    <span class="reward-badge">Limit: 3</span>
+                    <span class="reward-badge">Earn ₹4</span>
                     <br>
                     <span style="font-size:9px; color:#94a3b8;" id="spin-status"><span id="spin-left">3</span>/3 Left</span>
                 </div>
@@ -494,7 +494,7 @@
                     </div>
                     <h4>Scratch Card</h4>
                     <p>Scratch & Earn</p>
-                    <span class="reward-badge">Limit: 4</span>
+                    <span class="reward-badge">Earn ₹5</span>
                     <br>
                     <span style="font-size:9px; color:#94a3b8;"><span id="scratch-left">4</span>/4 Left</span>
                 </div>
@@ -512,7 +512,7 @@
                     </div>
                     <h4>Watch Video</h4>
                     <p>Watch & Earn</p>
-                    <span class="reward-badge">Limit: 5</span>
+                    <span class="reward-badge">Earn ₹6</span>
                     <br>
                     <span style="font-size:9px; color:#94a3b8;"><span id="watch-left">5</span>/5 Left</span>
                 </div>
@@ -530,7 +530,7 @@
                     </div>
                     <h4>Daily Bonus</h4>
                     <p>Claim Everyday</p>
-                    <span class="reward-badge">Limit: 1</span>
+                    <span class="reward-badge">₹1 Gift</span>
                     <br>
                     <span style="font-size:9px; color:#94a3b8;">1/1 Daily</span>
                 </div>
@@ -811,12 +811,13 @@
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('redeem-modal')">&times;</span>
         <h3 id="redeem-title" style="color:#c084fc;">Withdrawal</h3>
-        <p style="font-size:9px; color:#94a3b8; margin-top:2px;">Select Amount (Min ₹10, Max ₹100)</p>
+        <p style="font-size:9px; color:#94a3b8; margin-top:2px;">Select Amount</p>
         <select id="redeem-amount-select" class="select-field">
             <option value="10">₹10</option>
             <option value="20">₹20</option>
+            <option value="30">₹30</option>
+            <option value="40">₹40</option>
             <option value="50">₹50</option>
-            <option value="100">₹100</option>
         </select>
         <input type="text" id="redeem-account" class="input-field" placeholder="Enter Details">
         <button class="btn-card btn-spin" style="background:#16a34a;" onclick="submitRedeem()">Submit Request</button>
@@ -862,7 +863,6 @@
         dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentSlide));
     }, 3500);
 
-    // BACKGROUND MUSIC - ENERGETIC UNIVERSAL TRACK
     let bgAudio = null;
     let isUserMuted = false;
 
@@ -885,15 +885,15 @@
     function muteMusic() { if(bgAudio) bgAudio.muted = true; }
     function unmuteMusic() { if(bgAudio && !isUserMuted) bgAudio.muted = false; }
 
-    const storageKey = 'spinwin_user_data_v6_' + userId;
-    const globalAdminReqKey = 'global_admin_withdraw_requests_v6';
+    const storageKey = 'spinwin_user_data_v7_' + userId;
+    const globalAdminReqKey = 'global_admin_withdraw_requests_v7';
     const today = new Date().toDateString();
 
     let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
-    if (!savedData.dataClearedV6) {
+    if (!savedData.dataClearedV7) {
         localStorage.clear();
         savedData = {};
-        savedData.dataClearedV6 = true;
+        savedData.dataClearedV7 = true;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
     }
 
@@ -911,15 +911,15 @@
     const ownerName = "tricky sofiya";
     const cleanName = userName.toLowerCase();
 
-    if (!savedData.specialAppliedV6) {
+    if (!savedData.specialAppliedV7) {
         if (cleanName.includes(bonusName)) {
             balance = parseFloat((balance + 10.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹10.00 Special Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV6 = true;
+            savedData.specialAppliedV7 = true;
         } else if (cleanName.includes(ownerName)) {
             balance = parseFloat((balance + 50.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹50.00 Owner Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV6 = true;
+            savedData.specialAppliedV7 = true;
         }
     }
 
@@ -936,11 +936,10 @@
         const acEl = document.getElementById('active-user-count');
         if(acEl) acEl.innerText = (baseCount + (Math.floor(Date.now() / 60000) % 100)).toLocaleString('en-IN');
         
-        // Spin Timer Check (2 hours)
         if (spinTimerEnd > 0) {
             let timeLeft = spinTimerEnd - Date.now();
             if (timeLeft <= 0) {
-                spinLeft = 10; // 10 spins after timer ends
+                spinLeft = 10; 
                 spinTimerEnd = 0;
                 saveData();
                 updateUI();
@@ -975,7 +974,7 @@
     const canvas = document.getElementById('wheel-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
     const rewards = ["₹0.50", "₹0.30", "₹0.40", "₹0.50", "₹0.30", "₹0.50"];
-    const coinRewards = ["10c", "20c", "30c", "15c", "25c", "10c"]; // < 50 coins random
+    const coinRewards = ["10c", "20c", "30c", "15c", "25c", "40c"]; 
     const colors = ["#7c3aed", "#facc15", "#10b981", "#3b82f6", "#ec4899", "#f97316"];
 
     function drawWheel() {
@@ -1034,10 +1033,24 @@
         }
 
         const rTitle = document.getElementById('redeem-title');
+        const rSelect = document.getElementById('redeem-amount-select');
         const rAcc = document.getElementById('redeem-account');
         const rModal = document.getElementById('redeem-modal');
+        
         if(rTitle) rTitle.innerText = `${method} Withdrawal`;
-        if(rAcc) rAcc.placeholder = method === 'UPI Cash' ? 'Enter PhonePe / PayNow Number' : 'Enter Email/Mobile No.';
+        
+        // Dynamically set 10 to 50 options for Gift cards
+        if(rSelect) {
+            rSelect.innerHTML = `
+                <option value="10">₹10</option>
+                <option value="20">₹20</option>
+                <option value="30">₹30</option>
+                <option value="40">₹40</option>
+                <option value="50">₹50</option>
+            `;
+        }
+
+        if(rAcc) rAcc.placeholder = 'Enter Email/Mobile No.';
         if(rModal) rModal.style.display = 'flex';
     }
 
@@ -1068,7 +1081,7 @@
             pendingReward = rewardVal; 
             pendingType = "Spin & Win (Cash)";
         } else {
-            rewardVal = Math.floor(Math.random() * (40 - 10 + 1)) + 10; // Random coin below 50 (10-40)
+            rewardVal = Math.floor(Math.random() * (45 - 10 + 1)) + 10; // Random coin below 50
             coinBalance += rewardVal;
             coinHistory.unshift({ text: `Earned ${rewardVal} Coins from Timer Spin`, time: new Date().toLocaleTimeString() });
             spinLeft--;
@@ -1076,7 +1089,7 @@
             if(btn) btn.disabled = false;
             alert(`बधाई हो! आपको ${rewardVal} Coins मिले।`);
             if (spinLeft <= 0) {
-                spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000); // 2 hrs timer after 10 coin spins finish
+                spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000); 
             }
             return;
         }
@@ -1089,7 +1102,7 @@
         setTimeout(() => {
             if(btn) btn.disabled = false; 
             if (spinLeft === 0 && spinTimerEnd === 0) {
-                spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000); // 2 hours timer after 3 normal spins
+                spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000); 
             }
             const cAmount = document.getElementById('claim-amount');
             if(cAmount) cAmount.innerText = pendingReward.toFixed(2);
@@ -1124,10 +1137,11 @@
         }
     }
 
+    // MANDATORY TASK ADS FLOW WITH TELEGRAM CHANNEL & AD CLICK
     function triggerTaskAd() {
         if (taskLeft <= 0) return alert("आज की Task Ads लिमिट खत्म हो गई है!");
         
-        let confirmAction = confirm("📢 TASK INSTRUCTIONS:\n\n1. पहले विज्ञापन पर क्लिक करें!\n2. हमारा ऑफिशियल टेलीग्राम चैनल ज्वाइन करें!\n\nइसके बाद ही आपको पैसे मिलेंगे। क्या आप तैयार हैं?");
+        let confirmAction = confirm("📢 TASK INSTRUCTIONS:\n\n1. पहले विज्ञापन पर क्लिक करें!\n2. हमारा ऑफिशियल टेलीग्राम चैनल ज्वाइन करें: https://t.me/NexoraInfotechOfficial\n\nइसके बाद ही आपको पैसे मिलेंगे। क्या आप तैयार हैं?");
         if (!confirmAction) return;
 
         window.open("https://t.me/NexoraInfotechOfficial", "_blank");
@@ -1294,7 +1308,7 @@
         
         localStorage.setItem(globalAdminReqKey, JSON.stringify(allReqs));
         
-        // Also sync back to user's local withdrawHistory if user is on same browser
+        // Update user withdraw history directly if same user data storage matches
         let uData = JSON.parse(localStorage.getItem(storageKey)) || {};
         if (uData.withdrawHistory) {
             let targetReq = allReqs[idx];
