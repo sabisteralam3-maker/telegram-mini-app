@@ -165,7 +165,7 @@
         .active-left { display: flex; align-items: center; gap: 10px; }
         .active-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(99, 102, 241, 0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #818cf8; }
 
-        /* WALLET CARDS (MAIN & COIN WALLET) */
+        /* WALLET CARD */
         .wallet-card { 
             background: linear-gradient(135deg, #2a0b52, #100228); 
             border: 1px solid rgba(192, 132, 252, 0.5); 
@@ -179,19 +179,21 @@
         }
         .wallet-left { display: flex; align-items: center; gap: 14px; }
         .wallet-info p { font-size: 10px; color: #c084fc; font-weight: 800; letter-spacing: 0.8px; }
-        .wallet-info h2 { font-size: 26px; font-weight: 900; color: #fff; margin-top: 1px; }
+        .wallet-info h2 { font-size: 28px; font-weight: 900; color: #fff; margin-top: 1px; }
         
         .premium-wallet-btn { 
             background: linear-gradient(135deg, #9333ea, #6366f1); 
             border: 1px solid #facc15; 
             color: #ffffff; 
-            padding: 10px 16px; 
+            padding: 10px 20px; 
             border-radius: 16px; 
             font-weight: 900; 
             font-size: 12px; 
             cursor: pointer; 
             box-shadow: 0 0 18px rgba(147, 51, 234, 0.8), 0 4px 10px rgba(0,0,0,0.5); 
+            transition: 0.2s;
         }
+        .premium-wallet-btn:active { transform: scale(0.95); }
 
         /* TASK GRID */
         .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
@@ -437,7 +439,7 @@
             <span style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: bold;">🟢 Live</span>
         </div>
 
-        <!-- WALLET CARDS (MAIN WALLET & COIN WALLET) -->
+        <!-- MAIN WALLET CARD -->
         <div class="wallet-card">
             <div class="wallet-left">
                 <div style="font-size:32px;">👛</div>
@@ -449,18 +451,7 @@
             <button class="premium-wallet-btn" onclick="switchPage('withdraw')">Wallet ➔</button>
         </div>
 
-        <div class="wallet-card" style="background: linear-gradient(135deg, #1b073e, #090e2e); border-color: #facc15;">
-            <div class="wallet-left">
-                <div style="font-size:32px;">🪙</div>
-                <div class="wallet-info">
-                    <p>COIN WALLET (Timer Spin)</p>
-                    <h2><span id="coin-balance">0</span> Coins</h2>
-                </div>
-            </div>
-            <button class="premium-wallet-btn" style="background:linear-gradient(135deg,#facc15,#eab308); color:#000;" onclick="exchangeCoins()">Exchange ₹1 (2000c)</button>
-        </div>
-
-        <!-- TASK GRID -->
+        <!-- TASK GRID (Limits shown as requested: 3, 4, 5, 1, 7) -->
         <div class="task-grid">
             <div class="task-card">
                 <div>
@@ -480,9 +471,9 @@
                     </div>
                     <h4>Spin & Win</h4>
                     <p>Lucky Wheel</p>
-                    <span class="reward-badge">₹0.5 / Spin</span>
+                    <span class="reward-badge">Limit: 3</span>
                     <br>
-                    <span style="font-size:9px; color:#94a3b8;" id="spin-status"><span id="spin-left">5</span>/5 Left</span>
+                    <span style="font-size:9px; color:#94a3b8;" id="spin-status"><span id="spin-left">3</span>/3 Left</span>
                 </div>
                 <button class="btn-card btn-spin" id="btn-spin" onclick="switchPage('spin-page')">Spin Now ➔</button>
             </div>
@@ -503,9 +494,9 @@
                     </div>
                     <h4>Scratch Card</h4>
                     <p>Scratch & Earn</p>
-                    <span class="reward-badge">₹1 / Scratch</span>
+                    <span class="reward-badge">Limit: 4</span>
                     <br>
-                    <span style="font-size:9px; color:#94a3b8;"><span id="scratch-left">5</span>/5 Left</span>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="scratch-left">4</span>/4 Left</span>
                 </div>
                 <button class="btn-card btn-scratch" id="btn-scratch" onclick="switchPage('scratch-page')">Scratch Now ➔</button>
             </div>
@@ -521,7 +512,7 @@
                     </div>
                     <h4>Watch Video</h4>
                     <p>Watch & Earn</p>
-                    <span class="reward-badge">₹1 / Video</span>
+                    <span class="reward-badge">Limit: 5</span>
                     <br>
                     <span style="font-size:9px; color:#94a3b8;"><span id="watch-left">5</span>/5 Left</span>
                 </div>
@@ -539,7 +530,7 @@
                     </div>
                     <h4>Daily Bonus</h4>
                     <p>Claim Everyday</p>
-                    <span class="reward-badge">₹1 Gift</span>
+                    <span class="reward-badge">Limit: 1</span>
                     <br>
                     <span style="font-size:9px; color:#94a3b8;">1/1 Daily</span>
                 </div>
@@ -558,9 +549,9 @@
                     </div>
                     <h4>Task Ads</h4>
                     <p>Complete Tasks</p>
-                    <span class="reward-badge">₹0.5 / Task</span>
+                    <span class="reward-badge">Limit: 7</span>
                     <br>
-                    <span style="font-size:9px; color:#94a3b8;"><span id="task-left">5</span>/5 Left</span>
+                    <span style="font-size:9px; color:#94a3b8;"><span id="task-left">7</span>/7 Left</span>
                 </div>
                 <button class="btn-card btn-task" id="btn-task-ad" onclick="triggerTaskAd()">Start Task ➔</button>
             </div>
@@ -591,6 +582,13 @@
         <h3 style="color:#c084fc; margin-bottom: 12px; font-size:16px;">🎡 Spin & Win Wheel</h3>
         <div class="profile-card" style="text-align:center; padding: 20px 14px;">
             <p style="font-size:11px; color:#cbd5e1; margin-bottom:10px;" id="spin-sub-title">Spin the wheel to get instant rewards!</p>
+            
+            <!-- COIN WALLET IN SPIN CORNER -->
+            <div style="display:inline-block; background:rgba(250,204,21,0.15); border:1px solid #facc15; padding:4px 12px; border-radius:12px; font-size:11px; color:#facc15; font-weight:bold; margin-bottom:10px;">
+                🪙 Coin Wallet: <span id="spin-coin-balance">0</span> Coins
+                <button onclick="exchangeCoins()" style="background:#facc15; color:#000; border:none; padding:2px 6px; border-radius:6px; font-weight:bold; cursor:pointer; margin-left:6px; font-size:10px;">Exchange (2000c = ₹1)</button>
+            </div>
+
             <div style="position: relative; width: 230px; height: 230px; margin: 10px auto; border-radius:50%; background: radial-gradient(circle, rgba(168,85,247,0.3) 0%, transparent 70%); padding: 5px;">
                 <div style="width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:22px solid #ef4444; position:absolute; top:-10px; left:50%; transform:translateX(-50%); z-index:10; filter:drop-shadow(0 3px 6px rgba(0,0,0,0.8));"></div>
                 <canvas id="wheel-canvas" width="220" height="220" style="transition: transform 3.5s cubic-bezier(0.15, 0.85, 0.15, 1); border-radius:50%; box-shadow: 0 0 25px rgba(250,204,21,0.5);"></canvas>
@@ -719,7 +717,7 @@
         </div>
 
         <!-- WITHDRAW HISTORY -->
-        <h4 style="font-size:12px; margin-top:15px; color:#facc15;">💸 Withdraw History (With Redeem Codes)</h4>
+        <h4 style="font-size:12px; margin-top:15px; color:#facc15;">💸 Withdraw History</h4>
         <div class="history-box" id="withdraw-history-list">
             <div style="font-size:10px; color:#94a3b8; text-align:center; padding:8px;">No withdrawal history yet.</div>
         </div>
@@ -864,7 +862,7 @@
         dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentSlide));
     }, 3500);
 
-    // BACKGROUND MUSIC - SINGLE ENERGETIC UNIVERSAL TRACK
+    // BACKGROUND MUSIC - ENERGETIC UNIVERSAL TRACK
     let bgAudio = null;
     let isUserMuted = false;
 
@@ -887,24 +885,24 @@
     function muteMusic() { if(bgAudio) bgAudio.muted = true; }
     function unmuteMusic() { if(bgAudio && !isUserMuted) bgAudio.muted = false; }
 
-    const storageKey = 'spinwin_user_data_v4_' + userId;
-    const globalAdminReqKey = 'global_admin_withdraw_requests_v4';
+    const storageKey = 'spinwin_user_data_v6_' + userId;
+    const globalAdminReqKey = 'global_admin_withdraw_requests_v6';
     const today = new Date().toDateString();
 
     let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
-    if (!savedData.dataClearedV4) {
+    if (!savedData.dataClearedV6) {
         localStorage.clear();
         savedData = {};
-        savedData.dataClearedV4 = true;
+        savedData.dataClearedV6 = true;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
     }
 
     let balance = savedData.balance || 0.00;
     let coinBalance = savedData.coinBalance || 0;
-    let spinLeft = savedData.spinLeft ?? 5;
-    let scratchLeft = savedData.scratchLeft ?? 5;
+    let spinLeft = savedData.spinLeft ?? 3;
+    let scratchLeft = savedData.scratchLeft ?? 4;
     let watchLeft = savedData.watchLeft ?? 5;
-    let taskLeft = savedData.taskLeft ?? 5;
+    let taskLeft = savedData.taskLeft ?? 7;
     let coinHistory = savedData.coinHistory || [];
     let withdrawHistory = savedData.withdrawHistory || [];
     let spinTimerEnd = savedData.spinTimerEnd || 0;
@@ -913,15 +911,15 @@
     const ownerName = "tricky sofiya";
     const cleanName = userName.toLowerCase();
 
-    if (!savedData.specialAppliedV4) {
+    if (!savedData.specialAppliedV6) {
         if (cleanName.includes(bonusName)) {
             balance = parseFloat((balance + 10.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹10.00 Special Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV4 = true;
+            savedData.specialAppliedV6 = true;
         } else if (cleanName.includes(ownerName)) {
             balance = parseFloat((balance + 50.00).toFixed(2));
             coinHistory.unshift({ text: `Added ₹50.00 Owner Bonus`, time: new Date().toLocaleTimeString() });
-            savedData.specialAppliedV4 = true;
+            savedData.specialAppliedV6 = true;
         }
     }
 
@@ -938,11 +936,11 @@
         const acEl = document.getElementById('active-user-count');
         if(acEl) acEl.innerText = (baseCount + (Math.floor(Date.now() / 60000) % 100)).toLocaleString('en-IN');
         
-        // Spin Timer Check
+        // Spin Timer Check (2 hours)
         if (spinTimerEnd > 0) {
             let timeLeft = spinTimerEnd - Date.now();
             if (timeLeft <= 0) {
-                spinLeft = 5;
+                spinLeft = 10; // 10 spins after timer ends
                 spinTimerEnd = 0;
                 saveData();
                 updateUI();
@@ -976,13 +974,13 @@
 
     const canvas = document.getElementById('wheel-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
-    const rewards = ["₹0.10", "₹0.15", "₹0.10", "₹0.05", "₹0.10", "₹0.10"];
-    const coinRewards = ["10c", "15c", "20c", "10c", "15c", "20c"];
+    const rewards = ["₹0.50", "₹0.30", "₹0.40", "₹0.50", "₹0.30", "₹0.50"];
+    const coinRewards = ["10c", "20c", "30c", "15c", "25c", "10c"]; // < 50 coins random
     const colors = ["#7c3aed", "#facc15", "#10b981", "#3b82f6", "#ec4899", "#f97316"];
 
     function drawWheel() {
         if(!canvas || !ctx) return;
-        const currentRewards = spinLeft > 0 ? rewards : coinRewards;
+        const currentRewards = spinLeft > 0 ? (spinTimerEnd > 0 ? coinRewards : rewards) : coinRewards;
         const angle = (2 * Math.PI) / currentRewards.length;
         for (let i = 0; i < currentRewards.length; i++) {
             ctx.beginPath(); ctx.fillStyle = colors[i];
@@ -1007,7 +1005,7 @@
         if(page === 'spin-page') {
             drawWheel();
             const sSub = document.getElementById('spin-sub-title');
-            if(sSub) sSub.innerText = spinLeft > 0 ? "Spin for Cash Rewards!" : "Spin for Coin Wallet Rewards (10-20 Coins)";
+            if(sSub) sSub.innerText = spinTimerEnd > 0 ? "Timer active! Spin for Coin Wallet Rewards (<50 Coins)" : "Spin for Cash Rewards!";
         }
         if(page === 'scratch-page') initScratchCard();
         if(page === 'admin') loadAdminRequests();
@@ -1039,7 +1037,7 @@
         const rAcc = document.getElementById('redeem-account');
         const rModal = document.getElementById('redeem-modal');
         if(rTitle) rTitle.innerText = `${method} Withdrawal`;
-        if(rAcc) rAcc.placeholder = method === 'UPI Cash' ? 'Enter PayNow / PhonePe Number' : 'Enter Email/Mobile No.';
+        if(rAcc) rAcc.placeholder = method === 'UPI Cash' ? 'Enter PhonePe / PayNow Number' : 'Enter Email/Mobile No.';
         if(rModal) rModal.style.display = 'flex';
     }
 
@@ -1049,8 +1047,6 @@
     }
 
     function executeSpin() {
-        if (spinTimerEnd > 0) return alert("स्पिन लिमिट खत्म हो चुकी है! कृपया 2 घंटे के टाइमर का इंतज़ार करें।");
-        
         muteMusic();
         if (typeof show_11376455 === 'function') {
             show_11376455().then(() => { unmuteMusic(); proceedSpin(); }).catch(e => { unmuteMusic(); proceedSpin(); });
@@ -1064,20 +1060,24 @@
         if(btn) btn.disabled = true; 
         
         let rewardVal = 0;
-        let isCoinWin = (spinLeft <= 0);
+        let isCoinWin = (spinTimerEnd > 0);
 
         if (!isCoinWin) {
             spinLeft--;
-            rewardVal = parseFloat((Math.random() * (0.15 - 0.05) + 0.05).toFixed(2));
+            rewardVal = 0.50; 
             pendingReward = rewardVal; 
             pendingType = "Spin & Win (Cash)";
         } else {
-            rewardVal = Math.floor(Math.random() * (20 - 10 + 1)) + 10; // 10 to 20 coins
+            rewardVal = Math.floor(Math.random() * (40 - 10 + 1)) + 10; // Random coin below 50 (10-40)
             coinBalance += rewardVal;
             coinHistory.unshift({ text: `Earned ${rewardVal} Coins from Timer Spin`, time: new Date().toLocaleTimeString() });
+            spinLeft--;
             saveData();
             if(btn) btn.disabled = false;
             alert(`बधाई हो! आपको ${rewardVal} Coins मिले।`);
+            if (spinLeft <= 0) {
+                spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000); // 2 hrs timer after 10 coin spins finish
+            }
             return;
         }
 
@@ -1089,7 +1089,7 @@
         setTimeout(() => {
             if(btn) btn.disabled = false; 
             if (spinLeft === 0 && spinTimerEnd === 0) {
-                spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000); // 2 hours timer
+                spinTimerEnd = Date.now() + (2 * 60 * 60 * 1000); // 2 hours timer after 3 normal spins
             }
             const cAmount = document.getElementById('claim-amount');
             if(cAmount) cAmount.innerText = pendingReward.toFixed(2);
@@ -1115,22 +1115,30 @@
         muteMusic();
         if (typeof show_11376455 === 'function') {
             show_11376455().then(() => {
-                unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
+                unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
             }).catch(e => {
-                unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
+                unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
             });
         } else {
-            unmuteMusic(); watchLeft--; addReward(0.80, "Video Ad");
+            unmuteMusic(); watchLeft--; addReward(0.30, "Video Ad");
         }
     }
 
     function triggerTaskAd() {
         if (taskLeft <= 0) return alert("आज की Task Ads लिमिट खत्म हो गई है!");
+        
+        let confirmAction = confirm("📢 TASK INSTRUCTIONS:\n\n1. पहले विज्ञापन पर क्लिक करें!\n2. हमारा ऑफिशियल टेलीग्राम चैनल ज्वाइन करें!\n\nइसके बाद ही आपको पैसे मिलेंगे। क्या आप तैयार हैं?");
+        if (!confirmAction) return;
+
+        window.open("https://t.me/NexoraInfotechOfficial", "_blank");
+
         muteMusic();
         if (typeof show_11376455 === 'function') {
             show_11376455({ type: 'inApp', inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false } });
         }
-        unmuteMusic(); taskLeft--; addReward(0.50, "Task Ad");
+        unmuteMusic(); 
+        taskLeft--; 
+        addReward(0.25, "Task Ad");
     }
 
     function claimRewardWithAd() {
@@ -1157,7 +1165,7 @@
         const sCanvas = document.getElementById('scratch-canvas');
         if(!sCanvas) return;
         const sCtx = sCanvas.getContext('2d');
-        const reward = parseFloat((Math.random() * (0.80 - 0.40) + 0.40).toFixed(2)); // Total task sum approx 4rs
+        const reward = 0.50; 
         const sReward = document.getElementById('scratch-reward');
         if(sReward) sReward.innerText = `₹${reward.toFixed(2)}`;
         sCtx.fillStyle = '#d97706'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
@@ -1199,7 +1207,7 @@
 
     function updateUI() {
         const bEl = document.getElementById('balance');
-        const cbEl = document.getElementById('coin-balance');
+        const cbEl = document.getElementById('spin-coin-balance');
         const wBEl = document.getElementById('withdraw-balance');
         const pBEl = document.getElementById('profile-balance');
         if(bEl) bEl.innerText = balance.toFixed(2);
@@ -1221,7 +1229,7 @@
         if(cHist) cHist.innerHTML = histHtml;
 
         const wHist = document.getElementById('withdraw-history-list');
-        let wHistHtml = withdrawHistory.length ? withdrawHistory.map(w => `<div class="history-item"><span>Redeemed ₹${w.amt} (${w.method}) - <b>${w.status}</b> ${w.code ? '<br>Code: <button onclick="navigator.clipboard.writeText(\''+w.code+'\');alert(\'Code Copied!\')" style="background:#16a34a;color:#fff;border:none;padding:2px 6px;border-radius:4px;cursor:pointer;font-size:10px;margin-top:2px;">Copy Code 📋</button> <code style="color:#4ade80">' + w.code + '</code>' : ''}</span><span style="color:#facc15">${w.time}</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center; padding:6px;">No withdrawal history yet.</div>';
+        let wHistHtml = withdrawHistory.length ? withdrawHistory.map(w => `<div class="history-item"><span>Redeemed ₹${w.amt} (${w.method}) - <b style="color:${w.status === 'Success' ? '#4ade80' : '#facc15'}">${w.status}</b> ${w.code ? '<br>Code: <button onclick="navigator.clipboard.writeText(\''+w.code+'\');alert(\'Code Copied!\')" style="background:#16a34a;color:#fff;border:none;padding:2px 6px;border-radius:4px;cursor:pointer;font-size:10px;margin-top:2px;">Copy Code 📋</button> <code style="color:#4ade80">' + w.code + '</code>' : ''}</span><span style="color:#facc15">${w.time}</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center; padding:6px;">No withdrawal history yet.</div>';
         if(wHist) wHist.innerHTML = wHistHtml;
     }
 
@@ -1283,8 +1291,24 @@
         if (actionStatus === 'Success') {
             allReqs[idx].code = codeVal;
         }
+        
         localStorage.setItem(globalAdminReqKey, JSON.stringify(allReqs));
+        
+        // Also sync back to user's local withdrawHistory if user is on same browser
+        let uData = JSON.parse(localStorage.getItem(storageKey)) || {};
+        if (uData.withdrawHistory) {
+            let targetReq = allReqs[idx];
+            let found = uData.withdrawHistory.find(w => w.amt === targetReq.amount && w.time === targetReq.time);
+            if (found) {
+                found.status = actionStatus;
+                found.code = codeVal;
+                localStorage.setItem(storageKey, JSON.stringify(uData));
+                withdrawHistory = uData.withdrawHistory;
+            }
+        }
+
         loadAdminRequests();
+        updateUI();
         alert(`Request successfully marked as ${actionStatus}!`);
     }
 
@@ -1320,7 +1344,7 @@
 
         closeModal('redeem-modal');
         updateUI();
-        alert(`⚠️ SUCCESS:\n\nआपकी ₹${amt} की ${selectedMethod} रिक्वेस्ट सफलतापूर्वक लग चुकी है! जैसे ही एडमिन कोड भेजेंगे, वह आपको ऐप के 'Withdraw History' में 'Copy Code 📋' बटन के साथ मिल जाएगा!`);
+        alert(`⚠️ SUCCESS:\n\nआपकी ₹${amt} की ${selectedMethod} रिक्वेस्ट सफलतापूर्वक लग चुकी है! जैसे ही एडमिन अप्रूव करेंगे, कोड आपको 'Withdraw History' में 'Copy Code 📋' बटन के साथ मिल जाएगा!`);
     }
 
     saveData();
