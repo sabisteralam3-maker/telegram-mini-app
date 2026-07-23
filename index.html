@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpinWin Bot - Offline Admin Edition</title>
+    <title>SpinWin Bot - Master HD Edition</title>
     
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- AdsGram Official SDK -->
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+    <!-- Monetag Official SDK -->
+    <script src="//libtl.com/sdk.js" data-zone="11376455" data-sdk="show_11376455"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
@@ -195,7 +195,7 @@
         }
         .premium-wallet-btn:active { transform: scale(0.95); }
 
-        /* 3D REALISTIC TASK GRID */
+        /* TASK GRID */
         .task-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
         .task-card { 
             background: linear-gradient(180deg, #170732, #0b0219); 
@@ -316,8 +316,14 @@
         .withdraw-item h5 { font-size: 11px; font-weight: 900; color: #facc15; letter-spacing: 0.5px; }
         .btn-withdraw { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: 1px solid #fca5a5; padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; width: 100%; }
 
-        .history-box { background: #120426; border-radius: 16px; padding: 12px; margin-top: 12px; border: 1px solid rgba(168, 85, 247, 0.2); max-height: 150px; overflow-y: auto; text-align: left; }
-        .history-item { font-size: 11px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+        /* HISTORY BOXES */
+        .history-box { background: #120426; border-radius: 16px; padding: 12px; margin-top: 10px; border: 1px solid rgba(168, 85, 247, 0.25); max-height: 140px; overflow-y: auto; text-align: left; }
+        .history-item { font-size: 11px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+
+        /* ADMIN PANEL CARDS */
+        .admin-card { background: #180c35; border: 1px solid #7c3aed; border-radius: 14px; padding: 12px; margin-bottom: 10px; font-size: 11px; }
+        .admin-card p { margin: 3px 0; color: #cbd5e1; }
+        .admin-card b { color: #facc15; }
 
         /* PROFILE UI */
         .profile-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(168, 85, 247, 0.3); border-radius: 20px; padding: 16px; margin-bottom: 12px; box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
@@ -325,15 +331,7 @@
         .music-controls { display: flex; gap: 8px; margin-top: 8px; justify-content: center; }
         .music-ctrl-btn { background: #3b0764; border: 1px solid #a855f7; color: #fff; padding: 7px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 11px; }
 
-        /* ADMIN PANEL STYLES */
-        .admin-req-card { background: #1e1b4b; border: 1px solid #6366f1; border-radius: 12px; padding: 10px; margin-bottom: 10px; font-size: 11px; }
-        .admin-req-card p { margin: 2px 0; color: #cbd5e1; }
-        .admin-req-card b { color: #facc15; }
-        .admin-actions { display: flex; gap: 10px; margin-top: 8px; }
-        .btn-approve { background: #16a34a; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn-reject { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
-
-        /* BOTTOM NAVBAR (4 ITEMS) */
+        /* BOTTOM NAVBAR */
         .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #060112; border-top: 1px solid rgba(168, 85, 247, 0.25); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; backdrop-filter: blur(10px); }
         .nav-item { border: none; background: none; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
         .nav-item.active { color: #a855f7; }
@@ -350,7 +348,7 @@
 </head>
 <body>
 
-<!-- 3-STEP ANIMATED OPENING SCREEN -->
+<!-- OPENING LOADING SCREEN -->
 <div id="loader-screen">
     <div class="loader-ring"></div>
     <div class="loader-dots">
@@ -465,7 +463,7 @@
             <button class="premium-wallet-btn" onclick="switchPage('withdraw')">Wallet ➔</button>
         </div>
 
-        <!-- 3D REALISTIC HIGH-GLOSS TASK GRID -->
+        <!-- TASK GRID -->
         <div class="task-grid">
             <div class="task-card">
                 <div>
@@ -677,7 +675,7 @@
                 <div style="font-size:38px;">💰</div>
                 <div class="wallet-info">
                     <p>AVAILABLE BALANCE</p>
-                    <h2>₹<span id="withdraw-balance">0.00</span></h2>
+                    <h2>₹<span id="balance">0.00</span></h2>
                 </div>
             </div>
         </div>
@@ -712,18 +710,25 @@
                 <div class="withdraw-logo-box">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI">
                 </div>
-                <h5>UPI CASH (Min ₹10)</h5>
+                <h5>UPI CASH (Min ₹500)</h5>
                 <button class="btn-withdraw" style="background:linear-gradient(135deg,#16a34a,#15803d);" onclick="openRedeemModal('UPI Cash')">Withdraw ➔</button>
             </div>
         </div>
 
-        <h4 style="font-size:12px; margin-top:15px; color:#c084fc;">📜 Coin & Earnings History</h4>
+        <!-- COIN HISTORY -->
+        <h4 style="font-size:12px; margin-top:15px; color:#c084fc;">📜 Coin Earnings History</h4>
         <div class="history-box" id="coin-history-list">
             <div style="font-size:10px; color:#94a3b8; text-align:center; padding:8px;">No history yet.</div>
         </div>
+
+        <!-- WITHDRAW HISTORY -->
+        <h4 style="font-size:12px; margin-top:15px; color:#facc15;">💸 Withdraw History</h4>
+        <div class="history-box" id="withdraw-history-list">
+            <div style="font-size:10px; color:#94a3b8; text-align:center; padding:8px;">No withdrawal history yet.</div>
+        </div>
     </div>
 
-    <!-- PROFILE PAGE (ADDED ADMIN BUTTON HERE) -->
+    <!-- PROFILE PAGE -->
     <div id="page-profile" class="page">
         <h3 style="color:#facc15; margin-bottom: 10px;">👤 My Account & Settings</h3>
         
@@ -752,22 +757,21 @@
             
             <div class="music-controls">
                 <button class="music-ctrl-btn" onclick="prevMusic()">⏮️ Prev</button>
-                <button class="music-ctrl-btn" style="background:#ef4444; border-color:#fca5a5;" id="mute-btn" onclick="toggleAudioMute()">Mute 🔇</button>
+                <button class="music-ctrl-btn" style="background:#EF4444; border-color:#FCA5A5;" id="mute-btn" onclick="toggleAudioMute()">Mute 🔇</button>
                 <button class="music-ctrl-btn" onclick="nextMusic()">Next ⏭️</button>
             </div>
         </div>
 
-        <!-- SECRET ADMIN LOGIN BUTTON -->
-        <button class="btn-card" style="background:#1e1b4b; border:1px solid #6366f1; color:#94a3b8; margin-top:10px;" onclick="openAdminLogin()">Admin Panel ⚙️</button>
+        <!-- SECRET ADMIN PANEL (ONLY VISIBLE TO TRICKY SOFIYA OFFICIAL) -->
+        <button id="admin-btn-id" class="btn-card" style="background:#1e1b4b; border:1px solid #6366f1; color:#94a3b8; margin-top:10px; display:none;" onclick="openAdminLogin()">Admin Panel ⚙️</button>
     </div>
 
-    <!-- SECRET ADMIN PAGE -->
+    <!-- ADMIN PANEL PAGE -->
     <div id="page-admin" class="page">
-        <h3 style="color:#ef4444; margin-bottom: 10px;">🛡️ Secret Admin Panel</h3>
-        <p style="font-size:10px; color:#94a3b8; margin-bottom:12px;">All local withdrawal requests are shown below.</p>
-        
+        <h3 style="color:#ef4444; margin-bottom: 10px;">🛡️ Admin Withdrawal Requests</h3>
+        <p style="font-size:10px; color:#94a3b8; margin-bottom:12px;">यहाँ सभी यूज़र्स की रिडीम रिक्वेस्ट दिखेंगी:</p>
         <div id="admin-requests-list">
-            <!-- Requests will load here -->
+            <p style="text-align:center; color:#94a3b8; margin-top:20px;">No requests found.</p>
         </div>
     </div>
 
@@ -817,99 +821,55 @@
             <option value="50">₹50</option>
             <option value="100">₹100</option>
         </select>
-        <input type="text" id="redeem-account" class="input-field" placeholder="Enter UPI ID / Mobile No.">
+        <input type="text" id="redeem-account" class="input-field" placeholder="Enter Email/Mobile No.">
         <button class="btn-card btn-spin" style="background:#16a34a;" onclick="submitRedeem()">Submit Request</button>
     </div>
 </div>
 
 <script>
-    // --- TELEGRAM WEB APP ROBUST INITIALIZATION ---
     const tg = window.Telegram.WebApp;
-    try {
-        tg.expand();
-        tg.ready();
-    } catch(e) {}
+    try { tg.expand(); tg.ready(); } catch(e) {}
 
-    // --- GUARANTEED OPENING LOADER REMOVAL ---
     window.addEventListener('load', () => {
         setTimeout(() => {
             const lScreen = document.getElementById('loader-screen');
-            if(lScreen) {
-                lScreen.style.opacity = '0';
-                setTimeout(() => lScreen.style.display = 'none', 400);
-            }
+            if(lScreen) { lScreen.style.opacity = '0'; setTimeout(() => lScreen.style.display = 'none', 400); }
         }, 1200);
     });
-
-    setTimeout(() => {
-        const lScreen = document.getElementById('loader-screen');
-        if(lScreen) lScreen.style.display = 'none';
-    }, 2000);
-
-    // --- RECENT PAYOUT TICKER ---
-    const payouts = [
-        "User_5678 redeemed ₹170 via UPI",
-        "Rahul_K earned ₹50 Google Code",
-        "Aman_786 redeemed ₹10 via UPI",
-        "Sonia_M redeemed ₹100 Flipkart Code"
-    ];
-    let tickerIdx = 0;
-    setInterval(() => {
-        tickerIdx = (tickerIdx + 1) % payouts.length;
-        const tickEl = document.getElementById('ticker-text');
-        if(tickEl) tickEl.innerText = payouts[tickerIdx];
-    }, 3800);
-
-    // --- FIREBASE REMOVED - FULLY LOCAL LOGIC ---
-
-    const BOT_USERNAME = "SpinWinApp_bot";
-
-    // --- ALL ADSGRAM BLOCK IDs ---
-    const REWARDED_AD_ID = "39162";
-    const TASK_AD_ID = "39213";
-    const INTERSTITIAL_AD_ID = "39353";
-
-    let RewardedAdController = null;
-    let TaskAdController = null;
-    let InterstitialAdController = null;
-
-    if (window.Adsgram) {
-        if (REWARDED_AD_ID) RewardedAdController = window.Adsgram.init({ blockId: REWARDED_AD_ID });
-        if (TASK_AD_ID) TaskAdController = window.Adsgram.init({ blockId: TASK_AD_ID });
-        if (INTERSTITIAL_AD_ID) InterstitialAdController = window.Adsgram.init({ blockId: INTERSTITIAL_AD_ID });
-    }
+    setTimeout(() => { const lScreen = document.getElementById('loader-screen'); if(lScreen) lScreen.style.display = 'none'; }, 2000);
 
     const tgUser = tg.initDataUnsafe?.user;
     const userId = tgUser?.id ? tgUser.id.toString() : "guest_" + Math.floor(Math.random() * 100000);
-    const userName = tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : "User";
+    const userName = tgUser ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim() : "Tricky Sofiya Official";
     const userHandle = tgUser?.username ? `@${tgUser.username}` : "@SpinWinApp_bot";
-    const userAvatarText = userName.charAt(0).toUpperCase() || "U";
-    const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
+
+    // CHECK IF USER IS TRICKY SOFIYA OFFICIAL TO SHOW ADMIN PANEL
+    if (userName.toLowerCase().includes("tricky sofiya") || userName.toLowerCase().includes("sofiya")) {
+        const adminBtn = document.getElementById('admin-btn-id');
+        if(adminBtn) adminBtn.style.display = 'block';
+    }
 
     document.getElementById('user-name').innerText = userName;
     document.getElementById('profile-name').innerText = userName;
     document.getElementById('profile-handle').innerText = userHandle;
-    document.getElementById('user-avatar').innerText = userAvatarText;
+    document.getElementById('user-avatar').innerText = userName.charAt(0).toUpperCase() || "U";
+    const BOT_USERNAME = "SpinWinApp_bot";
+    const refLink = `https://t.me/${BOT_USERNAME}?start=ref_${userId}`;
     document.getElementById('ref-link-input').value = refLink;
 
-    // AUTO HERO SLIDER
     let currentSlide = 0;
     const sliderWrapper = document.getElementById('slider-wrapper');
     const dots = document.querySelectorAll('.dot');
-    function autoSlide() {
+    setInterval(() => {
         currentSlide = (currentSlide + 1) % 3;
         if(sliderWrapper) sliderWrapper.style.transform = `translateX(-${currentSlide * 33.333}%)`;
         dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentSlide));
-    }
-    setInterval(autoSlide, 3500);
+    }, 3500);
 
-    // --- 5 HIGH-BEAT RHYTHMIC MUSIC PLAYLIST ---
     const musicPlaylist = [
-        { name: "Track 1: Lofi Beats (Upbeat)", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Shattered_Becalm/Kai_Engel_-_04_-_Shattered_Becalm.mp3' },
-        { name: "Track 2: Chill Gaming Vibe", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Reflections/Ketsa_-_12_-_Reflections.mp3' },
-        { name: "Track 3: Game Electro Funk", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3' },
-        { name: "Track 4: Soft Rhythmic Beat", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Broke_For_Free/Directionless_EP/Broke_For_Free_-_01_-_Night_Owl.mp3' },
-        { name: "Track 5: Jazz Game Grooves", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Jahzzar/Super/Jahzzar_-_05_-_Siesta.mp3' }
+        { name: "Track 1: Lofi Beats", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Kai_Engel/Shattered_Becalm/Kai_Engel_-_04_-_Shattered_Becalm.mp3' },
+        { name: "Track 2: Chill Vibe", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Reflections/Ketsa_-_12_-_Reflections.mp3' },
+        { name: "Track 3: Game Electro", url: 'https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Tours/Enthusiast/Tours_-_01_-_Enthusiast.mp3' }
     ];
     let currentTrackIdx = 0;
     let bgAudio = null;
@@ -921,41 +881,21 @@
         bgAudio = new Audio(musicPlaylist[currentTrackIdx].url);
         bgAudio.volume = 0.2;
         bgAudio.muted = isUserMuted;
-
         bgAudio.onended = () => { nextMusic(); };
-
-        if(!isUserMuted) {
-            bgAudio.play().catch(() => {});
-        }
+        if(!isUserMuted) { bgAudio.play().catch(() => {}); }
         const sTitle = document.getElementById('current-song-title');
         if(sTitle) sTitle.innerText = `Playing ${musicPlaylist[currentTrackIdx].name}`;
     }
+    playTrack(0);
 
-    function initBackgroundMusic() {
-        playTrack(0);
-        window.addEventListener('click', () => { 
-            if(bgAudio && bgAudio.paused && !isUserMuted) bgAudio.play().catch(() => {}); 
-        }, {once: true});
-    }
-    initBackgroundMusic();
-
-    function nextMusic() {
-        let nextIdx = (currentTrackIdx + 1) % musicPlaylist.length;
-        playTrack(nextIdx);
-    }
-
-    function prevMusic() {
-        let prevIdx = (currentTrackIdx - 1 + musicPlaylist.length) % musicPlaylist.length;
-        playTrack(prevIdx);
-    }
-
+    function nextMusic() { playTrack((currentTrackIdx + 1) % musicPlaylist.length); }
+    function prevMusic() { playTrack((currentTrackIdx - 1 + musicPlaylist.length) % musicPlaylist.length); }
     function toggleAudioMute() {
         isUserMuted = !isUserMuted;
         if(bgAudio) bgAudio.muted = isUserMuted;
         const mBtn = document.getElementById('mute-btn');
         if(mBtn) mBtn.innerText = isUserMuted ? "Unmute 🎵" : "Mute 🔇";
     }
-
     function muteMusic() { if(bgAudio) bgAudio.muted = true; }
     function unmuteMusic() { if(bgAudio && !isUserMuted) bgAudio.muted = false; }
 
@@ -972,19 +912,17 @@
         } catch(e) {}
     }
 
-    // --- LOCAL STORAGE DATA LOGIC ---
     const storageKey = 'spinwin_user_data_' + userId;
-    const adminKey = 'admin_withdraw_requests';
+    const globalAdminReqKey = 'global_admin_withdraw_requests';
     const today = new Date().toDateString();
+    
+    // COMPLETE USER DATA RESET (Data Clear requested by Sofiya)
     let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
-
-    if (savedData.lastDate !== today) {
-        savedData.lastDate = today;
-        savedData.spinLeft = 5;
-        savedData.scratchLeft = 5;
-        savedData.watchLeft = 5;
-        savedData.taskLeft = 5;
-        delete savedData.bonusClaimedDate;
+    if (!savedData.dataClearedAll) {
+        localStorage.clear();
+        savedData = {};
+        savedData.dataClearedAll = true;
+        localStorage.setItem(storageKey, JSON.stringify(savedData));
     }
 
     let balance = savedData.balance || 0.00;
@@ -993,9 +931,30 @@
     let watchLeft = savedData.watchLeft ?? 5;
     let taskLeft = savedData.taskLeft ?? 5;
     let coinHistory = savedData.coinHistory || [];
-    let referHistory = savedData.referHistory || [];
+    let withdrawHistory = savedData.withdrawHistory || [];
 
-    // Local Referral Fake Check (For demo)
+    // REFUND / BONUS / OWNER SPECIFIC REWARDS LOGIC
+    const refundNames = ["shiv sankar", "saqib khan", "nighat qureshi", "umesh", "khritam deka", "ashok"];
+    const bonusName = "rajesh yadav";
+    const ownerName = "tricky sofiya";
+
+    const cleanName = userName.toLowerCase();
+    if (!savedData.specialApplied) {
+        if (refundNames.some(n => cleanName.includes(n))) {
+            balance = 0.00;
+            coinHistory.unshift({ text: `Coin Cleared / Refunded`, time: new Date().toLocaleTimeString() });
+            savedData.specialApplied = true;
+        } else if (cleanName.includes(bonusName)) {
+            balance = parseFloat((balance + 10.00).toFixed(2)); // 10 coin/Rs bonus
+            coinHistory.unshift({ text: `Added ₹10.00 Special Bonus`, time: new Date().toLocaleTimeString() });
+            savedData.specialApplied = true;
+        } else if (cleanName.includes(ownerName)) {
+            balance = parseFloat((balance + 50.00).toFixed(2)); // 50 coin/Rs owner bonus
+            coinHistory.unshift({ text: `Added ₹50.00 Owner Bonus`, time: new Date().toLocaleTimeString() });
+            savedData.specialApplied = true;
+        }
+    }
+
     const startParam = tg.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('tgWebAppStartParam');
     if (startParam && startParam.startsWith('ref_') && !savedData.hasBeenReferred) {
         savedData.hasBeenReferred = true;
@@ -1004,15 +963,11 @@
         saveData();
     }
 
-    // DYNAMIC LIVE ACTIVE USERS COUNTER
-    function updateActiveUserCount() {
+    setInterval(() => {
         const baseCount = 12920;
-        const dynamicCount = baseCount + (Math.floor(Date.now() / 60000) % 100);
         const acEl = document.getElementById('active-user-count');
-        if(acEl) acEl.innerText = dynamicCount.toLocaleString('en-IN');
-    }
-    updateActiveUserCount();
-    setInterval(updateActiveUserCount, 30000);
+        if(acEl) acEl.innerText = (baseCount + (Math.floor(Date.now() / 60000) % 100)).toLocaleString('en-IN');
+    }, 30000);
 
     let currentSpinDeg = 0;
     let pendingReward = 0;
@@ -1026,7 +981,7 @@
         savedData.watchLeft = watchLeft;
         savedData.taskLeft = taskLeft;
         savedData.coinHistory = coinHistory;
-        savedData.referHistory = referHistory;
+        savedData.withdrawHistory = withdrawHistory;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
         updateUI();
     }
@@ -1060,11 +1015,7 @@
         if(targetNav) targetNav.classList.add('active');
 
         if(page === 'scratch-page') initScratchCard();
-        if(page === 'admin') loadAdminData();
-
-        if (page !== 'admin' && InterstitialAdController && Math.random() < 0.3) {
-            InterstitialAdController.show().catch(() => {});
-        }
+        if(page === 'admin') loadAdminRequests();
     }
 
     function openBonusModal() {
@@ -1080,11 +1031,20 @@
 
     function openRedeemModal(method) {
         selectedMethod = method;
+        
+        if (method === 'UPI Cash') {
+            if (balance < 500) {
+                return alert("UPI Cash के लिए मिनिमम बैलेंस ₹500 होना चाहिए!");
+            } else {
+                return alert("⚠️ OUT OF STOCK: वर्तमान में UPI Cash का स्टॉक समाप्त हो चुका है! कृपया अन्य मेथड (Google/Amazon/Flipkart) से रिडीम करें।");
+            }
+        }
+
         const rTitle = document.getElementById('redeem-title');
         const rAcc = document.getElementById('redeem-account');
         const rModal = document.getElementById('redeem-modal');
         if(rTitle) rTitle.innerText = `${method} Withdrawal`;
-        if(rAcc) rAcc.placeholder = method === 'UPI Cash' ? 'Enter UPI ID' : 'Enter Email/Mobile No.';
+        if(rAcc) rAcc.placeholder = 'Enter Email/Mobile No.';
         if(rModal) rModal.style.display = 'flex';
     }
 
@@ -1099,18 +1059,14 @@
 
     function executeSpin() {
         if (spinLeft <= 0) return alert("आज की Spin लिमिट खत्म हो गई है!");
-        
         const btn = document.getElementById('start-spin-btn');
         if(btn) btn.disabled = true; 
         spinLeft--;
-
         const reward = getRandomRewardUnder50();
         const segmentAngle = 360 / rewards.length;
         const randomSegment = Math.floor(Math.random() * rewards.length);
         currentSpinDeg += (5 * 360) + (randomSegment * segmentAngle) + (segmentAngle / 2);
-
         if(canvas) canvas.style.transform = `rotate(${currentSpinDeg}deg)`;
-
         setTimeout(() => {
             if(btn) btn.disabled = false; 
             pendingReward = reward; pendingType = "Spin & Win";
@@ -1123,34 +1079,76 @@
 
     function triggerAdAndWatchVideo() {
         if (watchLeft <= 0) return alert("आज की Watch Video लिमिट खत्म हो गई है!");
-        playAdThenReward(getRandomRewardUnder50(), "Video Ad", () => { watchLeft--; }, RewardedAdController);
+        // Monetag Rewarded Interstitial integration
+        playMonetagRewardedInterstitial(() => {
+            watchLeft--;
+            addReward(getRandomRewardUnder50(), "Video Ad");
+        });
     }
 
     function triggerTaskAd() {
         if (taskLeft <= 0) return alert("आज की Task Ads लिमिट खत्म हो गई है!");
-        playAdThenReward(getRandomRewardUnder50(), "Task Ad", () => { taskLeft--; }, TaskAdController || RewardedAdController);
+        // Monetag In-App Ads integration
+        playMonetagInApp(() => {
+            taskLeft--;
+            addReward(getRandomRewardUnder50(), "Task Ad");
+        });
     }
 
     function claimRewardWithAd() {
         closeModal('claim-modal');
-        playAdThenReward(pendingReward, pendingType, () => {
+        // Monetag Rewarded Popup integration
+        playMonetagPopup(() => {
             if (pendingType === "Daily Bonus") savedData.bonusClaimedDate = today;
-        }, RewardedAdController);
+            addReward(pendingReward, pendingType);
+        });
     }
 
-    function playAdThenReward(amount, type, callback, adControllerInstance) {
+    // 1. MONETAG REWARDED INTERSTITIAL FUNCTION
+    function playMonetagRewardedInterstitial(onSuccess) {
         muteMusic();
-        const activeAd = adControllerInstance || RewardedAdController;
-        
-        if (activeAd) {
-            activeAd.show().then(() => {
-                unmuteMusic(); if(callback) callback(); addReward(amount, type);
-            }).catch(() => {
-                unmuteMusic(); alert("विज्ञापन पूरा नहीं देखा गया या नेटवर्क समस्या है।");
+        if (typeof show_11376455 === 'function') {
+            show_11376455().then(() => {
+                unmuteMusic();
+                if(onSuccess) onSuccess();
+            }).catch(e => {
+                unmuteMusic();
+                if(onSuccess) onSuccess();
             });
         } else {
-            unmuteMusic(); if(callback) callback(); addReward(amount, type);
+            unmuteMusic();
+            if(onSuccess) onSuccess();
         }
+    }
+
+    // 2. MONETAG REWARDED POPUP FUNCTION
+    function playMonetagPopup(onSuccess) {
+        muteMusic();
+        if (typeof show_11376455 === 'function') {
+            show_11376455('pop').then(() => {
+                unmuteMusic();
+                if(onSuccess) onSuccess();
+            }).catch(e => {
+                unmuteMusic();
+                if(onSuccess) onSuccess();
+            });
+        } else {
+            unmuteMusic();
+            if(onSuccess) onSuccess();
+        }
+    }
+
+    // 3. MONETAG IN-APP ADS FUNCTION
+    function playMonetagInApp(onSuccess) {
+        muteMusic();
+        if (typeof show_11376455 === 'function') {
+            show_11376455({
+                type: 'inApp',
+                inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false }
+            });
+        }
+        unmuteMusic();
+        if(onSuccess) onSuccess();
     }
 
     function initScratchCard() {
@@ -1160,7 +1158,6 @@
         const reward = getRandomRewardUnder50();
         const sReward = document.getElementById('scratch-reward');
         if(sReward) sReward.innerText = `₹${reward.toFixed(2)}`;
-        
         sCtx.fillStyle = '#d97706'; sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
         sCtx.fillStyle = '#ffffff'; sCtx.font = 'bold 14px Arial'; sCtx.fillText('Scratch Here!', 70, 62);
 
@@ -1192,7 +1189,6 @@
         balance = parseFloat((balance + amount).toFixed(2));
         coinHistory.unshift({ text: `Earned ₹${amount} from ${type}`, time: new Date().toLocaleTimeString() });
         saveData();
-        playCoinSound();
         alert(`बधाई हो! ${type} से आपको ₹${amount} मिले।`);
     }
 
@@ -1213,85 +1209,49 @@
         if(wLEl) wLEl.innerText = watchLeft;
         if(tLEl) tLEl.innerText = taskLeft;
 
-        const bSpin = document.getElementById('btn-spin');
-        const bScratch = document.getElementById('btn-scratch');
-        const bAd = document.getElementById('btn-ad');
-        const bTask = document.getElementById('btn-task-ad');
-        if(bSpin) bSpin.disabled = (spinLeft <= 0);
-        if(bScratch) bScratch.disabled = (scratchLeft <= 0);
-        if(bAd) bAd.disabled = (watchLeft <= 0);
-        if(bTask) bTask.disabled = (taskLeft <= 0);
-
         const cHist = document.getElementById('coin-history-list');
-        let histHtml = coinHistory.length ? coinHistory.map(h => `<div class="history-item"><span>${h.text}</span><span style="color:#94a3b8">${h.time}</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center; padding:8px;">No history yet.</div>';
+        let histHtml = coinHistory.length ? coinHistory.map(h => `<div class="history-item"><span>${h.text}</span><span style="color:#94a3b8">${h.time}</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center; padding:6px;">No coin history yet.</div>';
         if(cHist) cHist.innerHTML = histHtml;
 
-        const rHist = document.getElementById('refer-history-list');
-        let refHistHtml = referHistory.length ? referHistory.map(r => `<div class="history-item"><span>${r.name}</span><span style="color:#4ade80">+₹1.00</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>';
-        if(rHist) rHist.innerHTML = refHistHtml;
+        const wHist = document.getElementById('withdraw-history-list');
+        let wHistHtml = withdrawHistory.length ? withdrawHistory.map(w => `<div class="history-item"><span>Redeemed ₹${w.amt} (${w.method})</span><span style="color:#facc15">${w.time}</span></div>`).join('') : '<div style="font-size:10px; color:#94a3b8; text-align:center; padding:6px;">No withdrawal history yet.</div>';
+        if(wHist) wHist.innerHTML = wHistHtml;
     }
 
-    function copyReferLink() {
-        navigator.clipboard.writeText(refLink); alert("Referral Link कॉपी हो गया है!");
-    }
-    function shareOnWhatsApp() {
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent("Join this amazing bot and earn money: " + refLink)}`);
-    }
-    function shareOnTelegram() {
-        window.open(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("Earn real money daily!")}`);
-    }
+    function copyReferLink() { navigator.clipboard.writeText(refLink); alert("Referral Link कॉपी हो गया है!"); }
+    function shareOnWhatsApp() { window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent("Join and earn: " + refLink)}`); }
+    function shareOnTelegram() { window.open(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("Earn money daily!")}`); }
 
-    // --- LOCAL ADMIN PANEL SECRETS ---
     function openAdminLogin() {
         const pass = prompt("Enter Admin Password:");
-        if (pass === "1234") {
-            switchPage('admin');
-        } else if (pass !== null) {
-            alert("Wrong Password!");
-        }
+        if (pass === "1234") { switchPage('admin'); }
+        else if (pass !== null) { alert("Wrong Password!"); }
     }
 
-    function loadAdminData() {
+    function loadAdminRequests() {
         const adminList = document.getElementById('admin-requests-list');
-        const requests = JSON.parse(localStorage.getItem(adminKey)) || [];
+        const allReqs = JSON.parse(localStorage.getItem(globalAdminReqKey)) || [];
         
-        if (requests.length === 0) {
-            adminList.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:20px;">No withdrawal requests found.</p>';
+        if (allReqs.length === 0) {
+            adminList.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:20px;">No withdrawal requests found yet.</p>';
             return;
         }
 
         let html = '';
-        requests.forEach((req, index) => {
-            let statCol = req.status === 'Pending' ? '#facc15' : (req.status === 'Approved' ? '#4ade80' : '#ef4444');
+        allReqs.forEach((req, idx) => {
             html += `
-                <div class="admin-req-card">
-                    <p><b>User:</b> ${req.name} (ID: ${req.user_id})</p>
-                    <p><b>Amount:</b> ₹${req.amount}</p>
+                <div class="admin-card">
+                    <p><b>User:</b> ${req.name} (ID: ${req.userId})</p>
                     <p><b>Method:</b> ${req.method}</p>
-                    <p><b>Account:</b> ${req.account}</p>
-                    <p><b>Date:</b> ${req.date}</p>
-                    <p><b>Status:</b> <span style="color:${statCol}">${req.status}</span></p>
-                    ${req.status === 'Pending' ? `
-                    <div class="admin-actions">
-                        <button class="btn-approve" onclick="updateReqStatus(${index}, 'Approved')">Approve</button>
-                        <button class="btn-reject" onclick="updateReqStatus(${index}, 'Rejected')">Reject</button>
-                    </div>` : ''}
+                    <p><b>Amount:</b> ₹${req.amount}</p>
+                    <p><b>Account/Details:</b> ${req.account}</p>
+                    <p><b>Time:</b> ${req.time}</p>
                 </div>
             `;
         });
         adminList.innerHTML = html;
     }
 
-    function updateReqStatus(index, newStatus) {
-        let requests = JSON.parse(localStorage.getItem(adminKey)) || [];
-        if (requests[index]) {
-            requests[index].status = newStatus;
-            localStorage.setItem(adminKey, JSON.stringify(requests));
-            loadAdminData(); // refresh list
-        }
-    }
-
-    // --- SUBMIT REDEEM (LOCAL STORAGE VERSION) ---
     function submitRedeem() {
         const amtEl = document.getElementById('redeem-amount-select');
         const accEl = document.getElementById('redeem-account');
@@ -1300,30 +1260,29 @@
         const acc = accEl.value.trim();
         
         if (balance < amt) return alert(`आपके वॉलेट में कम से कम ₹${amt} होना चाहिए!`);
-        if (!acc) return alert("कृपया UPI ID या अकाउंट विवरण दर्ज करें!");
+        if (!acc) return alert("कृपया अकाउंट विवरण दर्ज करें!");
 
         balance = parseFloat((balance - amt).toFixed(2));
-        
         const timeStr = new Date().toLocaleString();
+        
+        withdrawHistory.unshift({ amt: amt, method: selectedMethod, time: timeStr });
         coinHistory.unshift({ text: `Redeemed ₹${amt} via ${selectedMethod}`, time: timeStr });
         saveData();
 
-        // 100% LOCAL STORAGE SAVING FOR ADMIN PANEL
-        let allRequests = JSON.parse(localStorage.getItem(adminKey)) || [];
-        allRequests.unshift({
-            user_id: userId,
+        let allReqs = JSON.parse(localStorage.getItem(globalAdminReqKey)) || [];
+        allReqs.unshift({
             name: userName,
+            userId: userId,
             method: selectedMethod,
             amount: amt,
             account: acc,
-            status: "Pending",
-            date: timeStr
+            time: timeStr
         });
-        localStorage.setItem(adminKey, JSON.stringify(allRequests));
+        localStorage.setItem(globalAdminReqKey, JSON.stringify(allReqs));
 
-        alert(`आपकी ₹${amt} की ${selectedMethod} रिक्वेस्ट सफलतापूर्वक सबमिट हो गई है!`);
         closeModal('redeem-modal');
         updateUI();
+        alert(`⚠️ PAYMENT NOTICE:\n\nआपकी ₹${amt} की ${selectedMethod} रिक्वेस्ट लग चुकी है! कृपया इसका स्क्रीनशॉट और अपना नाम हमारे टेलीग्राम चैनल पर भेजें।`);
     }
 
     saveData();
