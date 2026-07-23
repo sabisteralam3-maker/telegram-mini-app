@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpinWin Bot - Master HD Edition</title>
+    <title>SpinWin Bot - Offline Admin Edition</title>
     
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <!-- AdsGram Official SDK -->
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
@@ -27,7 +23,7 @@
 
         .container { max-width: 420px; margin: 0 auto; padding: 12px; }
 
-        /* TELEGRAM OPTIMIZED OPENING LOADING SCREEN ANIMATION */
+        /* OPENING LOADING SCREEN */
         #loader-screen { 
             position: absolute; 
             inset: 0; 
@@ -135,7 +131,7 @@
         }
 
         .slide-img-box { position: relative; z-index: 2; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
-        .slide-img-box img { max-width: 80px; max-height: 50px; object-fit: contain; }
+        .slide-img-box img { max-width: 80px; max-height: 50px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(34,197,94,0.8)); }
 
         .slider-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 3; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: 0.3s; }
@@ -329,7 +325,15 @@
         .music-controls { display: flex; gap: 8px; margin-top: 8px; justify-content: center; }
         .music-ctrl-btn { background: #3b0764; border: 1px solid #a855f7; color: #fff; padding: 7px 12px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 11px; }
 
-        /* BOTTOM NAVBAR */
+        /* ADMIN PANEL STYLES */
+        .admin-req-card { background: #1e1b4b; border: 1px solid #6366f1; border-radius: 12px; padding: 10px; margin-bottom: 10px; font-size: 11px; }
+        .admin-req-card p { margin: 2px 0; color: #cbd5e1; }
+        .admin-req-card b { color: #facc15; }
+        .admin-actions { display: flex; gap: 10px; margin-top: 8px; }
+        .btn-approve { background: #16a34a; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-reject { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+
+        /* BOTTOM NAVBAR (4 ITEMS) */
         .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #060112; border-top: 1px solid rgba(168, 85, 247, 0.25); display: flex; justify-content: space-around; align-items: center; padding: 8px 0; z-index: 90; backdrop-filter: blur(10px); }
         .nav-item { border: none; background: none; color: #64748b; font-size: 10px; font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; }
         .nav-item.active { color: #a855f7; }
@@ -375,7 +379,6 @@
         <!-- HERO SLIDER -->
         <div class="slider-container">
             <div class="slider-wrapper" id="slider-wrapper">
-                <!-- Slide 1: 3D 2-Boy Blue & Yellow Hoodie Illustration -->
                 <div class="slide" style="background-image: radial-gradient(circle at right, #1d4ed8, #090e2e);">
                     <div class="slide-overlay"></div>
                     <div class="slide-left">
@@ -401,7 +404,6 @@
                     </div>
                 </div>
 
-                <!-- Slide 2: Real Official UPI Logo -->
                 <div class="slide" style="background-image: radial-gradient(circle at right, #065f46, #0f0524);">
                     <div class="slide-overlay"></div>
                     <div class="slide-left">
@@ -414,7 +416,6 @@
                     </div>
                 </div>
 
-                <!-- Slide 3: Spin & Win 3D -->
                 <div class="slide" style="background-image: radial-gradient(circle at right, #991b1b, #0f0524);">
                     <div class="slide-overlay"></div>
                     <div class="slide-left">
@@ -466,7 +467,6 @@
 
         <!-- 3D REALISTIC HIGH-GLOSS TASK GRID -->
         <div class="task-grid">
-            <!-- 1. Spin & Win -->
             <div class="task-card">
                 <div>
                     <div class="svg-icon-box">
@@ -492,7 +492,6 @@
                 <button class="btn-card btn-spin" id="btn-spin" onclick="switchPage('spin-page')">Spin Now ➔</button>
             </div>
 
-            <!-- 2. Scratch Card -->
             <div class="task-card">
                 <div>
                     <div class="svg-icon-box">
@@ -516,7 +515,6 @@
                 <button class="btn-card btn-scratch" id="btn-scratch" onclick="switchPage('scratch-page')">Scratch Now ➔</button>
             </div>
 
-            <!-- 3. Watch Video -->
             <div class="task-card">
                 <div>
                     <div class="svg-icon-box">
@@ -535,7 +533,6 @@
                 <button class="btn-card btn-watch" id="btn-ad" onclick="triggerAdAndWatchVideo()">Watch Now ➔</button>
             </div>
 
-            <!-- 4. Daily Bonus -->
             <div class="task-card">
                 <div>
                     <div class="svg-icon-box">
@@ -554,7 +551,6 @@
                 <button class="btn-card btn-daily" onclick="openBonusModal()">Claim Now ➔</button>
             </div>
 
-            <!-- 5. Task Ads -->
             <div class="task-card">
                 <div>
                     <div class="svg-icon-box">
@@ -574,7 +570,6 @@
                 <button class="btn-card btn-task" id="btn-task-ad" onclick="triggerTaskAd()">Start Task ➔</button>
             </div>
 
-            <!-- 6. Refer & Earn -->
             <div class="task-card">
                 <div>
                     <div class="svg-icon-box">
@@ -643,7 +638,6 @@
                 </svg>
             </div>
 
-            <!-- 3 CONNECTED STEPS CARD -->
             <div class="refer-steps-card">
                 <div class="step-item">
                     <div class="step-icon">🔗</div>
@@ -672,26 +666,6 @@
                 <button class="btn-card" style="background:#0088cc; padding:10px;" onclick="shareOnTelegram()">Telegram Share</button>
             </div>
             <button class="btn-card btn-spin" style="margin-top:10px; padding:12px; background:linear-gradient(135deg,#facc15,#eab308); color:#000; font-weight:900; border:1px solid #fde047;" onclick="copyReferLink()">Copy Referral Link 📋</button>
-        </div>
-
-        <div class="reward-cards-grid">
-            <div class="reward-info-card">
-                <h5>🔥 Invite More</h5>
-                <p>Earn Unlimited Money</p>
-            </div>
-            <div class="reward-info-card">
-                <h5>💰 You Earn</h5>
-                <p>₹1.00 Per Referral</p>
-            </div>
-            <div class="reward-info-card">
-                <h5>🎁 Friend Gets</h5>
-                <p>₹1.00 Joining Bonus</p>
-            </div>
-        </div>
-
-        <h4 style="font-size:12px; margin-top:14px; color:#facc15;">Referral History:</h4>
-        <div class="history-box" id="refer-history-list">
-            <div style="font-size:10px; color:#94a3b8; text-align:center;">No referrals yet.</div>
         </div>
     </div>
 
@@ -749,7 +723,7 @@
         </div>
     </div>
 
-    <!-- PROFILE PAGE -->
+    <!-- PROFILE PAGE (ADDED ADMIN BUTTON HERE) -->
     <div id="page-profile" class="page">
         <h3 style="color:#facc15; margin-bottom: 10px;">👤 My Account & Settings</h3>
         
@@ -782,11 +756,24 @@
                 <button class="music-ctrl-btn" onclick="nextMusic()">Next ⏭️</button>
             </div>
         </div>
+
+        <!-- SECRET ADMIN LOGIN BUTTON -->
+        <button class="btn-card" style="background:#1e1b4b; border:1px solid #6366f1; color:#94a3b8; margin-top:10px;" onclick="openAdminLogin()">Admin Panel ⚙️</button>
+    </div>
+
+    <!-- SECRET ADMIN PAGE -->
+    <div id="page-admin" class="page">
+        <h3 style="color:#ef4444; margin-bottom: 10px;">🛡️ Secret Admin Panel</h3>
+        <p style="font-size:10px; color:#94a3b8; margin-bottom:12px;">All local withdrawal requests are shown below.</p>
+        
+        <div id="admin-requests-list">
+            <!-- Requests will load here -->
+        </div>
     </div>
 
 </div>
 
-<!-- BOTTOM NAVBAR (4 ITEMS - LEADERBOARD REMOVED) -->
+<!-- BOTTOM NAVBAR -->
 <div class="navbar">
     <button class="nav-item active" id="nav-home" onclick="switchPage('home')">
         <span class="nav-icon">🏠</span>
@@ -854,7 +841,6 @@
         }, 1200);
     });
 
-    // Failsafe timer so screen opens no matter what
     setTimeout(() => {
         const lScreen = document.getElementById('loader-screen');
         if(lScreen) lScreen.style.display = 'none';
@@ -874,22 +860,7 @@
         if(tickEl) tickEl.innerText = payouts[tickerIdx];
     }, 3800);
 
-    // --- FIREBASE INITIALIZATION ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyBtBMmxX2_PdmgHZ191A5hvR7kcpWUYVoU",
-        authDomain: "spinwinapp-961c6.firebaseapp.com",
-        projectId: "spinwinapp-961c6",
-        storageBucket: "spinwinapp-961c6.firebasestorage.app",
-        messagingSenderId: "679586730056",
-        appId: "1:679586730056:web:0c3dc20979e1814953887d",
-        measurementId: "G-V33CFFV2TL",
-        databaseURL: "https://spinwinapp-961c6-default-rtdb.firebaseio.com"
-    };
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.database();
+    // --- FIREBASE REMOVED - FULLY LOCAL LOGIC ---
 
     const BOT_USERNAME = "SpinWinApp_bot";
 
@@ -1001,7 +972,9 @@
         } catch(e) {}
     }
 
+    // --- LOCAL STORAGE DATA LOGIC ---
     const storageKey = 'spinwin_user_data_' + userId;
+    const adminKey = 'admin_withdraw_requests';
     const today = new Date().toDateString();
     let savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
 
@@ -1022,44 +995,14 @@
     let coinHistory = savedData.coinHistory || [];
     let referHistory = savedData.referHistory || [];
 
-    // --- REALTIME FIREBASE REFERRAL SYSTEM ---
+    // Local Referral Fake Check (For demo)
     const startParam = tg.initDataUnsafe?.start_param || new URLSearchParams(window.location.search).get('tgWebAppStartParam');
-    
     if (startParam && startParam.startsWith('ref_') && !savedData.hasBeenReferred) {
-        const referrerId = startParam.replace('ref_', '');
-        if (referrerId !== userId) {
-            savedData.hasBeenReferred = true;
-            balance = parseFloat((balance + 1.00).toFixed(2));
-            coinHistory.unshift({ text: `Earned ₹1.00 Welcome Referral Bonus`, time: new Date().toLocaleTimeString() });
-            
-            db.ref('users/' + referrerId).once('value', (snapshot) => {
-                let refData = snapshot.val() || {};
-                let refBal = parseFloat((refData.balance || 0) + 1.00).toFixed(2);
-                let refHist = refData.referHistory || [];
-                refHist.unshift({ name: `${userName} (Joined)`, time: new Date().toLocaleDateString() });
-                
-                db.ref('users/' + referrerId).update({
-                    balance: parseFloat(refBal),
-                    referHistory: refHist
-                });
-            }).catch(() => {});
-            saveData();
-        }
+        savedData.hasBeenReferred = true;
+        balance = parseFloat((balance + 1.00).toFixed(2));
+        coinHistory.unshift({ text: `Earned ₹1.00 Welcome Referral Bonus`, time: new Date().toLocaleTimeString() });
+        saveData();
     }
-
-    // LOAD LIVE DATA FROM FIREBASE
-    db.ref('users/' + userId).on('value', (snapshot) => {
-        const cloudData = snapshot.val();
-        if (cloudData) {
-            if (cloudData.balance !== undefined && cloudData.balance > balance) {
-                balance = parseFloat(cloudData.balance);
-            }
-            if (cloudData.referHistory) {
-                referHistory = cloudData.referHistory;
-            }
-            updateUI();
-        }
-    });
 
     // DYNAMIC LIVE ACTIVE USERS COUNTER
     function updateActiveUserCount() {
@@ -1085,15 +1028,6 @@
         savedData.coinHistory = coinHistory;
         savedData.referHistory = referHistory;
         localStorage.setItem(storageKey, JSON.stringify(savedData));
-
-        db.ref('users/' + userId).set({
-            name: userName,
-            balance: balance,
-            userHandle: userHandle,
-            referHistory: referHistory,
-            lastSeen: Date.now()
-        }).catch(() => {});
-
         updateUI();
     }
 
@@ -1126,8 +1060,9 @@
         if(targetNav) targetNav.classList.add('active');
 
         if(page === 'scratch-page') initScratchCard();
+        if(page === 'admin') loadAdminData();
 
-        if (InterstitialAdController && Math.random() < 0.3) {
+        if (page !== 'admin' && InterstitialAdController && Math.random() < 0.3) {
             InterstitialAdController.show().catch(() => {});
         }
     }
@@ -1306,6 +1241,57 @@
         window.open(`https://t.me/share/url?url=${encodeURIComponent(refLink)}&text=${encodeURIComponent("Earn real money daily!")}`);
     }
 
+    // --- LOCAL ADMIN PANEL SECRETS ---
+    function openAdminLogin() {
+        const pass = prompt("Enter Admin Password:");
+        if (pass === "1234") {
+            switchPage('admin');
+        } else if (pass !== null) {
+            alert("Wrong Password!");
+        }
+    }
+
+    function loadAdminData() {
+        const adminList = document.getElementById('admin-requests-list');
+        const requests = JSON.parse(localStorage.getItem(adminKey)) || [];
+        
+        if (requests.length === 0) {
+            adminList.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:20px;">No withdrawal requests found.</p>';
+            return;
+        }
+
+        let html = '';
+        requests.forEach((req, index) => {
+            let statCol = req.status === 'Pending' ? '#facc15' : (req.status === 'Approved' ? '#4ade80' : '#ef4444');
+            html += `
+                <div class="admin-req-card">
+                    <p><b>User:</b> ${req.name} (ID: ${req.user_id})</p>
+                    <p><b>Amount:</b> ₹${req.amount}</p>
+                    <p><b>Method:</b> ${req.method}</p>
+                    <p><b>Account:</b> ${req.account}</p>
+                    <p><b>Date:</b> ${req.date}</p>
+                    <p><b>Status:</b> <span style="color:${statCol}">${req.status}</span></p>
+                    ${req.status === 'Pending' ? `
+                    <div class="admin-actions">
+                        <button class="btn-approve" onclick="updateReqStatus(${index}, 'Approved')">Approve</button>
+                        <button class="btn-reject" onclick="updateReqStatus(${index}, 'Rejected')">Reject</button>
+                    </div>` : ''}
+                </div>
+            `;
+        });
+        adminList.innerHTML = html;
+    }
+
+    function updateReqStatus(index, newStatus) {
+        let requests = JSON.parse(localStorage.getItem(adminKey)) || [];
+        if (requests[index]) {
+            requests[index].status = newStatus;
+            localStorage.setItem(adminKey, JSON.stringify(requests));
+            loadAdminData(); // refresh list
+        }
+    }
+
+    // --- SUBMIT REDEEM (LOCAL STORAGE VERSION) ---
     function submitRedeem() {
         const amtEl = document.getElementById('redeem-amount-select');
         const accEl = document.getElementById('redeem-account');
@@ -1317,19 +1303,27 @@
         if (!acc) return alert("कृपया UPI ID या अकाउंट विवरण दर्ज करें!");
 
         balance = parseFloat((balance - amt).toFixed(2));
-        coinHistory.unshift({ text: `Redeemed ₹${amt} via ${selectedMethod}`, time: new Date().toLocaleTimeString() });
+        
+        const timeStr = new Date().toLocaleString();
+        coinHistory.unshift({ text: `Redeemed ₹${amt} via ${selectedMethod}`, time: timeStr });
         saveData();
 
-        tg.sendData(JSON.stringify({
-            action: "redeem_request",
+        // 100% LOCAL STORAGE SAVING FOR ADMIN PANEL
+        let allRequests = JSON.parse(localStorage.getItem(adminKey)) || [];
+        allRequests.unshift({
+            user_id: userId,
+            name: userName,
             method: selectedMethod,
             amount: amt,
             account: acc,
-            user_id: userId
-        }));
+            status: "Pending",
+            date: timeStr
+        });
+        localStorage.setItem(adminKey, JSON.stringify(allRequests));
 
-        alert(`आपकी ₹${amt} की ${selectedMethod} रिक्वेस्ट सबमिट हो गई है!`);
+        alert(`आपकी ₹${amt} की ${selectedMethod} रिक्वेस्ट सफलतापूर्वक सबमिट हो गई है!`);
         closeModal('redeem-modal');
+        updateUI();
     }
 
     saveData();
